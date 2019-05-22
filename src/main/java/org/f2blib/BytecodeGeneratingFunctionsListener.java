@@ -12,5 +12,5 @@
 
 package org.f2blib;
 
-public class Dummy {
+public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
 }

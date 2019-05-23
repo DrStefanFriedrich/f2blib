@@ -37,6 +37,11 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         this.generator = generator;
     }
 
+    public F2BLibImpl() {
+        // TODO SF use Assembler later
+        this(null, null);
+    }
+
     /**
      * Load a new function definition into the kernel.
      *

@@ -12,6 +12,43 @@
 
 package org.f2blib;
 
+import org.f2blib.impl.F2BLibImpl;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class FunctionEvaluationFactoryTest {
-    // TODO SF
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    @Test
+    public void defaultImplementation() {
+
+        FunctionEvaluationKernel kernel = FunctionEvaluationFactory.get();
+
+        assertThat(kernel, notNullValue());
+    }
+
+    @Test
+    public void implementationByName() {
+
+        FunctionEvaluationKernel kernel = FunctionEvaluationFactory.get("f2blib");
+
+        assertThat(kernel, notNullValue());
+        assertThat(kernel, instanceOf(F2BLibImpl.class));
+    }
+
+    @Test
+    public void unknownImplementation() {
+
+        exception.expect(RuntimeException.class);
+
+        FunctionEvaluationKernel kernel = FunctionEvaluationFactory.get("x");
+    }
+
 }

@@ -7,4 +7,4 @@
 #
 #    SPDX-License-Identifier: EPL-2.0
 #
-org.f2blib.impl.F2BLibImpl
+org.f2blib.impl.F2BLibAssembler

@@ -12,9 +12,6 @@
 
 package org.f2blib.impl;
 
-/**
- * Separate construction of a system from using it.
- */
-public class Assembler {
+public class F2BLibAssemblerTest {
     // TODO SF
 }

@@ -12,6 +12,7 @@
 
 package org.f2blib;
 
+import org.f2blib.impl.F2BLibAssembler;
 import org.f2blib.impl.F2BLibImpl;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +30,11 @@ public class FunctionEvaluationFactoryTest {
     @Test
     public void defaultImplementation() {
 
-        FunctionEvaluationKernel kernel = FunctionEvaluationFactory.get();
+        FunctionEvaluationProvider provider = FunctionEvaluationFactory.get();
+
+        assertThat(provider, notNullValue());
+
+        FunctionEvaluationKernel kernel = provider.create();
 
         assertThat(kernel, notNullValue());
     }
@@ -37,10 +42,14 @@ public class FunctionEvaluationFactoryTest {
     @Test
     public void implementationByName() {
 
-        FunctionEvaluationKernel kernel = FunctionEvaluationFactory.get("f2blib");
+        FunctionEvaluationProvider provider = FunctionEvaluationFactory.get("f2blib");
+
+        assertThat(provider, notNullValue());
+        assertThat(provider, instanceOf(F2BLibAssembler.class));
+
+        FunctionEvaluationKernel kernel = provider.create();
 
         assertThat(kernel, notNullValue());
-        assertThat(kernel, instanceOf(F2BLibImpl.class));
     }
 
     @Test
@@ -48,7 +57,7 @@ public class FunctionEvaluationFactoryTest {
 
         exception.expect(RuntimeException.class);
 
-        FunctionEvaluationKernel kernel = FunctionEvaluationFactory.get("x");
+        FunctionEvaluationProvider provider = FunctionEvaluationFactory.get("x");
     }
 
 }

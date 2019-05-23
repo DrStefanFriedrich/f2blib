@@ -20,29 +20,29 @@ public final class FunctionEvaluationFactory {
     private FunctionEvaluationFactory() {
     }
 
-    private final static ServiceLoader<FunctionEvaluationKernel> serviceLoader = ServiceLoader.load(FunctionEvaluationKernel.class);
+    private final static ServiceLoader<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
 
-    public static FunctionEvaluationKernel get(String kernelIdentifier) {
+    public static FunctionEvaluationProvider get(String kernelIdentifier) {
 
-        Iterator<FunctionEvaluationKernel> iter = getIterator();
+        Iterator<FunctionEvaluationProvider> iter = getIterator();
         while (iter.hasNext()) {
 
-            FunctionEvaluationKernel kernel = iter.next();
+            FunctionEvaluationProvider provider = iter.next();
 
-            if (kernel.getKernelIdentifier().equals(kernelIdentifier)) {
-                return kernel;
+            if (provider.getKernelIdentifier().equals(kernelIdentifier)) {
+                return provider;
             }
         }
 
         throw new RuntimeException("TODO SF not found");
     }
 
-    public static FunctionEvaluationKernel get() {
+    public static FunctionEvaluationProvider get() {
 
         return getIterator().next();
     }
 
-    private static Iterator<FunctionEvaluationKernel> getIterator() {
+    private static Iterator<FunctionEvaluationProvider> getIterator() {
 
         if (!serviceLoader.iterator().hasNext()) {
             throw new RuntimeException("TODO SF Service not found");

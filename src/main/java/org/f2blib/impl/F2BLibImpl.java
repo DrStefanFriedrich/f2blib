@@ -14,7 +14,6 @@ package org.f2blib.impl;
 
 import org.f2blib.FunctionEvaluationKernel;
 import org.f2blib.generator.FunctionEvaluationBytecodeGenerator;
-import org.f2blib.impl.FunctionEvaluation;
 import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 import org.f2blib.parser.FunctionParser;
 
@@ -35,11 +34,6 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
     public F2BLibImpl(FunctionParser parser, FunctionEvaluationBytecodeGenerator generator) {
         this.parser = parser;
         this.generator = generator;
-    }
-
-    public F2BLibImpl() {
-        // TODO SF use Assembler later
-        this(null, null);
     }
 
     /**
@@ -88,11 +82,6 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         }
 
         functionEvaluation.eval(p, x, y);
-    }
-
-    @Override
-    public String getKernelIdentifier() {
-        return "f2blib";
     }
 
 }

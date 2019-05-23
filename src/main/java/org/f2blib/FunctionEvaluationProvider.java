@@ -10,8 +10,22 @@
  *
  ******************************************************************************/
 
-package org.f2blib.impl;
+package org.f2blib;
 
-public class AssemblerTest {
-    // TODO SF
+public interface FunctionEvaluationProvider {
+
+    /**
+     * Create an instance, fully configured and ready to use.
+     *
+     * @return The instance to be created.
+     */
+    FunctionEvaluationKernel create();
+
+    /**
+     * Returns some "unique" identifier for this kernel.
+     *
+     * @return The identifier.
+     */
+    String getKernelIdentifier();
+
 }

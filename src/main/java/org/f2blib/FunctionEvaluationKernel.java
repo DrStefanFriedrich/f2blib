@@ -12,73 +12,34 @@
 
 package org.f2blib;
 
-import org.f2blib.generator.FunctionEvaluationBytecodeGenerator;
-import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
-import org.f2blib.parser.FunctionParser;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * The main entry point.
+ * Evaluates mathematical functions. This interface defines a kernel (i.e. a
+ * library interface) for the evaluation of mathematical functions. The functions
+ * can be specified according to a grammar and be loaded into the kernel. Then a
+ * simple call of the eval method starts the calculation. By functions we mean
+ * real-valued functions f_p: IR^n -> IR^m, p in IR^k. This is just syntactic
+ * sugar for f: IR^k x IR^n -> IR^m.
  */
-public class FunctionEvaluationKernel {
-
-    private final Map<String, FunctionEvaluation> cache = new HashMap<>();
-
-    private final FunctionParser parser;
-
-    private final FunctionEvaluationBytecodeGenerator generator;
-
-    public FunctionEvaluationKernel(FunctionParser parser, FunctionEvaluationBytecodeGenerator generator) {
-        this.parser = parser;
-        this.generator = generator;
-    }
+public interface FunctionEvaluationKernel {
 
     /**
      * Load a new function definition into the kernel.
      *
      * @param functionDefinition The function definition as defined by the grammar.
      */
-    public void load(String functionDefinition) {
-        try {
-
-            BytecodeGeneratingFunctionsListener listener = new BytecodeGeneratingFunctionsListener();
-
-            parser.applyListener(functionDefinition, listener);
-
-            Class<? extends FunctionEvaluation> clazz = generator.generateClass(listener);
-
-            // TODO SF Replace by class Constructor
-            FunctionEvaluation instance = clazz.newInstance();
-
-            cache.put(clazz.getName(), instance);
-
-        } catch (InstantiationException e) {
-            e.printStackTrace(); // TODO SF
-        } catch (IllegalAccessException e) {
-            e.printStackTrace(); // TODO SF
-        }
-
-    }
+    void load(String functionDefinition);
 
     /**
-     * Evaluate a function.
+     * Evaluates the given real-valued function. The contract for the function
+     * evaluation is as follows: the function depends on p and x only. During
+     * function evaluation y must not be considered. The only purpose of y is
+     * to store the result.
      *
-     * @param functionName The name of the function.
-     * @param p            The parameters of the function.
-     * @param x            The variables of the function.
-     * @param y            The vector which stores the result.
+     * @param functionName The name of the function to evaluate.
+     * @param p            The parameters of the function. p in IR^k
+     * @param x            The variable of the function. x in IR^n
+     * @param y            The result of the function evaluation. y in IR^m
      */
-    public void eval(String functionName, double[] p, double[] x, double[] y) {
-
-        FunctionEvaluation functionEvaluation = cache.get(functionName);
-
-        if (functionEvaluation == null) {
-            throw new RuntimeException("TODO SF: Unknown function definition: " + functionName);
-        }
-
-        functionEvaluation.eval(p, x, y);
-    }
+    void eval(String functionName, double[] p, double[] x, double[] y);
 
 }

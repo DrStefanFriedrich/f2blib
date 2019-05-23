@@ -10,7 +10,7 @@
  *
  ******************************************************************************/
 
-package org.f2blib;
+package org.f2blib.impl;
 
 /**
  * Models real-valued functions f_p: IR^n -> IR^m, p in IR^k. This is just

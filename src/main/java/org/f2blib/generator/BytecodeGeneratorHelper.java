@@ -12,7 +12,7 @@
 
 package org.f2blib.generator;
 
-import org.f2blib.FunctionEvaluation;
+import org.f2blib.impl.FunctionEvaluation;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

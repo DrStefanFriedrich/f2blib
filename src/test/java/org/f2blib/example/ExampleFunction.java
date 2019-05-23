@@ -12,7 +12,7 @@
 
 package org.f2blib.example;
 
-import org.f2blib.FunctionEvaluation;
+import org.f2blib.impl.FunctionEvaluation;
 
 public class ExampleFunction implements FunctionEvaluation {
 

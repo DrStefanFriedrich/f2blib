@@ -12,7 +12,7 @@
 
 package org.f2blib.generator;
 
-import org.f2blib.FunctionEvaluation;
+import org.f2blib.impl.FunctionEvaluation;
 import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 
 public class FunctionEvaluationBytecodeGenerator {

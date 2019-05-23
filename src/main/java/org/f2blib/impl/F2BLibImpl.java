@@ -85,4 +85,9 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         functionEvaluation.eval(p, x, y);
     }
 
+    @Override
+    public String getKernelIdentifier() {
+        return "f2blib";
+    }
+
 }

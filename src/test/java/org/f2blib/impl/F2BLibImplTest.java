@@ -10,8 +10,8 @@
  *
  ******************************************************************************/
 
-package org.f2blib;
+package org.f2blib.impl;
 
-public class FunctionEvaluationKernelTest {
+public class F2BLibImplTest {
     // TODO SF Test eval
 }

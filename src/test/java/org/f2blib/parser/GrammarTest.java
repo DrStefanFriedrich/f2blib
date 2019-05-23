@@ -10,10 +10,8 @@
  *
  ******************************************************************************/
 
-package org.f2blib.grammar;
+package org.f2blib.parser;
 
-import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
-import org.f2blib.parser.FunctionParser;
 import org.f2blib.FunctionsListener;
 import org.junit.Rule;
 import org.junit.Test;

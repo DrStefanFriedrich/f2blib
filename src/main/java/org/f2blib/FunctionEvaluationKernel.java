@@ -42,4 +42,11 @@ public interface FunctionEvaluationKernel {
      */
     void eval(String functionName, double[] p, double[] x, double[] y);
 
+    /**
+     * Returns some "unique" identifier for this kernel.
+     *
+     * @return The identifier.
+     */
+    String getKernelIdentifier();
+
 }

@@ -12,5 +12,6 @@
 
 package org.f2blib;
 
-public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
+public class FunctionEvaluationKernelTest {
+    // TODO SF Test eval
 }

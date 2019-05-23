@@ -12,8 +12,8 @@
 
 package org.f2blib.grammar;
 
-import org.f2blib.BytecodeGeneratingFunctionsListener;
-import org.f2blib.FunctionParser;
+import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
+import org.f2blib.parser.FunctionParser;
 import org.f2blib.FunctionsListener;
 import org.junit.Rule;
 import org.junit.Test;

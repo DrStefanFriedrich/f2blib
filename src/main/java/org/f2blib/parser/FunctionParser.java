@@ -10,12 +10,15 @@
  *
  ******************************************************************************/
 
-package org.f2blib;
+package org.f2blib.parser;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.f2blib.FunctionsLexer;
+import org.f2blib.FunctionsListener;
+import org.f2blib.FunctionsParser;
 
 public class FunctionParser {
 

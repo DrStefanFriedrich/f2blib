@@ -30,7 +30,7 @@ final class FunctionEvaluationFactory {
     private static Iterator<FunctionEvaluationProvider> getIterator() {
 
         if (!serviceLoader.iterator().hasNext()) {
-            throw new IllegalStateException("No provider at all found of type FunctionEvaluationProvider");
+            throw new IllegalStateException("No provider at all found for type FunctionEvaluationProvider");
         }
 
         return serviceLoader.iterator();

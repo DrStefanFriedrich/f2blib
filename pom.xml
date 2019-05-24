@@ -85,6 +85,12 @@
             <artifactId>asm</artifactId>
             <version>5.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+        </dependency>
+
 
         <!-- 3rd party function evaluation frameworks. Needed for
              performance tests only -->
@@ -92,21 +98,25 @@
             <groupId>com.udojava</groupId>
             <artifactId>EvalEx</artifactId>
             <version>2.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mariuszgromada.math</groupId>
             <artifactId>MathParser.org-mXparser</artifactId>
             <version>4.3.3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.objecthunter</groupId>
             <artifactId>exp4j</artifactId>
             <version>0.4.8</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.randombits.math</groupId>
             <artifactId>math-eval</artifactId>
             <version>1.0.1</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

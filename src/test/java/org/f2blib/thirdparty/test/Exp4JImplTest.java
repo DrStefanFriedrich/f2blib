@@ -10,7 +10,7 @@
  *
  ******************************************************************************/
 
-package org.f2blib.thirdparty;
+package org.f2blib.thirdparty.test;
 
 public class Exp4JImplTest {
     // TODO SF

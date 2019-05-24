@@ -12,6 +12,7 @@
 
 package org.f2blib.impl;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.f2blib.FunctionEvaluationKernel;
 import org.f2blib.FunctionEvaluationProvider;
 
@@ -25,6 +26,9 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
         return getBean(FunctionEvaluationKernel.class);
     }
 
+    /*
+     * Spring-like getBean method.
+     */
     private <T> T getBean(Class<T> interfaceType) {
 
         if (!interfaceType.equals(FunctionEvaluationKernel.class)) {
@@ -32,8 +36,13 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
         }
 
         @SuppressWarnings("unchecked")
-        T t = (T) new F2BLibImpl(null, null);
+        T t = (T) constructF2BLibImpl();
         return t;
+    }
+
+    @VisibleForTesting
+    protected FunctionEvaluationKernel constructF2BLibImpl() {
+        return new F2BLibImpl(null, null);
     }
 
     @Override

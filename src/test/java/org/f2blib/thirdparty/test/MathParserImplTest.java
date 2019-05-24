@@ -10,8 +10,8 @@
  *
  ******************************************************************************/
 
-package org.f2blib.thirdparty;
+package org.f2blib.thirdparty.test;
 
-public class MathEvalImplTest {
+public class MathParserImplTest {
     // TODO SF
 }

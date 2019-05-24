@@ -29,7 +29,8 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
     /*
      * Spring-like getBean method.
      */
-    private <T> T getBean(Class<T> interfaceType) {
+    @VisibleForTesting
+    <T> T getBean(Class<T> interfaceType) {
 
         if (!interfaceType.equals(FunctionEvaluationKernel.class)) {
             throw new IllegalArgumentException("The only supported bean type is FunctionEvaluationKernel");
@@ -40,8 +41,8 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
         return t;
     }
 
-    @VisibleForTesting
-    protected FunctionEvaluationKernel constructF2BLibImpl() {
+
+    private FunctionEvaluationKernel constructF2BLibImpl() {
         return new F2BLibImpl(null, null);
     }
 

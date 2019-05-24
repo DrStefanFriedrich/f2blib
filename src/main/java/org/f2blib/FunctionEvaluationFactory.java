@@ -12,31 +12,25 @@
 
 package org.f2blib;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-final class FunctionEvaluationFactory {
+class FunctionEvaluationFactory {
 
-    private FunctionEvaluationFactory() {
+    private final Iterable<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
+
+    @VisibleForTesting
+    Iterable<FunctionEvaluationProvider> getServiceLoader() {
+        return serviceLoader;
     }
 
-    private static final ServiceLoader<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
-
-    static FunctionEvaluationProvider get() {
-
+    FunctionEvaluationProvider get() {
         return getIterator().next();
     }
 
-    private static Iterator<FunctionEvaluationProvider> getIterator() {
-
-        if (!serviceLoader.iterator().hasNext()) {
-            throw new IllegalStateException("No provider at all found for type FunctionEvaluationProvider");
-        }
-
-        return serviceLoader.iterator();
-    }
-
-    static FunctionEvaluationProvider get(String kernelIdentifier) {
+    FunctionEvaluationProvider get(String kernelIdentifier) {
 
         Iterator<FunctionEvaluationProvider> iter = getIterator();
         while (iter.hasNext()) {
@@ -49,6 +43,14 @@ final class FunctionEvaluationFactory {
         }
 
         throw new IllegalArgumentException("Provider not found: " + kernelIdentifier);
+    }
+
+    private Iterator<FunctionEvaluationProvider> getIterator() {
+        if (!getServiceLoader().iterator().hasNext()) {
+            throw new IllegalStateException("No provider at all found for type FunctionEvaluationProvider");
+        }
+
+        return getServiceLoader().iterator();
     }
 
 }

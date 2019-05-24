@@ -13,10 +13,11 @@
 package org.f2blib;
 
 import org.f2blib.impl.F2BLibAssembler;
-import org.f2blib.impl.F2BLibImpl;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -27,10 +28,12 @@ public class FunctionEvaluationFactoryTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    private final FunctionEvaluationFactory underTest = new FunctionEvaluationFactory();
+
     @Test
     public void defaultImplementation() {
 
-        FunctionEvaluationProvider provider = FunctionEvaluationFactory.get();
+        FunctionEvaluationProvider provider = underTest.get();
 
         assertThat(provider, notNullValue());
 
@@ -42,7 +45,7 @@ public class FunctionEvaluationFactoryTest {
     @Test
     public void implementationByName() {
 
-        FunctionEvaluationProvider provider = FunctionEvaluationFactory.get("f2blib");
+        FunctionEvaluationProvider provider = underTest.get("f2blib");
 
         assertThat(provider, notNullValue());
         assertThat(provider, instanceOf(F2BLibAssembler.class));
@@ -55,9 +58,27 @@ public class FunctionEvaluationFactoryTest {
     @Test
     public void unknownImplementation() {
 
-        exception.expect(RuntimeException.class);
+        exception.expect(IllegalArgumentException.class);
 
-        FunctionEvaluationProvider provider = FunctionEvaluationFactory.get("x");
+        FunctionEvaluationProvider provider = underTest.get("x");
+    }
+
+    @Test
+    public void noProvidersAtAllFound() {
+
+        FunctionEvaluationFactory fef = new FunctionEvaluationFactoryAsset();
+
+        exception.expect(IllegalStateException.class);
+
+        fef.get();
+    }
+
+    private static class FunctionEvaluationFactoryAsset extends FunctionEvaluationFactory {
+
+        @Override
+        Iterable<FunctionEvaluationProvider> getServiceLoader() {
+            return Collections::emptyIterator;
+        }
     }
 
 }

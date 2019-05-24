@@ -15,14 +15,28 @@ package org.f2blib;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-public final class FunctionEvaluationFactory {
+final class FunctionEvaluationFactory {
 
     private FunctionEvaluationFactory() {
     }
 
-    private final static ServiceLoader<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
+    private static final ServiceLoader<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
 
-    public static FunctionEvaluationProvider get(String kernelIdentifier) {
+    static FunctionEvaluationProvider get() {
+
+        return getIterator().next();
+    }
+
+    private static Iterator<FunctionEvaluationProvider> getIterator() {
+
+        if (!serviceLoader.iterator().hasNext()) {
+            throw new IllegalStateException("No provider at all found of type FunctionEvaluationProvider");
+        }
+
+        return serviceLoader.iterator();
+    }
+
+    static FunctionEvaluationProvider get(String kernelIdentifier) {
 
         Iterator<FunctionEvaluationProvider> iter = getIterator();
         while (iter.hasNext()) {
@@ -34,21 +48,7 @@ public final class FunctionEvaluationFactory {
             }
         }
 
-        throw new RuntimeException("TODO SF not found");
-    }
-
-    public static FunctionEvaluationProvider get() {
-
-        return getIterator().next();
-    }
-
-    private static Iterator<FunctionEvaluationProvider> getIterator() {
-
-        if (!serviceLoader.iterator().hasNext()) {
-            throw new RuntimeException("TODO SF Service not found");
-        }
-
-        return serviceLoader.iterator();
+        throw new IllegalArgumentException("Provider not found: " + kernelIdentifier);
     }
 
 }

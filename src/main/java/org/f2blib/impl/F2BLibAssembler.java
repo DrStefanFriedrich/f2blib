@@ -28,10 +28,12 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
     private <T> T getBean(Class<T> interfaceType) {
 
         if (!interfaceType.equals(FunctionEvaluationKernel.class)) {
-            throw new RuntimeException("TODO SF: the only supported bean type is FunctionEvaluationKernel");
+            throw new IllegalArgumentException("The only supported bean type is FunctionEvaluationKernel");
         }
 
-        return (T) new F2BLibImpl(null, null);
+        @SuppressWarnings("unchecked")
+        T t = (T) new F2BLibImpl(null, null);
+        return t;
     }
 
     @Override

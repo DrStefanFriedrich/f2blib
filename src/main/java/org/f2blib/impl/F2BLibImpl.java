@@ -13,10 +13,12 @@
 package org.f2blib.impl;
 
 import org.f2blib.FunctionEvaluationKernel;
+import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.generator.FunctionEvaluationBytecodeGenerator;
 import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 import org.f2blib.parser.FunctionParser;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
     private final FunctionEvaluationBytecodeGenerator generator;
 
-    public F2BLibImpl(FunctionParser parser, FunctionEvaluationBytecodeGenerator generator) {
+    F2BLibImpl(FunctionParser parser, FunctionEvaluationBytecodeGenerator generator) {
         this.parser = parser;
         this.generator = generator;
     }
@@ -51,15 +53,18 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
             Class<? extends FunctionEvaluation> clazz = generator.generateClass(listener);
 
-            // TODO SF Replace by class Constructor
-            FunctionEvaluation instance = clazz.newInstance();
+            FunctionEvaluation instance = clazz.getConstructor((Class<?>) null).newInstance();
 
             cache.put(clazz.getName(), instance);
 
-        } catch (InstantiationException e) {
-            e.printStackTrace(); // TODO SF
-        } catch (IllegalAccessException e) {
-            e.printStackTrace(); // TODO SF
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new BytecodeGenerationException("Cannot instantiate class", e);
+        } catch (InvocationTargetException e) {
+            Throwable targetException = e.getTargetException();
+            if (targetException instanceof RuntimeException) {
+                throw (RuntimeException) targetException;
+            }
+            throw new BytecodeGenerationException("Exception from constructor invocation", targetException);
         }
 
     }
@@ -78,7 +83,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         FunctionEvaluation functionEvaluation = cache.get(functionName);
 
         if (functionEvaluation == null) {
-            throw new RuntimeException("TODO SF: Unknown function definition: " + functionName);
+            throw new IllegalArgumentException("Unknown function name: " + functionName);
         }
 
         functionEvaluation.eval(p, x, y);

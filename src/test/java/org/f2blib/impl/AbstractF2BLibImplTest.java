@@ -10,28 +10,33 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.impl;
 
-import org.f2blib.FunctionsListener;
+import org.f2blib.generator.FunctionEvaluationBytecodeGenerator;
+import org.f2blib.parser.FunctionParser;
+import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class GrammarTest {
+import static org.mockito.Mockito.mock;
 
-    private final FunctionParser parser = new AntlrFunctionParser();
-
-    private final FunctionsListener listener = new BytecodeGeneratingFunctionsListener();
+public abstract class AbstractF2BLibImplTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    @Test
-    public void allFails() {
+    F2BLibImpl underTest;
 
-        exception.expect(RuntimeException.class);
+    FunctionParser parserMock;
 
-        parser.applyListener("x", listener);
+    FunctionEvaluationBytecodeGenerator generatorMock;
+
+    @Before
+    public void setup() {
+        parserMock = mock(FunctionParser.class);
+        generatorMock = mock(FunctionEvaluationBytecodeGenerator.class);
+
+        underTest = new F2BLibImpl(parserMock, generatorMock);
     }
 
 }

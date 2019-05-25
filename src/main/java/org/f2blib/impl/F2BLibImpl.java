@@ -19,15 +19,15 @@ import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 import org.f2blib.parser.FunctionParser;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The main entry point.
+ * F2BLib implementation of a {@link FunctionEvaluationKernel}.
  */
 public class F2BLibImpl implements FunctionEvaluationKernel {
 
-    private final Map<String, FunctionEvaluation> cache = new HashMap<>();
+    private final Map<String, FunctionEvaluation> cache = new ConcurrentHashMap<>();
 
     private final FunctionParser parser;
 
@@ -53,7 +53,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
             Class<? extends FunctionEvaluation> clazz = generator.generateClass(listener);
 
-            FunctionEvaluation instance = clazz.getConstructor(new Class<?>[]{}).newInstance();
+            FunctionEvaluation instance = clazz.getConstructor(null).newInstance();
 
             cache.put(clazz.getName(), instance);
 

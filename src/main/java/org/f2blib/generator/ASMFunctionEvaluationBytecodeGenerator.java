@@ -12,11 +12,17 @@
 
 package org.f2blib.generator;
 
+import org.f2blib.PerformanceTestFunction;
 import org.f2blib.impl.FunctionEvaluation;
 import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 
-public interface FunctionEvaluationBytecodeGenerator {
+public class ASMFunctionEvaluationBytecodeGenerator implements FunctionEvaluationBytecodeGenerator {
 
-    Class<? extends FunctionEvaluation> generateClass(BytecodeGeneratingFunctionsListener listener);
+
+    @Override
+    public Class<? extends FunctionEvaluation> generateClass(BytecodeGeneratingFunctionsListener listener) {
+        // Right now return some dummy implementation
+        return PerformanceTestFunction.class;
+    }
 
 }

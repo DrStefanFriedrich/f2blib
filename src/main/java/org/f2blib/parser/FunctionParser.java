@@ -12,25 +12,10 @@
 
 package org.f2blib.parser;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.f2blib.FunctionsLexer;
 import org.f2blib.FunctionsListener;
-import org.f2blib.FunctionsParser;
 
-public class FunctionParser {
+public interface FunctionParser {
 
-    public void applyListener(String functionDefinition, FunctionsListener listener) {
-
-        FunctionsLexer lexer = new FunctionsLexer(CharStreams.fromString(functionDefinition));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        FunctionsParser parser = new FunctionsParser(tokens);
-        ParseTree tree = parser.parse();
-        ParseTreeWalker walker = new ParseTreeWalker();
-
-        walker.walk(listener, tree);
-    }
+    void applyListener(String functionDefinition, FunctionsListener listener);
 
 }

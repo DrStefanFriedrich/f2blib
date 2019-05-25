@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FunctionEvaluationBytecodeGeneratorTest {
 
-    private final FunctionEvaluationBytecodeGenerator underTest = new FunctionEvaluationBytecodeGenerator();
+    private final FunctionEvaluationBytecodeGenerator underTest = new ASMFunctionEvaluationBytecodeGenerator();
 
     @Test
     public void returnNull() {

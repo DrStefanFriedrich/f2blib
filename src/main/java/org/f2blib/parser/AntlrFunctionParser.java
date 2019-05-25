@@ -12,8 +12,8 @@
 
 package org.f2blib.parser;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.f2blib.FunctionsLexer;
@@ -28,6 +28,15 @@ public class AntlrFunctionParser implements FunctionParser {
         FunctionsLexer lexer = new FunctionsLexer(CharStreams.fromString(functionDefinition));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FunctionsParser parser = new FunctionsParser(tokens);
+
+        parser.addErrorListener(new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                                    int line, int charPositionInLine, String msg, RecognitionException e) {
+                throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
+            }
+        });
+
         ParseTree tree = parser.parse();
         ParseTreeWalker walker = new ParseTreeWalker();
 

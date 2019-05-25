@@ -12,7 +12,9 @@
 
 grammar Functions;
 
-parse: ( error )* EOF;
+parse: ( comment | error )* EOF;
+
+comment: '#' ~( '\r' | '\n' )*;
 
 error: UNEXPECTED_CHAR
    {

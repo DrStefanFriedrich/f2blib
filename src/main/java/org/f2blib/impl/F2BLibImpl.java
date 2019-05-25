@@ -53,7 +53,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
             Class<? extends FunctionEvaluation> clazz = generator.generateClass(listener);
 
-            FunctionEvaluation instance = clazz.getConstructor((Class<?>) null).newInstance();
+            FunctionEvaluation instance = clazz.getConstructor(new Class<?>[]{}).newInstance();
 
             cache.put(clazz.getName(), instance);
 

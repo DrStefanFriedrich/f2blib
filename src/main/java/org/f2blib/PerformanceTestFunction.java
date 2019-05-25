@@ -10,18 +10,15 @@
  *
  ******************************************************************************/
 
-package org.f2blib.generator;
+package org.f2blib;
 
-import org.f2blib.PerformanceTestFunction;
 import org.f2blib.impl.FunctionEvaluation;
-import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 
-public class FunctionEvaluationBytecodeGenerator {
-
-
-    public Class<? extends FunctionEvaluation> generateClass(BytecodeGeneratingFunctionsListener listener) {
-        // Right now return some dummy implementation
-        return PerformanceTestFunction.class;
+/**
+ * TODO SF Delete later
+ */
+public class PerformanceTestFunction implements FunctionEvaluation {
+    @Override
+    public void eval(double[] p, double[] x, double[] y) {
     }
-
 }

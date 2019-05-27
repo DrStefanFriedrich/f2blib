@@ -24,7 +24,7 @@ public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
     private final Set<String> functionIndexes = new HashSet<>();
 
     @Override
-    public void enterSingle_valued_function(FunctionsParser.Single_valued_functionContext ctx) {
+    public void enterSingleValuedFunctionDecl(FunctionsParser.SingleValuedFunctionDeclContext ctx) {
 
         String index = ctx.f.getText();
 
@@ -36,7 +36,7 @@ public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
     }
 
     @Override
-    public void enterFor_loop(FunctionsParser.For_loopContext ctx) {
+    public void enterForLoopDecl(FunctionsParser.ForLoopDeclContext ctx) {
 
         int startValue = Integer.parseInt(ctx.startValue.getText());
         int endValue = Integer.parseInt(ctx.endValue.getText());
@@ -44,6 +44,25 @@ public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
         if (startValue > endValue) {
             throw new ParseCancellationException("startValue in for loop must not be greater than endValue");
         }
+    }
+
+    @Override
+    public void enterPlus(FunctionsParser.PlusContext ctx) {
+
+        FunctionsParser.ExpressionContext left = ctx.expression(0);
+        FunctionsParser.ExpressionContext right = ctx.expression(1);
+    }
+
+    @Override
+    public void enterTimes(FunctionsParser.TimesContext ctx) {
+
+        FunctionsParser.ExpressionContext left = ctx.expression(0);
+        FunctionsParser.ExpressionContext right = ctx.expression(1);
+    }
+
+    @Override
+    public void enterConstant(FunctionsParser.ConstantContext ctx) {
+        ctx.getText();
     }
 
 }

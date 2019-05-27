@@ -21,10 +21,9 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test elementary grammar elements. Numerous function definitions go to a different
- * file.
+ * Test elementary grammar syntax.
  */
-public class GrammarBasicsTest {
+public class SyntaxTest {
 
     private final FunctionParser parser = new AntlrFunctionParser();
 

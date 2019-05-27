@@ -12,62 +12,61 @@
 
 grammar Functions;
 
-parse: function_definition EOF;
+// parse: function_definition EOF;
 
-function_definition: FUNCTION className=class_name ';'
+functionDefinition: FUNCTION className=classNameDecl ';'
 BEGIN
-    function_body
+    functionBody
 END;
 
-function_body: for_loop | single_valued_functions;
+functionBody: forLoopDecl # forLoop | singleValuedFunctionsDecl # singleValuedFunctions;
 
-single_valued_functions: single_valued_function*;
+singleValuedFunctionsDecl: singleValuedFunctionDecl*;
 
 // TODO SF Improve FOR_I
-for_loop: FOR_I startValue=integer ':' endValue=integer SEMI
+forLoopDecl: FOR_I startValue=integer ':' endValue=integer SEMI
 BEGIN
-    single_valued_function*
+    singleValuedFunctionDecl*
 END;
 
-single_valued_function: FUNC f=INDEX DEFINE expression SEMI;
+singleValuedFunctionDecl: FUNC f=INDEX DEFINE expression SEMI;
 
-// TODO SF Check operator precendence
 // TODO SF NEG, POS
 expression:
-    variable |
-    parameter |
-    LPAREN arg=expression RPAREN |
-    larg=expression POWER rarg=expression |
-    larg=expression TIMES rarg=expression |
-    larg=expression DIVIDE rarg=expression |
-    larg=expression PLUS rarg=expression |
-    larg=expression MINUS rarg=expression |
-    ABS LPAREN arg=expression RPAREN |
-    ROUND LPAREN arg=expression RPAREN |
-    EXP LPAREN arg=expression RPAREN |
-    LN LPAREN arg=expression RPAREN |
-    SIN LPAREN arg=expression RPAREN |
-    COS LPAREN arg=expression RPAREN |
-    TAN LPAREN arg=expression RPAREN |
-    ARCSIN LPAREN arg=expression RPAREN |
-    ARCCOS LPAREN arg=expression RPAREN |
-    ARCTAN LPAREN arg=expression RPAREN |
-    SINH LPAREN arg=expression RPAREN |
-    COSH LPAREN arg=expression RPAREN |
-    TANH LPAREN arg=expression RPAREN |
-    ARSINH LPAREN arg=expression RPAREN |
-    ARCOSH LPAREN arg=expression RPAREN |
-    ARTANH LPAREN arg=expression RPAREN |
-    FACULTY LPAREN iarg=integer_expression RPAREN |
-    LAGUERRE LPAREN order=integer_expression ',' arg=expression RPAREN |
-    LEGENDRE LPAREN order=integer_expression ',' arg=expression RPAREN |
-    BINOMIAL LPAREN top=integer_expression ',' down=integer_expression RPAREN |
+    variable # var |
+    parameter # param |
+    LPAREN expression RPAREN # parenthesis |
+    expression POWER expression # power |
+    expression PLUS expression # plus | // TODO SF Unit test should fail!!
+    expression MINUS expression # minus |
+    expression TIMES expression # times |
+    expression DIVIDE expression # divide |
+    ABS LPAREN expression RPAREN # abs |
+    ROUND LPAREN expression RPAREN # round |
+    EXP LPAREN expression RPAREN # exp |
+    LN LPAREN expression RPAREN # ln |
+    SIN LPAREN expression RPAREN # sin |
+    COS LPAREN expression RPAREN # cos |
+    TAN LPAREN expression RPAREN # tan |
+    ARCSIN LPAREN expression RPAREN # arcsin |
+    ARCCOS LPAREN expression RPAREN # arccos |
+    ARCTAN LPAREN expression RPAREN # arctan |
+    SINH LPAREN expression RPAREN # sinh |
+    COSH LPAREN expression RPAREN # cosh |
+    TANH LPAREN expression RPAREN # tanh |
+    ARSINH LPAREN expression RPAREN # arsinh |
+    ARCOSH LPAREN expression RPAREN # arcosh |
+    ARTANH LPAREN expression RPAREN # artanh |
+    FACULTY LPAREN integerExpression RPAREN # faculty |
+    LAGUERRE LPAREN integerExpression ',' expression RPAREN # laguerre |
+    LEGENDRE LPAREN integerExpression ',' expression RPAREN # legendre |
+    BINOMIAL LPAREN integerExpression ',' integerExpression RPAREN # binomial |
 //    NEG expression |
 //    POS expression |
-    integer |
-    constant;
+    integer # int |
+    constant # const;
 
-integer_expression: integer | 'i';
+integerExpression: integer | 'i';
 
 variable: VAR x=INDEX;
 
@@ -115,7 +114,7 @@ BINOMIAL: 'binomial';
 FACULTY: 'faculty';
 
 // TODO SF Improve class name and remove JAVALETTER, JAVALETTERORDIGIT
-class_name:	FULLY_QUALIFIED_CLASS_NAME;
+classNameDecl:	FULLY_QUALIFIED_CLASS_NAME;
 
 FULLY_QUALIFIED_CLASS_NAME: [a-zA-Z\\.]+;
 

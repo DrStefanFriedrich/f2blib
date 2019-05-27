@@ -37,7 +37,30 @@ public class AntlrFunctionParser implements FunctionParser {
             }
         });
 
-        ParseTree tree = parser.parse();
+        ParseTree tree = parser.functionDefinition();
+        ParseTreeWalker walker = new ParseTreeWalker();
+
+        walker.walk(listener, tree);
+    }
+
+    public void applyVisitor(String functionDefinition, FunctionsListener listener) {
+
+        FunctionsLexer lexer = new FunctionsLexer(CharStreams.fromString(functionDefinition));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        FunctionsParser parser = new FunctionsParser(tokens);
+
+        parser.addErrorListener(new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                                    int line, int charPositionInLine, String msg, RecognitionException e) {
+                throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
+            }
+        });
+
+        // http://jakubdziworski.github.io/java/2016/04/01/antlr_visitor_vs_listener.html
+        parser.functionDefinition();
+
+        ParseTree tree = parser.functionDefinition();
         ParseTreeWalker walker = new ParseTreeWalker();
 
         walker.walk(listener, tree);

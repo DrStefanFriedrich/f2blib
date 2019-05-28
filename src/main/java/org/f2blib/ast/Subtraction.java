@@ -10,15 +10,21 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.ast;
 
-import org.f2blib.FunctionsListener;
-import org.f2blib.ast.FunctionDefinition;
+import org.f2blib.visitor.Visitor;
 
-public interface FunctionParser {
+/**
+ * Nomen est omen.
+ */
+public class Subtraction extends BinaryExpression {
 
-    void applyListener(String functionDefinition, FunctionsListener listener);
+    public Subtraction(Expression left, Expression right) {
+        super(left, right);
+    }
 
-    FunctionDefinition parse(String functionDefinition);
+    public void accept(Visitor visitor) {
+        visitor.visitSubtraction(this);
+    }
 
 }

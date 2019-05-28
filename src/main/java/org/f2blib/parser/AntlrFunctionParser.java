@@ -16,12 +16,17 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.f2blib.FunctionsBaseVisitor;
 import org.f2blib.FunctionsLexer;
 import org.f2blib.FunctionsListener;
 import org.f2blib.FunctionsParser;
+import org.f2blib.ast.*;
+
+import java.util.List;
 
 public class AntlrFunctionParser implements FunctionParser {
 
+    // TODO SF Remove
     @Override
     public void applyListener(String functionDefinition, FunctionsListener listener) {
 
@@ -43,7 +48,9 @@ public class AntlrFunctionParser implements FunctionParser {
         walker.walk(listener, tree);
     }
 
-    public void applyVisitor(String functionDefinition, FunctionsListener listener) {
+    // http://jakubdziworski.github.io/java/2016/04/01/antlr_visitor_vs_listener.html
+    @Override
+    public FunctionDefinition parse(String functionDefinition) {
 
         FunctionsLexer lexer = new FunctionsLexer(CharStreams.fromString(functionDefinition));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -57,13 +64,21 @@ public class AntlrFunctionParser implements FunctionParser {
             }
         });
 
-        // http://jakubdziworski.github.io/java/2016/04/01/antlr_visitor_vs_listener.html
-        parser.function_definition();
+        return new FunctionDefinitionVisitor().visit(parser.function_definition());
+    }
 
-        ParseTree tree = parser.function_definition();
-        ParseTreeWalker walker = new ParseTreeWalker();
+    private static final class FunctionDefinitionVisitor extends FunctionsBaseVisitor<FunctionDefinition> {
+        @Override
+        public FunctionDefinition visitFunction_definition(FunctionsParser.Function_definitionContext ctx) {
 
-        walker.walk(listener, tree);
+            FunctionBodyVisitor functionBodyVisitor = new FunctionBodyVisitor();
+            String className = ctx.class_name().getText();
+            return new FunctionDefinition(className, ctx.function_body().accept(functionBodyVisitor));
+        }
+    }
+
+    private static final class FunctionBodyVisitor extends FunctionsBaseVisitor<FunctionBody> {
+
     }
 
 }

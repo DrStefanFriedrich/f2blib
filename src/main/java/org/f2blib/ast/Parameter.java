@@ -10,15 +10,21 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.ast;
 
-import org.f2blib.FunctionsListener;
-import org.f2blib.ast.FunctionDefinition;
+import org.f2blib.visitor.Visitor;
 
-public interface FunctionParser {
+/**
+ * A parameter is an expression of the form p_i, where i is a integer.
+ */
+public class Parameter extends IndexedExpression {
 
-    void applyListener(String functionDefinition, FunctionsListener listener);
+    public Parameter(int index) {
+        super(index);
+    }
 
-    FunctionDefinition parse(String functionDefinition);
+    public void accept(Visitor visitor) {
+        visitor.visitParameter(this);
+    }
 
 }

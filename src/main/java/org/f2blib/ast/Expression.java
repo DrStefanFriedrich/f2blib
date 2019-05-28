@@ -10,15 +10,13 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.ast;
 
-import org.f2blib.FunctionsListener;
-import org.f2blib.ast.FunctionDefinition;
+import java.io.Serializable;
 
-public interface FunctionParser {
-
-    void applyListener(String functionDefinition, FunctionsListener listener);
-
-    FunctionDefinition parse(String functionDefinition);
-
+/**
+ * Models a mathematical expression. For example, an expression can be evaluated,
+ * differentiated, pretty printed, or converted to JVM bytecode.
+ */
+public interface Expression extends Serializable {
 }

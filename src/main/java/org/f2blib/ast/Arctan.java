@@ -10,15 +10,21 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.ast;
 
-import org.f2blib.FunctionsListener;
-import org.f2blib.ast.FunctionDefinition;
+import org.f2blib.visitor.Visitor;
 
-public interface FunctionParser {
+/**
+ * Area tangens.
+ */
+public class Arctan extends UnaryExpression {
 
-    void applyListener(String functionDefinition, FunctionsListener listener);
+    public Arctan(Expression expression) {
+        super(expression);
+    }
 
-    FunctionDefinition parse(String functionDefinition);
+    public void accept(Visitor visitor) {
+        visitor.visitArctan(this);
+    }
 
 }

@@ -10,15 +10,21 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.ast;
 
-import org.f2blib.FunctionsListener;
-import org.f2blib.ast.FunctionDefinition;
+import org.f2blib.visitor.Visitor;
 
-public interface FunctionParser {
+/**
+ * A variable is an expression of the form x_i, where i is a integer.
+ */
+public class Variable extends IndexedExpression {
 
-    void applyListener(String functionDefinition, FunctionsListener listener);
+    public Variable(int index) {
+        super(index);
+    }
 
-    FunctionDefinition parse(String functionDefinition);
+    public void accept(Visitor visitor) {
+        visitor.visitVariable(this);
+    }
 
 }

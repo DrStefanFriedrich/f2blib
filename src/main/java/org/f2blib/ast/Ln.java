@@ -10,15 +10,21 @@
  *
  ******************************************************************************/
 
-package org.f2blib.parser;
+package org.f2blib.ast;
 
-import org.f2blib.FunctionsListener;
-import org.f2blib.ast.FunctionDefinition;
+import org.f2blib.visitor.Visitor;
 
-public interface FunctionParser {
+/**
+ * Natural logarithm.
+ */
+public class Ln extends UnaryExpression {
 
-    void applyListener(String functionDefinition, FunctionsListener listener);
+    public Ln(Expression expression) {
+        super(expression);
+    }
 
-    FunctionDefinition parse(String functionDefinition);
+    public void accept(Visitor visitor) {
+        visitor.visitLn(this);
+    }
 
 }

@@ -14,22 +14,16 @@ grammar Functions;
 
 // parse: function_definition EOF;
 
-functionDefinition: FUNCTION className=classNameDecl ';'
+function_definition: FUNCTION className=class_name ';'
 BEGIN
-    functionBody
+    function_body
 END;
 
-functionBody: forLoopDecl # forLoop | singleValuedFunctionsDecl # singleValuedFunctions;
+function_body: single_valued_functions # singleValuedFunctions;
 
-singleValuedFunctionsDecl: singleValuedFunctionDecl*;
+single_valued_functions: single_valued_function*;
 
-// TODO SF Improve FOR_I
-forLoopDecl: FOR_I startValue=integer ':' endValue=integer SEMI
-BEGIN
-    singleValuedFunctionDecl*
-END;
-
-singleValuedFunctionDecl: FUNC f=INDEX DEFINE expression SEMI;
+single_valued_function: FUNC f=INDEX DEFINE expression SEMI;
 
 // TODO SF NEG, POS
 expression:
@@ -57,16 +51,14 @@ expression:
     ARSINH LPAREN expression RPAREN # arsinh |
     ARCOSH LPAREN expression RPAREN # arcosh |
     ARTANH LPAREN expression RPAREN # artanh |
-    FACULTY LPAREN integerExpression RPAREN # faculty |
-    LAGUERRE LPAREN integerExpression ',' expression RPAREN # laguerre |
-    LEGENDRE LPAREN integerExpression ',' expression RPAREN # legendre |
-    BINOMIAL LPAREN integerExpression ',' integerExpression RPAREN # binomial |
+    FACULTY LPAREN integer RPAREN # faculty |
+    LAGUERRE LPAREN integer ',' expression RPAREN # laguerre |
+    LEGENDRE LPAREN integer ',' expression RPAREN # legendre |
+    BINOMIAL LPAREN integer ',' integer RPAREN # binomial |
 //    NEG expression |
 //    POS expression |
     integer # int |
     constant # const;
-
-integerExpression: integer | 'i';
 
 variable: VAR x=INDEX;
 
@@ -114,7 +106,7 @@ BINOMIAL: 'binomial';
 FACULTY: 'faculty';
 
 // TODO SF Improve class name and remove JAVALETTER, JAVALETTERORDIGIT
-classNameDecl:	FULLY_QUALIFIED_CLASS_NAME;
+class_name:	FULLY_QUALIFIED_CLASS_NAME;
 
 FULLY_QUALIFIED_CLASS_NAME: [a-zA-Z\\.]+;
 

@@ -37,7 +37,7 @@ public class AntlrFunctionParser implements FunctionParser {
             }
         });
 
-        ParseTree tree = parser.functionDefinition();
+        ParseTree tree = parser.function_definition();
         ParseTreeWalker walker = new ParseTreeWalker();
 
         walker.walk(listener, tree);
@@ -58,9 +58,9 @@ public class AntlrFunctionParser implements FunctionParser {
         });
 
         // http://jakubdziworski.github.io/java/2016/04/01/antlr_visitor_vs_listener.html
-        parser.functionDefinition();
+        parser.function_definition();
 
-        ParseTree tree = parser.functionDefinition();
+        ParseTree tree = parser.function_definition();
         ParseTreeWalker walker = new ParseTreeWalker();
 
         walker.walk(listener, tree);

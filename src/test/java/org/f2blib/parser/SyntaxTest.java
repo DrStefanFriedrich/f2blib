@@ -169,60 +169,6 @@ public class SyntaxTest {
     }
 
     @Test
-    public void forLoop() {
-        assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
-                // Some additional spaces
-                "for i :=  10 : 20; \n" +
-                "    begin\n" +
-                "        f_20 := p_5 + p_1 + p_20;\n" +
-                "        f_1 := x_1 + x_10;\n" +
-                "    end\n" +
-                "end");
-    }
-
-    @Test
-    public void forLoopWithStartIndexGreaterThanEndIndex() {
-        assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
-                // Some additional spaces
-                "for i :=  20 : 10; \n" +
-                "    begin\n" +
-                "        f_20 := p_5 + p_1 + p_20;\n" +
-                "        f_1 := x_1 + x_10;\n" +
-                "    end\n" +
-                "end");
-    }
-
-    @Test
-    public void forLoopWithWrongClosingEnd() {
-        assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
-                // Some additional spaces
-                "for i :=  10 : 20 ; \n" +
-                "    begin\n" +
-                "        f_20 := p_5 + p_1 + p_20;\n" +
-                "        f_1 := x_1 + x_10;\n" +
-                "end");
-    }
-
-    @Test
-    public void forLoopWithWrongStartingBegin() {
-        assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
-                // Some additional spaces
-                "for i :=  10 : 20  ;\n" +
-                "        f_20 := p_5 + p_1 + p_20;\n" +
-                "        f_1 := x_1 + x_10;\n" +
-                "    end\n" +
-                "end");
-    }
-
-    @Test
     public void variablePrecendence() {
         assertGrammar("" +
                 "function a.b.c.Xyz;\n" +

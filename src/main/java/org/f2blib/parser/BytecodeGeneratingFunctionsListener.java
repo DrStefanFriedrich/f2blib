@@ -24,7 +24,7 @@ public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
     private final Set<String> functionIndexes = new HashSet<>();
 
     @Override
-    public void enterSingleValuedFunctionDecl(FunctionsParser.SingleValuedFunctionDeclContext ctx) {
+    public void enterSingle_valued_function(FunctionsParser.Single_valued_functionContext ctx) {
 
         String index = ctx.f.getText();
 
@@ -32,17 +32,6 @@ public class BytecodeGeneratingFunctionsListener extends FunctionsBaseListener {
             throw new ParseCancellationException("Function indexes must be unique: f_" + index);
         } else {
             functionIndexes.add(index);
-        }
-    }
-
-    @Override
-    public void enterForLoopDecl(FunctionsParser.ForLoopDeclContext ctx) {
-
-        int startValue = Integer.parseInt(ctx.startValue.getText());
-        int endValue = Integer.parseInt(ctx.endValue.getText());
-
-        if (startValue > endValue) {
-            throw new ParseCancellationException("startValue in for loop must not be greater than endValue");
         }
     }
 

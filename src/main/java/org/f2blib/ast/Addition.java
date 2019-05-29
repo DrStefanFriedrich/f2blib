@@ -19,12 +19,19 @@ import org.f2blib.visitor.Visitor;
  */
 public class Addition extends BinaryExpression {
 
+    private static final int PRECEDENCE = 3;
+
     public Addition(Expression left, Expression right) {
         super(left, right);
     }
 
     public void accept(Visitor visitor) {
         visitor.visitAddition(this);
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
 }

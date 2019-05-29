@@ -76,7 +76,7 @@ public class ASTTest {
                 "Functions{functions=[Function{index=0, expression=Abs{expression=Variable{index=0}}}]}}}"));
     }
 
-    private FunctionDefinition createFunctionDefinition(String name, Expression expression) {
+    public static FunctionDefinition createFunctionDefinition(String name, Expression expression) {
 
         Set<Function> set = new HashSet<>();
         Function f = new Function(0, expression);

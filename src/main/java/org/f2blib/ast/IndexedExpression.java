@@ -21,6 +21,8 @@ import java.util.Objects;
  */
 public abstract class IndexedExpression implements Expression {
 
+    private static final int PRECEDENCE = 0;
+
     /**
      * The index starts counting with 0. Caution: in mathematical notation, like
      * in x_1 or p_1 we start counting with 1.
@@ -33,6 +35,11 @@ public abstract class IndexedExpression implements Expression {
 
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
     @Override

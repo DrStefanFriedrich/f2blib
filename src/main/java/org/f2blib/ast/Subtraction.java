@@ -19,12 +19,19 @@ import org.f2blib.visitor.Visitor;
  */
 public class Subtraction extends BinaryExpression {
 
+    private static final int PRECEDENCE = 3;
+
     public Subtraction(Expression left, Expression right) {
         super(left, right);
     }
 
     public void accept(Visitor visitor) {
         visitor.visitSubtraction(this);
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
 }

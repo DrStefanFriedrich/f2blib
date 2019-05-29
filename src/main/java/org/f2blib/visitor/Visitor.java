@@ -84,4 +84,8 @@ public interface Visitor {
 
     void visitVariable(Variable variable);
 
+    void visitNeg(Neg neg);
+
+    void visitPos(Pos pos);
+
 }

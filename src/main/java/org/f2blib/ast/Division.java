@@ -19,12 +19,19 @@ import org.f2blib.visitor.Visitor;
  */
 public class Division extends BinaryExpression {
 
+    private static final int PRECEDENCE = 2;
+
     public Division(Expression left, Expression right) {
         super(left, right);
     }
 
     public void accept(Visitor visitor) {
         visitor.visitDivision(this);
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
 }

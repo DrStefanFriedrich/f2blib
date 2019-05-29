@@ -19,7 +19,7 @@ import org.f2blib.visitor.Visitor;
  */
 public class Legendre extends SpecialPolynomialExpression {
 
-    public Legendre(int n, Expression expression) {
+    public Legendre(IntExpression n, Expression expression) {
         super(n, expression);
     }
 

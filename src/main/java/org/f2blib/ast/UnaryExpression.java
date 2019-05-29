@@ -17,9 +17,11 @@ import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 /**
- * Expression that evaluate only one sub-expression.
+ * Expression that evaluates only one sub-expression.
  */
 public abstract class UnaryExpression implements Expression {
+
+    private static final int PRECEDENCE = 1;
 
     private final Expression expression;
 
@@ -29,6 +31,11 @@ public abstract class UnaryExpression implements Expression {
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
     @Override

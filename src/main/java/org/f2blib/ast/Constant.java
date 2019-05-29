@@ -21,8 +21,15 @@ public enum Constant implements Expression {
 
     PI, E, BOLTZMANN;
 
+    private static final int PRECEDENCE = 0;
+
     public void accept(Visitor visitor) {
         visitor.visitConstant(this);
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
 }

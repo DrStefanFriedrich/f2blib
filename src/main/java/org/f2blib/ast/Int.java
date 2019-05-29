@@ -20,7 +20,9 @@ import java.util.Objects;
 /**
  * The {@link Int} expression models an integer number.
  */
-public class Int implements Expression {
+public class Int implements IntExpression {
+
+    private static final int PRECEDENCE = 0;
 
     private final int value;
 
@@ -30,6 +32,11 @@ public class Int implements Expression {
 
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
     @Override

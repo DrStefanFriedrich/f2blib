@@ -19,7 +19,7 @@ import org.f2blib.visitor.Visitor;
  */
 public class Laguerre extends SpecialPolynomialExpression {
 
-    public Laguerre(int n, Expression expression) {
+    public Laguerre(IntExpression n, Expression expression) {
         super(n, expression);
     }
 

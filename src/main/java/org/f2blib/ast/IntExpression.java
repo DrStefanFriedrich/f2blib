@@ -15,18 +15,7 @@ package org.f2blib.ast;
 import java.io.Serializable;
 
 /**
- * Models a mathematical expression. For example, an expression can be evaluated,
- * differentiated, pretty printed, or converted to JVM bytecode.
+ * Models a mathematical integer expression.
  */
-public interface Expression extends Serializable, ASTElement {
-
-    /**
-     * Operator precedence is the order in which operators will be evaluated or
-     * applied.
-     *
-     * @return The precedence, 0 meaning highest binding or coupling, monotonically
-     * increasing.
-     */
-    int precedence();
-
+public interface IntExpression extends Expression {
 }

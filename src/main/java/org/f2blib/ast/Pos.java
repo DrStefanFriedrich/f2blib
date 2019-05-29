@@ -15,23 +15,17 @@ package org.f2blib.ast;
 import org.f2blib.visitor.Visitor;
 
 /**
- * a^b.
+ * +expression
  */
-public class Power extends BinaryExpression {
+public class Pos extends UnaryExpression {
 
-    private static final int PRECEDENCE = 1;
-
-    public Power(Expression left, Expression right) {
-        super(left, right);
-    }
-
-    public void accept(Visitor visitor) {
-        visitor.visitPower(this);
+    public Pos(Expression expression) {
+        super(expression);
     }
 
     @Override
-    public int precedence() {
-        return PRECEDENCE;
+    public void accept(Visitor visitor) {
+        visitor.visitPos(this);
     }
 
 }

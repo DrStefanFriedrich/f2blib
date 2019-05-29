@@ -21,21 +21,28 @@ import java.util.Objects;
  */
 public abstract class SpecialPolynomialExpression implements Expression {
 
-    private final int n;
+    private static final int PRECEDENCE = 0;
+
+    private final IntExpression n;
 
     private final Expression expression;
 
-    public SpecialPolynomialExpression(int n, Expression expression) {
+    public SpecialPolynomialExpression(IntExpression n, Expression expression) {
         this.n = n;
         this.expression = expression;
     }
 
-    public int getN() {
+    public IntExpression getN() {
         return n;
     }
 
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
     @Override
@@ -51,13 +58,13 @@ public abstract class SpecialPolynomialExpression implements Expression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpecialPolynomialExpression that = (SpecialPolynomialExpression) o;
-        return n == that.n &&
+        return Objects.equals(n, that.n) &&
                 Objects.equals(expression, that.expression);
     }
 
     @Override
     public int hashCode() {
+
         return Objects.hash(n, expression);
     }
-
 }

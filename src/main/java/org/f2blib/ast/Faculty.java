@@ -20,22 +20,29 @@ import java.util.Objects;
 /**
  * n!
  */
-public class Faculty implements Expression {
+public class Faculty implements IntExpression {
 
-    private final int n;
+    private static final int PRECEDENCE = 1;
 
-    public Faculty(int n) {
-        this.n = n;
+    private final IntExpression intExpression;
+
+    public Faculty(IntExpression intExpression) {
+        this.intExpression = intExpression;
     }
 
-    public int getN() {
-        return n;
+    public IntExpression getIntExpression() {
+        return intExpression;
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("n", n)
+                .add("intExpression", intExpression)
                 .toString();
     }
 
@@ -44,12 +51,13 @@ public class Faculty implements Expression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Faculty faculty = (Faculty) o;
-        return n == faculty.n;
+        return Objects.equals(intExpression, faculty.intExpression);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(n);
+
+        return Objects.hash(intExpression);
     }
 
     public void accept(Visitor visitor) {

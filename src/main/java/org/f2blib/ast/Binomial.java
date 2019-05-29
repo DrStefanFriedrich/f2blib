@@ -20,23 +20,30 @@ import java.util.Objects;
 /**
  * Binomial coefficient k over n.
  */
-public class Binomial implements Expression {
+public class Binomial implements IntExpression {
 
-    private final int k;
+    private static final int PRECEDENCE = 1;
 
-    private final int n;
+    private final IntExpression k;
 
-    public Binomial(int k, int n) {
+    private final IntExpression n;
+
+    public Binomial(IntExpression k, IntExpression n) {
         this.k = k;
         this.n = n;
     }
 
-    public int getK() {
+    public IntExpression getK() {
         return k;
     }
 
-    public int getN() {
+    public IntExpression getN() {
         return n;
+    }
+
+    @Override
+    public int precedence() {
+        return PRECEDENCE;
     }
 
     @Override
@@ -52,12 +59,13 @@ public class Binomial implements Expression {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Binomial binomial = (Binomial) o;
-        return k == binomial.k &&
-                n == binomial.n;
+        return Objects.equals(k, binomial.k) &&
+                Objects.equals(n, binomial.n);
     }
 
     @Override
     public int hashCode() {
+
         return Objects.hash(k, n);
     }
 

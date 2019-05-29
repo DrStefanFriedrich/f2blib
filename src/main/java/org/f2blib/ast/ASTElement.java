@@ -15,23 +15,10 @@ package org.f2blib.ast;
 import org.f2blib.visitor.Visitor;
 
 /**
- * a^b.
+ * Accept a visitor on an element of our abstract syntax tree (AST).
  */
-public class Power extends BinaryExpression {
+public interface ASTElement {
 
-    private static final int PRECEDENCE = 1;
-
-    public Power(Expression left, Expression right) {
-        super(left, right);
-    }
-
-    public void accept(Visitor visitor) {
-        visitor.visitPower(this);
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
-    }
+    void accept(Visitor visitor);
 
 }

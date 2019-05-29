@@ -13,7 +13,6 @@
 package org.f2blib.parser;
 
 import org.f2blib.FunctionsListener;
-import org.f2blib.FunctionsParser;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -23,8 +23,8 @@ public enum Constant implements Expression {
 
     private static final int PRECEDENCE = 0;
 
-    public void accept(Visitor visitor) {
-        visitor.visitConstant(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitConstant(this);
     }
 
     @Override

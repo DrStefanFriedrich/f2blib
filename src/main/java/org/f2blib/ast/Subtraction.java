@@ -25,8 +25,8 @@ public class Subtraction extends BinaryExpression {
         super(left, right);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitSubtraction(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitSubtraction(this);
     }
 
     @Override

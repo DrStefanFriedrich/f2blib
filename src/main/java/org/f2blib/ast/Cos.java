@@ -23,8 +23,8 @@ public class Cos extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitCos(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitCos(this);
     }
 
 }

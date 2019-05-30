@@ -21,7 +21,7 @@ import java.util.Objects;
  * {@link Function} models a single-valued mathematical function. A function has
  * an index n and and expression: f_n := 'expression'.
  */
-public class Function {
+public class Function implements ASTElement {
 
     /*
      * The index is the subscript, e.g. f_1. Please not we start counting by 1
@@ -71,9 +71,8 @@ public class Function {
         return super.clone();
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitFunction(this);
+    public Void accept(Visitor visitor) {
+        return visitor.visitFunction(this);
     }
-
 
 }

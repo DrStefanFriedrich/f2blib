@@ -23,8 +23,8 @@ public class Arccos extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitArccos(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitArccos(this);
     }
 
 }

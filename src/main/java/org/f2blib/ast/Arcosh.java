@@ -23,8 +23,8 @@ public class Arcosh extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitArcosh(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitArcosh(this);
     }
 
 }

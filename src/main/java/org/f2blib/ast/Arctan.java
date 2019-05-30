@@ -23,8 +23,8 @@ public class Arctan extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitArctan(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitArctan(this);
     }
 
 }

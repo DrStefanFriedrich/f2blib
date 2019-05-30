@@ -19,6 +19,6 @@ import org.f2blib.visitor.Visitor;
  */
 public interface ASTElement {
 
-    void accept(Visitor visitor);
+    <T> T accept(Visitor visitor);
 
 }

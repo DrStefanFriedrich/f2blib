@@ -23,8 +23,8 @@ public class Legendre extends SpecialPolynomialExpression {
         super(n, expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitLegendre(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitLegendre(this);
     }
 
 }

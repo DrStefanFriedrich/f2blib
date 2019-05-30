@@ -25,8 +25,8 @@ public class Multiplication extends BinaryExpression {
         super(left, right);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitMultiplication(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitMultiplication(this);
     }
 
     @Override

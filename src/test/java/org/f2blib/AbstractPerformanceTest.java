@@ -40,7 +40,7 @@ abstract class AbstractPerformanceTest {
     }
 
     boolean performanceTestsEnabled() {
-        return Boolean.valueOf(System.getProperty("org.f2blib.PerformanceTest.enabled", Boolean.FALSE.toString()));
+        return Boolean.valueOf(System.getProperty("org.f2blib.performancetest.enabled", Boolean.FALSE.toString()));
     }
 
     Set<RequestResponse> prepareTestObjects() {

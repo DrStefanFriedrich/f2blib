@@ -86,81 +86,95 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public void visitAbs(Abs abs) {
+    public Void visitAbs(Abs abs) {
         printUnaryExpression("abc", abs);
+        return null;
     }
 
     @Override
-    public void visitAddition(Addition addition) {
+    public Void visitAddition(Addition addition) {
         printBinaryExpression("+", addition);
+        return null;
     }
 
     @Override
-    public void visitArccos(Arccos arccos) {
+    public Void visitArccos(Arccos arccos) {
         printUnaryExpression("arccos", arccos);
+        return null;
     }
 
     @Override
-    public void visitArcosh(Arcosh arcosh) {
+    public Void visitArcosh(Arcosh arcosh) {
         printUnaryExpression("arcosh", arcosh);
+        return null;
     }
 
     @Override
-    public void visitArcsin(Arcsin arcsin) {
+    public Void visitArcsin(Arcsin arcsin) {
         printUnaryExpression("arcsin", arcsin);
+        return null;
     }
 
     @Override
-    public void visitArctan(Arctan arctan) {
+    public Void visitArctan(Arctan arctan) {
         printUnaryExpression("arctan", arctan);
+        return null;
     }
 
     @Override
-    public void visitArsinh(Arsinh arsinh) {
+    public Void visitArsinh(Arsinh arsinh) {
         printUnaryExpression("arsinh", arsinh);
+        return null;
     }
 
     @Override
-    public void visitArtanh(Artanh artanh) {
+    public Void visitArtanh(Artanh artanh) {
         printUnaryExpression("artanh", artanh);
+        return null;
     }
 
     @Override
-    public void visitBinomial(Binomial binomial) {
+    public Void visitBinomial(Binomial binomial) {
         pw.print("binomial(");
         binomial.getK().accept(this);
         pw.print(", ");
         binomial.getN().accept(this);
         pw.print(")");
+        return null;
     }
 
     @Override
-    public void visitConstant(Constant constant) {
+    public Void visitConstant(Constant constant) {
         pw.print(constant);
+        return null;
     }
 
     @Override
-    public void visitCos(Cos cos) {
+    public Void visitCos(Cos cos) {
         printUnaryExpression("cos", cos);
+        return null;
     }
 
     @Override
-    public void visitCosh(Cosh cosh) {
+    public Void visitCosh(Cosh cosh) {
         printUnaryExpression("cosh", cosh);
+        return null;
     }
 
     @Override
-    public void visitDivision(Division division) {
+    public Void visitDivision(Division division) {
         printBinaryExpression("/", division);
+        return null;
     }
 
     @Override
-    public void visitExp(Exp exp) {
+    public Void visitExp(Exp exp) {
         printUnaryExpression("exp", exp);
+        return null;
     }
 
     @Override
-    public void visitFaculty(Faculty faculty) {
+    public Void visitFaculty(Faculty faculty) {
 
         if (faculty.precedence() < faculty.getIntExpression().precedence()) {
 
@@ -173,74 +187,85 @@ public class PrettyPrintVisitor implements Visitor {
             faculty.getIntExpression().accept(this);
             pw.print("!");
         }
+        return null;
     }
 
     @Override
-    public void visitFunction(Function function) {
+    public Void visitFunction(Function function) {
         pw.print("    f_" + (function.getIndex() + 1) + " := ");
         function.getExpression().accept(this);
         pw.println(";");
+        return null;
     }
 
     @Override
-    public void visitFunctionBody(FunctionBody functionBody) {
+    public Void visitFunctionBody(FunctionBody functionBody) {
         pw.println("begin");
         functionBody.getFunctions().accept(this);
         pw.println("end");
+        return null;
     }
 
     @Override
-    public void visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
         pw.println("function " + functionDefinition.getName() + ";");
         functionDefinition.getFunctionBody().accept(this);
+        return null;
     }
 
     @Override
-    public void visitFunctions(Functions functions) {
+    public Void visitFunctions(Functions functions) {
         functions.getFunctions().stream()
                 .forEach(f -> f.accept(this));
+        return null;
     }
 
     @Override
-    public void visitInt(Int i) {
+    public Void visitInt(Int i) {
         pw.print(i.getValue());
+        return null;
     }
 
     @Override
-    public void visitLaguerre(Laguerre laguerre) {
+    public Void visitLaguerre(Laguerre laguerre) {
         pw.print("laguerre(");
         laguerre.getN().accept(this);
         pw.print(", ");
         laguerre.getExpression().accept(this);
         pw.print(")");
+        return null;
     }
 
     @Override
-    public void visitLegendre(Legendre legendre) {
+    public Void visitLegendre(Legendre legendre) {
         pw.print("legendre(");
         legendre.getN().accept(this);
         pw.print(", ");
         legendre.getExpression().accept(this);
         pw.print(")");
+        return null;
     }
 
     @Override
-    public void visitLn(Ln ln) {
+    public Void visitLn(Ln ln) {
         printUnaryExpression("ln", ln);
+        return null;
     }
 
     @Override
-    public void visitMultiplication(Multiplication multiplication) {
+    public Void visitMultiplication(Multiplication multiplication) {
         printBinaryExpression("*", multiplication);
+        return null;
     }
 
     @Override
-    public void visitParameter(Parameter parameter) {
+    public Void visitParameter(Parameter parameter) {
         pw.print("p_" + (parameter.getIndex() + 1));
+        return null;
     }
 
     @Override
-    public void visitParenthesis(Parenthesis parenthesis) {
+    public Void visitParenthesis(Parenthesis parenthesis) {
 
         if (parenthesis.precedence() < parenthesis.getExpression().precedence()) {
 
@@ -249,50 +274,59 @@ public class PrettyPrintVisitor implements Visitor {
         } else {
             parenthesis.getExpression().accept(this);
         }
+        return null;
     }
 
     @Override
-    public void visitPower(Power power) {
+    public Void visitPower(Power power) {
         printBinaryExpression("^", power);
+        return null;
     }
 
     @Override
-    public void visitRound(Round round) {
+    public Void visitRound(Round round) {
         printUnaryExpression("round", round);
+        return null;
     }
 
     @Override
-    public void visitSin(Sin sin) {
+    public Void visitSin(Sin sin) {
         printUnaryExpression("sin", sin);
+        return null;
     }
 
     @Override
-    public void visitSinh(Sinh sinh) {
+    public Void visitSinh(Sinh sinh) {
         printUnaryExpression("sinh", sinh);
+        return null;
     }
 
     @Override
-    public void visitSubtraction(Subtraction subtraction) {
+    public Void visitSubtraction(Subtraction subtraction) {
         printBinaryExpression("-", subtraction);
+        return null;
     }
 
     @Override
-    public void visitTan(Tan tan) {
+    public Void visitTan(Tan tan) {
         printUnaryExpression("tan", tan);
+        return null;
     }
 
     @Override
-    public void visitTanh(Tanh tanh) {
+    public Void visitTanh(Tanh tanh) {
         printUnaryExpression("tanh", tanh);
+        return null;
     }
 
     @Override
-    public void visitVariable(Variable variable) {
+    public Void visitVariable(Variable variable) {
         pw.print("x_" + (variable.getIndex() + 1));
+        return null;
     }
 
     @Override
-    public void visitNeg(Neg neg) {
+    public Void visitNeg(Neg neg) {
 
         if (neg.precedence() < neg.getExpression().precedence()) {
 
@@ -301,10 +335,11 @@ public class PrettyPrintVisitor implements Visitor {
             pw.print("-");
             neg.getExpression().accept(this);
         }
+        return null;
     }
 
     @Override
-    public void visitPos(Pos pos) {
+    public Void visitPos(Pos pos) {
 
         if (pos.precedence() < pos.getExpression().precedence()) {
 
@@ -312,6 +347,7 @@ public class PrettyPrintVisitor implements Visitor {
         } else {
             pos.getExpression().accept(this);
         }
+        return null;
     }
 
 }

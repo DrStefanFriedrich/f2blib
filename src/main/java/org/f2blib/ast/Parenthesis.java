@@ -25,8 +25,8 @@ public class Parenthesis extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitParenthesis(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitParenthesis(this);
     }
 
     @Override

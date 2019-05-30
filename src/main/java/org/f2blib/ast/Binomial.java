@@ -69,8 +69,8 @@ public class Binomial implements IntExpression {
         return Objects.hash(k, n);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitBinomial(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitBinomial(this);
     }
 
 }

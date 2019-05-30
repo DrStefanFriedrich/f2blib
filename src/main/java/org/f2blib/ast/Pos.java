@@ -24,8 +24,8 @@ public class Pos extends UnaryExpression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitPos(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitPos(this);
     }
 
 }

@@ -60,8 +60,8 @@ public class Faculty implements IntExpression {
         return Objects.hash(intExpression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitFaculty(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitFaculty(this);
     }
 
 }

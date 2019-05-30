@@ -23,8 +23,8 @@ public class Laguerre extends SpecialPolynomialExpression {
         super(n, expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitLaguerre(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitLaguerre(this);
     }
 
 }

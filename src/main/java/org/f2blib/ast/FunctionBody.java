@@ -21,7 +21,7 @@ import java.util.Objects;
  * {@link FunctionBody} models the actual function definition in form of mathematical
  * expressions or (in the future) for loops and the like.
  */
-public class FunctionBody {
+public class FunctionBody implements ASTElement {
 
     private final Functions functions;
 
@@ -53,8 +53,8 @@ public class FunctionBody {
         return Objects.hash(functions);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitFunctionBody(this);
+    public Void accept(Visitor visitor) {
+        return visitor.visitFunctionBody(this);
     }
 
 }

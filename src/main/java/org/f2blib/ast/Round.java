@@ -23,8 +23,8 @@ public class Round extends UnaryExpression implements IntExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitRound(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitRound(this);
     }
 
 }

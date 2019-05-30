@@ -23,8 +23,8 @@ public class Tan extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitTan(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitTan(this);
     }
 
 }

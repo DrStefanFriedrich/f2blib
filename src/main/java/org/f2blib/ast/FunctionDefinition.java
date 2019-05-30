@@ -21,7 +21,7 @@ import java.util.Objects;
  * {@link FunctionDefinition} is the main entry point to the abstract syntax
  * tree (AST).
  */
-public class FunctionDefinition {
+public class FunctionDefinition implements ASTElement {
 
     private final String name;
 
@@ -62,8 +62,8 @@ public class FunctionDefinition {
         return Objects.hash(name, functionBody);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitFunctionDefinition(this);
+    public Void accept(Visitor visitor) {
+        return visitor.visitFunctionDefinition(this);
     }
 
 }

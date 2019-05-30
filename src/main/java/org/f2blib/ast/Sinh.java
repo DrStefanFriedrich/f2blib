@@ -23,8 +23,8 @@ public class Sinh extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitSinh(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitSinh(this);
     }
 
 }

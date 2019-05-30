@@ -23,8 +23,8 @@ public class Parameter extends IndexedExpression {
         super(index);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitParameter(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitParameter(this);
     }
 
 }

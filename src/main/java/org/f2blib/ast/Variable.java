@@ -23,8 +23,8 @@ public class Variable extends IndexedExpression {
         super(index);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitVariable(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitVariable(this);
     }
 
 }

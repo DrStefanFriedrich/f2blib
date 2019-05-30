@@ -24,7 +24,7 @@ import java.util.Set;
  * f_1 := x_1^2<p />
  * f_2 := 3-x_2
  */
-public class Functions {
+public class Functions implements ASTElement {
 
     private final Set<Function> functions = new HashSet<>();
 
@@ -56,8 +56,8 @@ public class Functions {
         return Objects.hash(functions);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitFunctions(this);
+    public Void accept(Visitor visitor) {
+        return visitor.visitFunctions(this);
     }
 
 }

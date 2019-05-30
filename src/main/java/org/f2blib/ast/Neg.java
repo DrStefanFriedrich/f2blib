@@ -24,8 +24,8 @@ public class Neg extends UnaryExpression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visitNeg(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitNeg(this);
     }
 
 }

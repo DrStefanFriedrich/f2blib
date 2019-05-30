@@ -25,8 +25,8 @@ public class Division extends BinaryExpression {
         super(left, right);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitDivision(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitDivision(this);
     }
 
     @Override

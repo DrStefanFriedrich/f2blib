@@ -59,8 +59,8 @@ public class Int implements IntExpression {
         return Objects.hash(value);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitInt(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitInt(this);
     }
 
 }

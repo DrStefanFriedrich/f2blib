@@ -23,8 +23,8 @@ public class Arcsin extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitArcsin(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitArcsin(this);
     }
 
 }

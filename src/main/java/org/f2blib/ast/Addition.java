@@ -25,8 +25,8 @@ public class Addition extends BinaryExpression {
         super(left, right);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitAddition(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitAddition(this);
     }
 
     @Override

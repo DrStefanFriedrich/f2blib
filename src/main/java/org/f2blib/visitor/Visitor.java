@@ -16,76 +16,76 @@ import org.f2blib.ast.*;
 
 public interface Visitor {
 
-    void visitAbs(Abs abs);
+    <T> T visitAbs(Abs abs);
 
-    void visitAddition(Addition addition);
+    <T> T visitAddition(Addition addition);
 
-    void visitArccos(Arccos arccos);
+    <T> T visitArccos(Arccos arccos);
 
-    void visitArcosh(Arcosh arcosh);
+    <T> T visitArcosh(Arcosh arcosh);
 
-    void visitArcsin(Arcsin arcsin);
+    <T> T visitArcsin(Arcsin arcsin);
 
-    void visitArctan(Arctan arctan);
+    <T> T visitArctan(Arctan arctan);
 
-    void visitArsinh(Arsinh arsinh);
+    <T> T visitArsinh(Arsinh arsinh);
 
-    void visitArtanh(Artanh artanh);
+    <T> T visitArtanh(Artanh artanh);
 
-    void visitBinomial(Binomial binomial);
+    <T> T visitBinomial(Binomial binomial);
 
-    void visitConstant(Constant constant);
+    <T> T visitConstant(Constant constant);
 
-    void visitCos(Cos cos);
+    <T> T visitCos(Cos cos);
 
-    void visitCosh(Cosh cosh);
+    <T> T visitCosh(Cosh cosh);
 
-    void visitDivision(Division division);
+    <T> T visitDivision(Division division);
 
-    void visitExp(Exp exp);
+    <T> T visitExp(Exp exp);
 
-    void visitFaculty(Faculty faculty);
+    <T> T visitFaculty(Faculty faculty);
 
-    void visitFunction(Function function);
+    <T> T visitFunction(Function function);
 
-    void visitFunctionBody(FunctionBody functionBody);
+    <T> T visitFunctionBody(FunctionBody functionBody);
 
-    void visitFunctionDefinition(FunctionDefinition functionDefinition);
+    <T> T visitFunctionDefinition(FunctionDefinition functionDefinition);
 
-    void visitFunctions(Functions functions);
+    <T> T visitFunctions(Functions functions);
 
-    void visitInt(Int i);
+    <T> T visitInt(Int i);
 
-    void visitLaguerre(Laguerre laguerre);
+    <T> T visitLaguerre(Laguerre laguerre);
 
-    void visitLegendre(Legendre legendre);
+    <T> T visitLegendre(Legendre legendre);
 
-    void visitLn(Ln ln);
+    <T> T visitLn(Ln ln);
 
-    void visitMultiplication(Multiplication multiplication);
+    <T> T visitMultiplication(Multiplication multiplication);
 
-    void visitParameter(Parameter parameter);
+    <T> T visitParameter(Parameter parameter);
 
-    void visitParenthesis(Parenthesis parenthesis);
+    <T> T visitParenthesis(Parenthesis parenthesis);
 
-    void visitPower(Power power);
+    <T> T visitPower(Power power);
 
-    void visitRound(Round round);
+    <T> T visitRound(Round round);
 
-    void visitSin(Sin sin);
+    <T> T visitSin(Sin sin);
 
-    void visitSinh(Sinh sinh);
+    <T> T visitSinh(Sinh sinh);
 
-    void visitSubtraction(Subtraction subtraction);
+    <T> T visitSubtraction(Subtraction subtraction);
 
-    void visitTan(Tan tan);
+    <T> T visitTan(Tan tan);
 
-    void visitTanh(Tanh tanh);
+    <T> T visitTanh(Tanh tanh);
 
-    void visitVariable(Variable variable);
+    <T> T visitVariable(Variable variable);
 
-    void visitNeg(Neg neg);
+    <T> T visitNeg(Neg neg);
 
-    void visitPos(Pos pos);
+    <T> T visitPos(Pos pos);
 
 }

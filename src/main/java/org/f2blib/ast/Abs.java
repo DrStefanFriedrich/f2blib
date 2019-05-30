@@ -23,8 +23,8 @@ public class Abs extends UnaryExpression {
         super(expression);
     }
 
-    public void accept(Visitor visitor) {
-        visitor.visitAbs(this);
+    public <T> T accept(Visitor visitor) {
+        return visitor.visitAbs(this);
     }
 
 }

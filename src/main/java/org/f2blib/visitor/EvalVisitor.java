@@ -15,11 +15,7 @@ package org.f2blib.visitor;
 import org.apache.commons.math3.analysis.function.Acosh;
 import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;
-import org.apache.commons.math3.util.CombinatoricsUtils;
 import org.f2blib.ast.*;
-
-import java.util.Set;
-import java.util.TreeSet;
 
 import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficient;
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
@@ -38,9 +34,10 @@ public class EvalVisitor implements Visitor {
 
     private static final Atanh ARTANH = new Atanh();
 
-    public EvalVisitor(double[] x, double[] p) {
+    public EvalVisitor(double[] x, double[] p, int lengthResultArray) {
         this.x = x;
         this.p = p;
+        this.y = new double[lengthResultArray];
     }
 
     public double[] getResult() {
@@ -159,50 +156,9 @@ public class EvalVisitor implements Visitor {
     @Override
     public Void visitFunctions(Functions functions) {
 
-        y = checkFunctionsAndCalcArrayLength(functions.getFunctions());
-
-        if (y.length == 0) {
-            throw new RuntimeException("TODO SF");
-        }
-
         functions.getFunctions().stream().forEach(f -> f.accept(this));
 
         return null;
-    }
-
-    /**
-     * Checks whether the functions are defined in a row without gaps.
-     * Example for a correct function definition: f_1, f_2, f_3; returned
-     * will be 3.
-     * Example for a wrong function definition: f_1, f_1, f_2; 0 will be
-     * returned.
-     * Example for a wrong function definition: f_1, f_3; 0 will be returned.
-     *
-     * @return An array of the correct length.
-     */
-    private double[] checkFunctionsAndCalcArrayLength(Set<Function> functions) {
-
-        TreeSet<Integer> indexes = new TreeSet<>();
-
-        for (Function f : functions) {
-
-            int index = f.getIndex();
-            if (indexes.contains(index)) {
-                throw new RuntimeException("TODO SF");
-            }
-
-            indexes.add(index);
-        }
-
-        int size = indexes.size();
-        int firstIndex = indexes.higher(-1);
-        int lastIndex = indexes.lower(size);
-
-        if (firstIndex != 0 || lastIndex != size - 1) {
-            throw new RuntimeException("TDOO SF");
-        }
-
-        return new double[size];
     }
 
     @Override

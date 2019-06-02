@@ -36,7 +36,7 @@ public class EvalVisitorTest {
     public void setup() {
         double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         double[] p = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
-        evalVisitor = new EvalVisitor(x, p);
+        evalVisitor = new EvalVisitor(x, p, 5);
     }
 
     private FunctionDefinition createSampleFunction() {
@@ -125,7 +125,7 @@ public class EvalVisitorTest {
                                             3 + (double) i4 / 10, 5, 6, 7, 8, 9, 10};
                                     double[] p = new double[]{(double) i5 / 10, 1 + (double) i6 / 10,
                                             3 + (double) i7 / 10, 6, 8, 10, 12, 14, 16, 18};
-                                    evalVisitor = new EvalVisitor(x, p);
+                                    evalVisitor = new EvalVisitor(x, p, 5);
 
                                     fd.accept(evalVisitor);
                                 }

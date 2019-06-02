@@ -12,5 +12,5 @@
 
 package org.f2blib.visitor;
 
-public class DiffVisitor {
+public class ValidationVisitorTest {
 }

@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * +expression
  */
-public class Pos extends UnaryExpression {
+public final class Pos extends UnaryExpression {
 
     public Pos(Expression expression) {
         super(expression);

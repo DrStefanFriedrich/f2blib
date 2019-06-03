@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Laguerre polynomials.
  */
-public class Laguerre extends SpecialPolynomialExpression {
+public final class Laguerre extends SpecialPolynomialExpression {
 
     public Laguerre(IntExpression n, Expression expression) {
         super(n, expression);

@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Legendre polynomials.
  */
-public class Legendre extends SpecialPolynomialExpression {
+public final class Legendre extends SpecialPolynomialExpression {
 
     public Legendre(IntExpression n, Expression expression) {
         super(n, expression);

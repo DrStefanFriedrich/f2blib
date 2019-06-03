@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Exponential function.
  */
-public class Exp extends UnaryExpression {
+public final class Exp extends UnaryExpression {
 
     public Exp(Expression expression) {
         super(expression);

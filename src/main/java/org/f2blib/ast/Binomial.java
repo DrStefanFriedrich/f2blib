@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * Binomial coefficient k over n.
  */
-public class Binomial implements IntExpression {
+public final class Binomial implements IntExpression {
 
     private static final int PRECEDENCE = 1;
 

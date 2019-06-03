@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public class Parenthesis extends UnaryExpression {
+public final class Parenthesis extends UnaryExpression {
 
     private static final int PRECEDENCE = 0;
 

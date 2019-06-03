@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Tangens.
  */
-public class Tan extends UnaryExpression {
+public final class Tan extends UnaryExpression {
 
     public Tan(Expression expression) {
         super(expression);

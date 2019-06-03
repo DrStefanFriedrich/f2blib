@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * The {@link Int} expression models an integer number.
  */
-public class Int implements IntExpression {
+public final class Int implements IntExpression {
 
     private static final int PRECEDENCE = 0;
 

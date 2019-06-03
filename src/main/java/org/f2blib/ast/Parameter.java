@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * A parameter is an expression of the form p_i, where i is a integer.
  */
-public class Parameter extends IndexedExpression {
+public final class Parameter extends IndexedExpression {
 
     public Parameter(int index) {
         super(index);

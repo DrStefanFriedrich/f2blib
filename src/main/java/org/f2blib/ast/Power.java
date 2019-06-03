@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * a^b.
  */
-public class Power extends BinaryExpression {
+public final class Power extends BinaryExpression {
 
     private static final int PRECEDENCE = 1;
 

@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Area cosine hyperbolicus.
  */
-public class Arcosh extends UnaryExpression {
+public final class Arcosh extends UnaryExpression {
 
     public Arcosh(Expression expression) {
         super(expression);

@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * n!
  */
-public class Faculty implements IntExpression {
+public final class Faculty implements IntExpression {
 
     private static final int PRECEDENCE = 1;
 

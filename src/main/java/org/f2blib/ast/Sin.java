@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Sine.
  */
-public class Sin extends UnaryExpression {
+public final class Sin extends UnaryExpression {
 
     public Sin(Expression expression) {
         super(expression);

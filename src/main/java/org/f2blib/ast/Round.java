@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Rounding function.
  */
-public class Round extends UnaryExpression implements IntExpression {
+public final class Round extends UnaryExpression implements IntExpression {
 
     public Round(Expression expression) {
         super(expression);

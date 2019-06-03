@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * A variable is an expression of the form x_i, where i is a integer.
  */
-public class Variable extends IndexedExpression {
+public final class Variable extends IndexedExpression {
 
     public Variable(int index) {
         super(index);

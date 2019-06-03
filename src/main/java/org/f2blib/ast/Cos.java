@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Cosine.
  */
-public class Cos extends UnaryExpression {
+public final class Cos extends UnaryExpression {
 
     public Cos(Expression expression) {
         super(expression);

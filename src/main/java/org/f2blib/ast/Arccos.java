@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Area cosine.
  */
-public class Arccos extends UnaryExpression {
+public final class Arccos extends UnaryExpression {
 
     public Arccos(Expression expression) {
         super(expression);

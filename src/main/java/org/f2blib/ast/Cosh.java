@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Cosine hyperbolicus.
  */
-public class Cosh extends UnaryExpression {
+public final class Cosh extends UnaryExpression {
 
     public Cosh(Expression expression) {
         super(expression);

@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public class Addition extends BinaryExpression {
+public final class Addition extends BinaryExpression {
 
     private static final int PRECEDENCE = 3;
 

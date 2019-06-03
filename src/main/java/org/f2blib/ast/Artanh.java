@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Area tangens hyperbolicus.
  */
-public class Artanh extends UnaryExpression {
+public final class Artanh extends UnaryExpression {
 
     public Artanh(Expression expression) {
         super(expression);

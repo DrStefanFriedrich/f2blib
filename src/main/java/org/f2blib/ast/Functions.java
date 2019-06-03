@@ -24,7 +24,7 @@ import java.util.Set;
  * f_1 := x_1^2<p />
  * f_2 := 3-x_2
  */
-public class Functions implements ASTElement {
+public final class Functions implements ASTElement {
 
     private final Set<Function> functions = new HashSet<>();
 

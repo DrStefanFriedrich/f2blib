@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Natural logarithm.
  */
-public class Ln extends UnaryExpression {
+public final class Ln extends UnaryExpression {
 
     public Ln(Expression expression) {
         super(expression);

@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Area tangens.
  */
-public class Arctan extends UnaryExpression {
+public final class Arctan extends UnaryExpression {
 
     public Arctan(Expression expression) {
         super(expression);

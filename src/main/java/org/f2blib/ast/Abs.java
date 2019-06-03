@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Absolute value.
  */
-public class Abs extends UnaryExpression {
+public final class Abs extends UnaryExpression {
 
     public Abs(Expression expression) {
         super(expression);

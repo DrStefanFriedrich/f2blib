@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Arcus sine.
  */
-public class Arcsin extends UnaryExpression {
+public final class Arcsin extends UnaryExpression {
 
     public Arcsin(Expression expression) {
         super(expression);

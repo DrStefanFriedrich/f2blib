@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Area sine hyperbolicus.
  */
-public class Arsinh extends UnaryExpression {
+public final class Arsinh extends UnaryExpression {
 
     public Arsinh(Expression expression) {
         super(expression);

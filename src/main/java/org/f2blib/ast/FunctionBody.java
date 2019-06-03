@@ -21,7 +21,7 @@ import java.util.Objects;
  * {@link FunctionBody} models the actual function definition in form of mathematical
  * expressions or (in the future) for loops and the like.
  */
-public class FunctionBody implements ASTElement {
+public final class FunctionBody implements ASTElement {
 
     private final Functions functions;
 

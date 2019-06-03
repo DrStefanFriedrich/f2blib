@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Tangens hyperbolicus.
  */
-public class Tanh extends UnaryExpression {
+public final class Tanh extends UnaryExpression {
 
     public Tanh(Expression expression) {
         super(expression);

@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * Sinus hyperbolicus.
  */
-public class Sinh extends UnaryExpression {
+public final class Sinh extends UnaryExpression {
 
     public Sinh(Expression expression) {
         super(expression);

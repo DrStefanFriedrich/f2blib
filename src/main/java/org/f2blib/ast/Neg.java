@@ -17,7 +17,7 @@ import org.f2blib.visitor.Visitor;
 /**
  * -expression
  */
-public class Neg extends UnaryExpression {
+public final class Neg extends UnaryExpression {
 
     public Neg(Expression expression) {
         super(expression);

@@ -14,7 +14,7 @@ package org.f2blib.example;
 
 import org.objectweb.asm.*;
 
-public class ExampleFunctionGenerator implements Opcodes {
+public class ExampleFunctionDump implements Opcodes {
 
     public static byte[] dump() throws Exception {
 

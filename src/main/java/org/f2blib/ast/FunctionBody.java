@@ -13,6 +13,7 @@
 package org.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
+import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ import java.util.Objects;
  * {@link FunctionBody} models the actual function definition in form of mathematical
  * expressions or (in the future) for loops and the like.
  */
-public final class FunctionBody implements ASTElement {
+public final class FunctionBody implements ASTElement, DoubleASTElement {
 
     private final Functions functions;
 
@@ -54,6 +55,11 @@ public final class FunctionBody implements ASTElement {
     }
 
     public Void accept(Visitor visitor) {
+        return visitor.visitFunctionBody(this);
+    }
+
+    @Override
+    public double accept(DoubleVisitor visitor) {
         return visitor.visitFunctionBody(this);
     }
 

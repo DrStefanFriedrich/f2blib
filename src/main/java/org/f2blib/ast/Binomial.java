@@ -13,6 +13,7 @@
 package org.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
+import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 import java.util.Objects;
@@ -70,6 +71,11 @@ public final class Binomial implements IntExpression {
     }
 
     public <T> T accept(Visitor visitor) {
+        return visitor.visitBinomial(this);
+    }
+
+    @Override
+    public double accept(DoubleVisitor visitor) {
         return visitor.visitBinomial(this);
     }
 

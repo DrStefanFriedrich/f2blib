@@ -18,7 +18,7 @@ import java.io.Serializable;
  * Models a mathematical expression. For example, an expression can be evaluated,
  * differentiated, pretty printed, or converted to JVM bytecode.
  */
-public interface Expression extends Serializable, ASTElement {
+public interface Expression extends Serializable, ASTElement, DoubleASTElement {
 
     /**
      * Operator precedence is the order in which operators will be evaluated or

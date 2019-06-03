@@ -12,6 +12,7 @@
 
 package org.f2blib.ast;
 
+import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 /**
@@ -24,6 +25,11 @@ public final class Tanh extends UnaryExpression {
     }
 
     public <T> T accept(Visitor visitor) {
+        return visitor.visitTanh(this);
+    }
+
+    @Override
+    public double accept(DoubleVisitor visitor) {
         return visitor.visitTanh(this);
     }
 

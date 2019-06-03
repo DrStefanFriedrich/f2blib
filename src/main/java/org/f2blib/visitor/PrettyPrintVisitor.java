@@ -227,6 +227,12 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
+    public Void visitDoub(Doub doub) {
+        pw.print(doub.getValue());
+        return null;
+    }
+
+    @Override
     public Void visitLaguerre(Laguerre laguerre) {
         pw.print("laguerre(");
         laguerre.getN().accept(this);

@@ -10,14 +10,15 @@
  *
  ******************************************************************************/
 
-package org.f2blib.example;
+package org.f2blib.ast;
 
-import org.objectweb.asm.util.ASMifier;
+import org.f2blib.visitor.DoubleVisitor;
 
-public class Dumper {
+/**
+ * Accept a visitor on an element of our abstract syntax tree (AST).
+ */
+public interface DoubleASTElement {
 
-    public static void main(String[] args) throws Exception {
-        ASMifier.main(new String[]{ExampleVisitor.class.getCanonicalName()});
-    }
+    double accept(DoubleVisitor visitor);
 
 }

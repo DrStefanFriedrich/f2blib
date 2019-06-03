@@ -12,6 +12,7 @@
 
 package org.f2blib.ast;
 
+import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 /**
@@ -25,6 +26,11 @@ public final class Neg extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
+        return visitor.visitNeg(this);
+    }
+
+    @Override
+    public double accept(DoubleVisitor visitor) {
         return visitor.visitNeg(this);
     }
 

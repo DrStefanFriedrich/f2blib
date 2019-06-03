@@ -88,4 +88,6 @@ public interface Visitor {
 
     <T> T visitPos(Pos pos);
 
+    <T> T visitDoub(Doub doub);
+
 }

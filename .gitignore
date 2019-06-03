@@ -1,4 +1,4 @@
 .idea/
 f2blib.iml
 target/
-
+*.class

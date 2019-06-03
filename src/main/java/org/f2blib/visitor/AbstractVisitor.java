@@ -142,6 +142,11 @@ public abstract class AbstractVisitor implements Visitor {
     }
 
     @Override
+    public <T> T visitDoub(Doub doub) {
+        return null;
+    }
+
+    @Override
     public <T> T visitLaguerre(Laguerre laguerre) {
         laguerre.getN().accept(this);
         laguerre.getExpression().accept(this);

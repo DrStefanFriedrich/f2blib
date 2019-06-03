@@ -14,8 +14,6 @@ package org.f2blib.visitor;
 
 import org.f2blib.ast.*;
 
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,22 +22,18 @@ import java.util.TreeSet;
  */
 public class ValidationVisitor extends AbstractVisitor {
 
-    private int lengthResultArray;
+    private final BytecodeNavigatorImpl navi = new BytecodeNavigatorImpl();
 
-    private final Set<Integer> parameterIndexes = new HashSet<>();
-
-    private final Set<Integer> variableIndexes = new HashSet<>();
-
-    public int getLengthResultArray() {
-        return lengthResultArray;
+    public BytecodeNavigator getBytecodeNavigator() {
+        return navi;
     }
 
-    public int getLengthVariables() {
-        return variableIndexes.stream().max(Comparator.naturalOrder()).get() + 1;
-    }
+    @Override
+    public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
 
-    public int getLengthParameters() {
-        return parameterIndexes.stream().max(Comparator.naturalOrder()).get() + 1;
+        super.visitFunctionDefinition(functionDefinition);
+        navi.finalizeNavigator();
+        return null;
     }
 
     @Override
@@ -88,18 +82,18 @@ public class ValidationVisitor extends AbstractVisitor {
             throw new RuntimeException("TODO SF");
         }
 
-        lengthResultArray = size;
+        navi.setLengthResultArray(size);
     }
 
     @Override
     public Void visitParameter(Parameter parameter) {
-        parameterIndexes.add(parameter.getIndex());
+        navi.addIndexToParameterIndexes(parameter.getIndex());
         return null;
     }
 
     @Override
     public Void visitVariable(Variable variable) {
-        variableIndexes.add(variable.getIndex());
+        navi.addIndexToVariableIndexes(variable.getIndex());
         return null;
     }
 

@@ -13,6 +13,7 @@
 package org.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
+import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ import java.util.Objects;
  * {@link Function} models a single-valued mathematical function. A function has
  * an index n and and expression: f_n := 'expression'.
  */
-public final class Function implements ASTElement {
+public final class Function implements ASTElement, DoubleASTElement {
 
     /*
      * The index is the subscript, e.g. f_1. Please not we start counting by 1
@@ -75,4 +76,8 @@ public final class Function implements ASTElement {
         return visitor.visitFunction(this);
     }
 
+    @Override
+    public double accept(DoubleVisitor visitor) {
+        return visitor.visitFunction(this);
+    }
 }

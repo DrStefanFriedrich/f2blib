@@ -13,6 +13,7 @@
 package org.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
+import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ import java.util.Objects;
  * {@link FunctionDefinition} is the main entry point to the abstract syntax
  * tree (AST).
  */
-public final class FunctionDefinition implements ASTElement {
+public final class FunctionDefinition implements ASTElement, DoubleASTElement {
 
     private final String name;
 
@@ -63,6 +64,11 @@ public final class FunctionDefinition implements ASTElement {
     }
 
     public Void accept(Visitor visitor) {
+        return visitor.visitFunctionDefinition(this);
+    }
+
+    @Override
+    public double accept(DoubleVisitor visitor) {
         return visitor.visitFunctionDefinition(this);
     }
 

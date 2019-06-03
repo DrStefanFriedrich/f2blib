@@ -20,7 +20,7 @@ import org.f2blib.ast.*;
 import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficient;
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
 
-public class EvalVisitor implements Visitor {
+public class EvalVisitor implements DoubleVisitor {
 
     private final double[] x;
 
@@ -44,206 +44,207 @@ public class EvalVisitor implements Visitor {
         return y;
     }
 
-    private double toDouble(Number number) {
-        return number.doubleValue();
+    @Override
+    public double visitAbs(Abs abs) {
+        return Math.abs(abs.getExpression().accept(this));
     }
 
     @Override
-    public Double visitAbs(Abs abs) {
-        return Math.abs(toDouble(abs.getExpression().accept(this)));
+    public double visitAddition(Addition addition) {
+        return addition.getLeft().accept(this) + addition.getRight().accept(this);
     }
 
     @Override
-    public Double visitAddition(Addition addition) {
-        return (toDouble(addition.getLeft().accept(this))) + (toDouble(addition.getRight().accept(this)));
+    public double visitArccos(Arccos arccos) {
+        return Math.acos(arccos.getExpression().accept(this));
     }
 
     @Override
-    public Double visitArccos(Arccos arccos) {
-        return Math.acos(toDouble(arccos.getExpression().accept(this)));
+    public double visitArcosh(Arcosh arcosh) {
+        return ARCOSH.value(arcosh.getExpression().accept(this));
     }
 
     @Override
-    public Double visitArcosh(Arcosh arcosh) {
-        return ARCOSH.value(toDouble(arcosh.getExpression().accept(this)));
+    public double visitArcsin(Arcsin arcsin) {
+        return Math.asin(arcsin.getExpression().accept(this));
     }
 
     @Override
-    public Double visitArcsin(Arcsin arcsin) {
-        return Math.asin(toDouble(arcsin.getExpression().accept(this)));
+    public double visitArctan(Arctan arctan) {
+        return Math.atan(arctan.getExpression().accept(this));
     }
 
     @Override
-    public Double visitArctan(Arctan arctan) {
-        return Math.atan(toDouble(arctan.getExpression().accept(this)));
+    public double visitArsinh(Arsinh arsinh) {
+        return ARSINH.value(arsinh.getExpression().accept(this));
     }
 
     @Override
-    public Double visitArsinh(Arsinh arsinh) {
-        return ARSINH.value(toDouble(arsinh.getExpression().accept(this)));
+    public double visitArtanh(Artanh artanh) {
+        return ARTANH.value(artanh.getExpression().accept(this));
     }
 
     @Override
-    public Double visitArtanh(Artanh artanh) {
-        return ARTANH.value(toDouble(artanh.getExpression().accept(this)));
-    }
-
-    @Override
-    public Long visitBinomial(Binomial binomial) {
+    public double visitBinomial(Binomial binomial) {
         return binomialCoefficient((int) binomial.getN().accept(this), (int) binomial.getK().accept(this));
     }
 
     @Override
-    public Double visitConstant(Constant constant) {
+    public double visitConstant(Constant constant) {
         switch (constant) {
             case PI:
                 return Math.PI;
             case E:
                 return Math.E;
             case BOLTZMANN:
-                return 1.38064852e10 - 23;
+                return 1.38064852e-23;
             default:
                 throw new RuntimeException("TODO SF");
         }
     }
 
     @Override
-    public Double visitCos(Cos cos) {
-        return Math.cos(toDouble(cos.getExpression().accept(this)));
+    public double visitCos(Cos cos) {
+        return Math.cos(cos.getExpression().accept(this));
     }
 
     @Override
-    public Double visitCosh(Cosh cosh) {
-        return Math.cosh(toDouble(cosh.getExpression().accept(this)));
+    public double visitCosh(Cosh cosh) {
+        return Math.cosh(cosh.getExpression().accept(this));
     }
 
     @Override
-    public Double visitDivision(Division division) {
-        return (toDouble(division.getLeft().accept(this))) / (toDouble(division.getRight().accept(this)));
+    public double visitDivision(Division division) {
+        return division.getLeft().accept(this) / division.getRight().accept(this);
     }
 
     @Override
-    public Double visitExp(Exp exp) {
-        return Math.exp(toDouble(exp.getExpression().accept(this)));
+    public double visitExp(Exp exp) {
+        return Math.exp(exp.getExpression().accept(this));
     }
 
     @Override
-    public Long visitFaculty(Faculty faculty) {
-        return factorial(faculty.getIntExpression().accept(this));
+    public double visitFaculty(Faculty faculty) {
+        return factorial((int)faculty.getIntExpression().accept(this));
     }
 
     @Override
-    public Void visitFunction(Function function) {
+    public double visitFunction(Function function) {
 
         int index = function.getIndex();
         Expression expression = function.getExpression();
 
-        y[index] = toDouble(expression.accept(this));
+        y[index] = expression.accept(this);
 
-        return null;
+        return 0;
     }
 
     @Override
-    public Void visitFunctionBody(FunctionBody functionBody) {
+    public double visitFunctionBody(FunctionBody functionBody) {
         return functionBody.getFunctions().accept(this);
     }
 
     @Override
-    public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public double visitFunctionDefinition(FunctionDefinition functionDefinition) {
         return functionDefinition.getFunctionBody().accept(this);
     }
 
     @Override
-    public Void visitFunctions(Functions functions) {
+    public double visitFunctions(Functions functions) {
 
         functions.getFunctions().stream().forEach(f -> f.accept(this));
 
-        return null;
+        return 0;
     }
 
     @Override
-    public Integer visitInt(Int i) {
+    public double visitInt(Int i) {
         return i.getValue();
     }
 
     @Override
-    public Void visitLaguerre(Laguerre laguerre) {
+    public double visitDoub(Doub doub) {
+        return doub.getValue();
+    }
+
+    @Override
+    public double visitLaguerre(Laguerre laguerre) {
         throw new RuntimeException("TODO SF Not implemented yet");
     }
 
     @Override
-    public Void visitLegendre(Legendre legendre) {
+    public double visitLegendre(Legendre legendre) {
         throw new RuntimeException("TODO SF Not implemented yet");
     }
 
     @Override
-    public Double visitLn(Ln ln) {
-        return Math.log(toDouble(ln.getExpression().accept(this)));
+    public double visitLn(Ln ln) {
+        return Math.log(ln.getExpression().accept(this));
     }
 
     @Override
-    public Double visitMultiplication(Multiplication multiplication) {
-        return (toDouble(multiplication.getLeft().accept(this))) * (toDouble(multiplication.getRight().accept(this)));
+    public double visitMultiplication(Multiplication multiplication) {
+        return multiplication.getLeft().accept(this) * multiplication.getRight().accept(this);
     }
 
     @Override
-    public Double visitParameter(Parameter parameter) {
+    public double visitParameter(Parameter parameter) {
         return p[parameter.getIndex()];
     }
 
     @Override
-    public Double visitParenthesis(Parenthesis parenthesis) {
-        return toDouble(parenthesis.getExpression().accept(this));
+    public double visitParenthesis(Parenthesis parenthesis) {
+        return parenthesis.getExpression().accept(this);
     }
 
     @Override
-    public Double visitPower(Power power) {
-        return Math.pow(toDouble(power.getLeft().accept(this)), toDouble(power.getRight().accept(this)));
+    public double visitPower(Power power) {
+        return Math.pow(power.getLeft().accept(this), power.getRight().accept(this));
     }
 
     @Override
-    public Long visitRound(Round round) {
-        return Math.round(toDouble(round.getExpression().accept(this)));
+    public double visitRound(Round round) {
+        return Math.round(round.getExpression().accept(this));
     }
 
     @Override
-    public Double visitSin(Sin sin) {
-        return Math.sin(toDouble(sin.getExpression().accept(this)));
+    public double visitSin(Sin sin) {
+        return Math.sin(sin.getExpression().accept(this));
     }
 
     @Override
-    public Double visitSinh(Sinh sinh) {
-        return Math.sinh(toDouble(sinh.getExpression().accept(this)));
+    public double visitSinh(Sinh sinh) {
+        return Math.sinh(sinh.getExpression().accept(this));
     }
 
     @Override
-    public Double visitSubtraction(Subtraction subtraction) {
-        return (toDouble(subtraction.getLeft().accept(this))) - (toDouble(subtraction.getRight().accept(this)));
+    public double visitSubtraction(Subtraction subtraction) {
+        return subtraction.getLeft().accept(this) - subtraction.getRight().accept(this);
     }
 
     @Override
-    public Double visitTan(Tan tan) {
-        return Math.tan(toDouble(tan.getExpression().accept(this)));
+    public double visitTan(Tan tan) {
+        return Math.tan(tan.getExpression().accept(this));
     }
 
     @Override
-    public Double visitTanh(Tanh tanh) {
-        return Math.tanh(toDouble(tanh.getExpression().accept(this)));
+    public double visitTanh(Tanh tanh) {
+        return Math.tanh(tanh.getExpression().accept(this));
     }
 
     @Override
-    public Double visitVariable(Variable variable) {
+    public double visitVariable(Variable variable) {
         return x[variable.getIndex()];
     }
 
     @Override
-    public Double visitNeg(Neg neg) {
-        return -toDouble(neg.getExpression().accept(this));
+    public double visitNeg(Neg neg) {
+        return -neg.getExpression().accept(this);
     }
 
     @Override
-    public Double visitPos(Pos pos) {
-        return toDouble(pos.getExpression().accept(this));
+    public double visitPos(Pos pos) {
+        return pos.getExpression().accept(this);
     }
 
 }

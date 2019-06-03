@@ -39,7 +39,7 @@ public class EvalVisitorTest {
         evalVisitor = new EvalVisitor(x, p, 5);
     }
 
-    private FunctionDefinition createSampleFunction() {
+    public static FunctionDefinition createSampleFunction() {
 
         Set<Function> functions = new HashSet<>();
 
@@ -64,7 +64,7 @@ public class EvalVisitorTest {
 
         Function f3 = new Function(2, new Neg(new Addition(Constant.PI, new Multiplication(
                 new Cos(new Ln(new Addition(new Int(1), new Abs(new Variable(7))))),
-                new Multiplication(new Addition(new Arsinh(Constant.E), new Tan(new Multiplication(
+                new Multiplication(new Addition(new Sinh(Constant.E), new Tan(new Multiplication(
                         new Addition(new Parameter(5), new Parameter(5)),
                         new Addition(new Parameter(5), new Parameter(5))))),
                         new Parenthesis(new Variable(9)))))));
@@ -100,7 +100,7 @@ public class EvalVisitorTest {
         fd.accept(evalVisitor);
         assertThat(evalVisitor.getResult()[0], closeTo(660, 1e-8));
         assertThat(evalVisitor.getResult()[1], closeTo(1.385614343926388, 1e-8));
-        assertThat(evalVisitor.getResult()[2], closeTo(16.47020012859959, 1e-8));
+        assertThat(evalVisitor.getResult()[2], closeTo(50.58293575689467, 1e-8));
         assertThat(evalVisitor.getResult()[3], closeTo(-3.7776177920749547, 1e-8));
         assertThat(evalVisitor.getResult()[4], closeTo(0, 1e-8));
     }

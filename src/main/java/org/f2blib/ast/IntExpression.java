@@ -12,8 +12,6 @@
 
 package org.f2blib.ast;
 
-import java.io.Serializable;
-
 /**
  * Models a mathematical integer expression.
  */

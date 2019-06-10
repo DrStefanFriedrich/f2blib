@@ -14,17 +14,16 @@ package org.f2blib.visitor;
 
 import org.f2blib.ast.*;
 import org.f2blib.impl.FunctionEvaluation;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.f2blib.util.TestUtil.closeTo;
 
 /**
- * Some very elementary tests of the {@link BytecodeVisitor}, mainly to show
- * correctness of the generated Java Bytecode.
+ * Some very elementary tests of the {@link BytecodeVisitorImpl}, mainly to show
+ * correctness of the generated Java bytecode.
  */
-public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
+public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorImplTest {
 
     @Test
     public void test1() {
@@ -36,7 +35,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat((double) 3, is(y[0]));
+        assertThat(y[0], closeTo(3));
     }
 
     @Test
@@ -49,7 +48,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat(Math.PI, is(y[0]));
+        assertThat(y[0], closeTo(Math.PI));
     }
 
     @Test
@@ -62,7 +61,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{3.24}, y);
 
-        assertThat(3.24, is(y[0]));
+        assertThat(y[0], closeTo(3.24));
     }
 
     @Test
@@ -75,7 +74,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat(0.1411200080598672, is(y[0]));
+        assertThat(y[0], closeTo(0.1411200080598672));
     }
 
     @Test
@@ -88,7 +87,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[11], y);
 
-        assertThat(0d, is(y[0]));
+        assertThat(y[0], closeTo(0));
     }
 
     @Test
@@ -102,7 +101,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{3.31, 4.19}, y);
 
-        assertThat(7.5d, is(y[0]));
+        assertThat(y[0], closeTo(7.5));
     }
 
     @Test
@@ -117,8 +116,8 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{3.31, 4.19}, y);
 
-        assertThat(3.31d, is(y[0]));
-        assertThat(4.19d, is(y[1]));
+        assertThat(y[0], closeTo(3.31));
+        assertThat(y[1], closeTo(4.19));
     }
 
     @Test
@@ -133,8 +132,8 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{3.31, 4.19}, y);
 
-        assertThat(7.5d, is(y[0]));
-        assertThat(-0.8800000000000003, is(y[1]));
+        assertThat(y[0], closeTo(7.5));
+        assertThat(y[1], closeTo(-0.88));
     }
 
     @Test
@@ -149,8 +148,8 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{1, 2, 3, 4, 5}, y);
 
-        assertThat(3d, is(y[0]));
-        assertThat(5d, is(y[1]));
+        assertThat(y[0], closeTo(3));
+        assertThat(y[1], closeTo(5));
     }
 
     @Test
@@ -165,8 +164,8 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[]{1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5}, new double[]{1, 2, 3, 4, 5}, y);
 
-        assertThat(8.5d, is(y[0]));
-        assertThat(11d, is(y[1]));
+        assertThat(y[0], closeTo(8.5));
+        assertThat(y[1], closeTo(11));
     }
 
     @Test
@@ -180,7 +179,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{3.31, 4.19}, y);
 
-        assertThat(-0.8337433605077962, is(y[0]));
+        assertThat(y[0], closeTo(-0.8337433605077962));
     }
 
     @Test
@@ -195,7 +194,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[]{1.2, 2.3}, new double[]{3.31, 4.19}, y);
 
-        assertThat(0.009927266565406323, is(y[0]));
+        assertThat(y[0], closeTo(0.009927266565406323));
     }
 
     @Test
@@ -208,7 +207,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat(1.38064852e-23, is(y[0]));
+        assertThat(y[0], closeTo(1.38064852e-23));
     }
 
     @Test
@@ -221,7 +220,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{2.44}, y);
 
-        assertThat(0.6454349983343708, is(y[0]));
+        assertThat(y[0], closeTo(0.6454349983343708));
     }
 
     @Test
@@ -234,7 +233,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{0}, y);
 
-        assertThat(0d, is(y[0]));
+        assertThat(y[0], closeTo(0));
     }
 
     @Test
@@ -247,7 +246,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{6.71}, y);
 
-        assertThat(-6.71d, is(y[0]));
+        assertThat(y[0], closeTo(-6.71));
     }
 
     @Test
@@ -260,7 +259,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[]{6.71}, y);
 
-        assertThat(6.71d, is(y[0]));
+        assertThat(y[0], closeTo(6.71));
     }
 
     @Test
@@ -274,7 +273,7 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat(81d, is(y[0]));
+        assertThat(y[0], closeTo(81));
     }
 
     @Test
@@ -287,11 +286,10 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat(3d, is(y[0]));
+        assertThat(y[0], closeTo(3));
     }
 
     @Test
-    @Ignore("TODO SF")
     public void test20() {
 
         FunctionDefinition fd = createFunctionDefinition("Test20", new Function(0, new Int(1000000000)));
@@ -301,7 +299,59 @@ public class ElementaryBytecodeVisitorTest extends AbstractBytecodeVisitorTest {
 
         fe.eval(new double[0], new double[0], y);
 
-        assertThat(y[0], is(1000000000));
+        assertThat(y[0], closeTo(1000000000));
+    }
+
+    @Test
+    public void test21() {
+
+        FunctionDefinition fd = createFunctionDefinition("Test21", new Function(0, new Doub(1.23456789)));
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] y = new double[1];
+
+        fe.eval(new double[0], new double[0], y);
+
+        assertThat(y[0], closeTo(1.23456789));
+    }
+
+    @Test
+    public void test22() {
+
+        FunctionDefinition fd = createFunctionDefinition("Test22", new Function(0, new Faculty(new Int(5))));
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] y = new double[1];
+
+        fe.eval(new double[0], new double[0], y);
+
+        assertThat(y[0], closeTo(120));
+    }
+
+    @Test
+    public void test23() {
+
+        FunctionDefinition fd = createFunctionDefinition("Test23", new Function(0, new Binomial(new Int(3), new Int(9))));
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] y = new double[1];
+
+        fe.eval(new double[0], new double[0], y);
+
+        assertThat(y[0], closeTo(84));
+    }
+
+    @Test
+    public void test24() {
+
+        FunctionDefinition fd = createFunctionDefinition("Test24", new Function(0, new Sqrt(new Doub(9))));
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] y = new double[1];
+
+        fe.eval(new double[0], new double[0], y);
+
+        assertThat(y[0], closeTo(3));
     }
 
 }

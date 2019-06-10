@@ -19,14 +19,4 @@ import java.io.Serializable;
  * differentiated, pretty printed, or converted to JVM bytecode.
  */
 public interface Expression extends Serializable, ASTElement, DoubleASTElement {
-
-    /**
-     * Operator precedence is the order in which operators will be evaluated or
-     * applied.
-     *
-     * @return The precedence, 0 meaning highest binding or coupling, monotonically
-     * increasing.
-     */
-    int precedence();
-
 }

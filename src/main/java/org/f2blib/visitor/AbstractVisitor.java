@@ -147,20 +147,6 @@ public abstract class AbstractVisitor implements Visitor {
     }
 
     @Override
-    public <T> T visitLaguerre(Laguerre laguerre) {
-        laguerre.getN().accept(this);
-        laguerre.getExpression().accept(this);
-        return null;
-    }
-
-    @Override
-    public <T> T visitLegendre(Legendre legendre) {
-        legendre.getN().accept(this);
-        legendre.getExpression().accept(this);
-        return null;
-    }
-
-    @Override
     public <T> T visitLn(Ln ln) {
         ln.getExpression().accept(this);
         return null;
@@ -242,6 +228,12 @@ public abstract class AbstractVisitor implements Visitor {
     @Override
     public <T> T visitPos(Pos pos) {
         pos.getExpression().accept(this);
+        return null;
+    }
+
+    @Override
+    public <T> T visitSqrt(Sqrt sqrt) {
+        sqrt.getExpression().accept(this);
         return null;
     }
 

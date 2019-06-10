@@ -16,21 +16,22 @@ import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 /**
- * Legendre polynomials.
+ * Square root.
  */
-public final class Legendre extends SpecialPolynomialExpression {
+public class Sqrt extends UnaryExpression {
 
-    public Legendre(IntExpression n, Expression expression) {
-        super(n, expression);
+    public Sqrt(Expression expression) {
+        super(expression);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitLegendre(this);
+        return visitor.visitSqrt(this);
     }
 
     @Override
     public double accept(DoubleVisitor visitor) {
-        return visitor.visitLegendre(this);
+        return visitor.visitSqrt(this);
     }
 
 }

@@ -20,19 +20,12 @@ import org.f2blib.visitor.Visitor;
  */
 public final class Power extends BinaryExpression {
 
-    private static final int PRECEDENCE = 1;
-
     public Power(Expression left, Expression right) {
         super(left, right);
     }
 
     public <T> T accept(Visitor visitor) {
         return visitor.visitPower(this);
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

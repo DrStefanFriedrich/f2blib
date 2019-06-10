@@ -12,10 +12,18 @@
 
 package org.f2blib.exception;
 
+/**
+ * Wrapper exception thrown when all kind of problems occur during bytecode
+ * generation.
+ */
 public class BytecodeGenerationException extends RuntimeException {
 
     public BytecodeGenerationException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public BytecodeGenerationException(String message) {
+        super(message);
     }
 
 }

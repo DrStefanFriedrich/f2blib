@@ -12,11 +12,13 @@
 
 package org.f2blib.generator;
 
+import org.f2blib.ast.FunctionDefinition;
 import org.f2blib.impl.FunctionEvaluation;
-import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
+
+import java.io.IOException;
 
 public interface FunctionEvaluationBytecodeGenerator {
 
-    Class<? extends FunctionEvaluation> generateClass(BytecodeGeneratingFunctionsListener listener);
+    FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition);
 
 }

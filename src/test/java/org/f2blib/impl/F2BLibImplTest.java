@@ -12,28 +12,29 @@
 
 package org.f2blib.impl;
 
-import org.f2blib.PerformanceTestFunction;
-import org.junit.Assert;
+import org.f2blib.ast.*;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.f2blib.util.TestUtil.closeTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 public class F2BLibImplTest extends AbstractF2BLibImplTest {
 
     @Test
     public void cacheWorks() {
 
-        doReturn(PerformanceTestFunction.class).when(generatorMock).generateClass(any());
+        FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new Functions(new Function(0, new Variable(0)))));
+        double[] y = new double[1];
 
-        underTest.load("");
-        underTest.eval(PerformanceTestFunction.class.getName(), null, null, null);
+        when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
 
-        // Must be reached without throwing an exception
-        assertTrue(true);
+        underTest.load("someFakeDefinition");
+
+        underTest.eval(FunctionEvaluationAsset.class.getName(), new double[0], new double[0], y);
+
+        assertThat(y[0], closeTo(1.234));
     }
 
     @Test
@@ -42,38 +43,6 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         exception.expect(IllegalArgumentException.class);
 
         underTest.eval("unknown", null, null, null);
-    }
-
-    @Test
-    public void parserAndGeneratorAreBeingCalled() {
-
-        doReturn(PerformanceTestFunction.class).when(generatorMock).generateClass(any());
-
-        underTest.load("");
-
-        verify(parserMock).applyListener(eq(""), any());
-        verify(generatorMock).generateClass(any());
-    }
-
-    @Test
-    public void invocationTargetException() {
-
-        doReturn(ConstructorThrowing.class).when(generatorMock).generateClass(any());
-
-        exception.expect(ArrayIndexOutOfBoundsException.class);
-
-        underTest.load("");
-    }
-
-    public static class ConstructorThrowing implements FunctionEvaluation {
-
-        public ConstructorThrowing() {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-
-        @Override
-        public void eval(double[] p, double[] x, double[] y) {
-        }
     }
 
 }

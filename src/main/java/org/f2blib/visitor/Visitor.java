@@ -56,10 +56,6 @@ public interface Visitor {
 
     <T> T visitInt(Int i);
 
-    <T> T visitLaguerre(Laguerre laguerre);
-
-    <T> T visitLegendre(Legendre legendre);
-
     <T> T visitLn(Ln ln);
 
     <T> T visitMultiplication(Multiplication multiplication);
@@ -89,5 +85,7 @@ public interface Visitor {
     <T> T visitPos(Pos pos);
 
     <T> T visitDoub(Doub doub);
+
+    <T> T visitSqrt(Sqrt sqrt);
 
 }

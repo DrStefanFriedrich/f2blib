@@ -21,8 +21,6 @@ import java.util.Objects;
  */
 public abstract class UnaryExpression implements Expression {
 
-    private static final int PRECEDENCE = 1;
-
     private final Expression expression;
 
     public UnaryExpression(Expression expression) {
@@ -31,11 +29,6 @@ public abstract class UnaryExpression implements Expression {
 
     public Expression getExpression() {
         return expression;
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

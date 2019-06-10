@@ -13,14 +13,14 @@
 package org.f2blib.impl;
 
 import org.f2blib.FunctionEvaluationKernel;
-import org.f2blib.exception.BytecodeGenerationException;
+import org.f2blib.ast.FunctionDefinition;
 import org.f2blib.generator.FunctionEvaluationBytecodeGenerator;
-import org.f2blib.parser.BytecodeGeneratingFunctionsListener;
 import org.f2blib.parser.FunctionParser;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static java.lang.String.format;
 
 /**
  * F2BLib implementation of a {@link FunctionEvaluationKernel}.
@@ -45,27 +45,12 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
      */
     @Override
     public void load(String functionDefinition) {
-        try {
 
-            BytecodeGeneratingFunctionsListener listener = new BytecodeGeneratingFunctionsListener();
+        FunctionDefinition fd = parser.parse(functionDefinition);
 
-            parser.applyListener(functionDefinition, listener);
+        FunctionEvaluation instance = generator.generateAndInstantiate(fd);
 
-            Class<? extends FunctionEvaluation> clazz = generator.generateClass(listener);
-
-            FunctionEvaluation instance = clazz.getConstructor(null).newInstance();
-
-            cache.put(clazz.getName(), instance);
-
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-            throw new BytecodeGenerationException("Cannot instantiate class", e);
-        } catch (InvocationTargetException e) {
-            Throwable targetException = e.getTargetException();
-            if (targetException instanceof RuntimeException) {
-                throw (RuntimeException) targetException;
-            }
-            throw new BytecodeGenerationException("Exception from constructor invocation", targetException);
-        }
+        cache.put(instance.getClass().getName(), instance);
 
     }
 
@@ -83,7 +68,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         FunctionEvaluation functionEvaluation = cache.get(functionName);
 
         if (functionEvaluation == null) {
-            throw new IllegalArgumentException("Unknown function name: " + functionName);
+            throw new IllegalArgumentException(format("Unknown function name: %s", functionName));
         }
 
         functionEvaluation.eval(p, x, y);

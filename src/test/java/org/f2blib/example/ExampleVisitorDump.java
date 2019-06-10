@@ -12,8 +12,8 @@
 
 package org.f2blib.example;
 
+import java.util.*;
 import org.objectweb.asm.*;
-
 public class ExampleVisitorDump implements Opcodes {
 
     public static byte[] dump () throws Exception {
@@ -169,12 +169,20 @@ public class ExampleVisitorDump implements Opcodes {
             mv.visitInsn(ARETURN);
             mv.visitLabel(l3);
             mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-            mv.visitTypeInsn(NEW, "java/lang/RuntimeException");
+            mv.visitTypeInsn(NEW, "org/f2blib/exception/BytecodeGenerationException");
             mv.visitInsn(DUP);
-            mv.visitLdcInsn("TODO SF");
-            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/RuntimeException", "<init>", "(Ljava/lang/String;)V", false);
+            mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
+            mv.visitLdcInsn("Unrecognized constant ");
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+            mv.visitVarInsn(ALOAD, 1);
+            mv.visitMethodInsn(INVOKEVIRTUAL, "org/f2blib/ast/Constant", "name", "()Ljava/lang/String;", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+            mv.visitMethodInsn(INVOKESPECIAL, "org/f2blib/exception/BytecodeGenerationException", "<init>", "(Ljava/lang/String;)V", false);
             mv.visitInsn(ATHROW);
-            mv.visitMaxs(3, 2);
+            mv.visitMaxs(4, 2);
             mv.visitEnd();
         }
         {
@@ -184,6 +192,16 @@ public class ExampleVisitorDump implements Opcodes {
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Number", "doubleValue", "()D", false);
             mv.visitInsn(DRETURN);
             mv.visitMaxs(2, 2);
+            mv.visitEnd();
+        }
+        {
+            mv = cw.visitMethod(ACC_PUBLIC, "visitArsinh", "()D", null, null);
+            mv.visitCode();
+            mv.visitFieldInsn(GETSTATIC, "org/f2blib/example/ExampleVisitor", "ARSINH", "Lorg/apache/commons/math3/analysis/function/Asinh;");
+            mv.visitLdcInsn(new Double("3.0"));
+            mv.visitMethodInsn(INVOKEVIRTUAL, "org/apache/commons/math3/analysis/function/Asinh", "value", "(D)D", false);
+            mv.visitInsn(DRETURN);
+            mv.visitMaxs(3, 1);
             mv.visitEnd();
         }
         {

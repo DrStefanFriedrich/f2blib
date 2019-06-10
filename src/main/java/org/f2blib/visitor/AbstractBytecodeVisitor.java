@@ -16,48 +16,87 @@ import org.f2blib.ast.Arcosh;
 import org.f2blib.ast.Arsinh;
 import org.f2blib.ast.Artanh;
 import org.f2blib.ast.UnaryExpression;
+import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.impl.FunctionEvaluation;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static java.lang.String.format;
 import static org.objectweb.asm.Opcodes.*;
-import static org.objectweb.asm.Opcodes.RETURN;
 
-public abstract class AbstractBytecodeVisitor extends AbstractVisitor {
+public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
 
-    protected final ClassWriter cw = new ClassWriter(0);
+    public static final String ARSINH = "ARSINH";
 
-    protected final MethodVisitor evalMethod = cw.visitMethod(ACC_PUBLIC, "eval", "([D[D[D)V", null, null);
+    public static final String ARCOSH = "ARCOSH";
 
-    protected String className;
+    public static final String ARTANH = "ARTANH";
 
-    protected final BytecodeNavigator navi;
+    public static final String ARSINH_TYPE = "Lorg/apache/commons/math3/analysis/function/Asinh;";
 
-    public AbstractBytecodeVisitor(BytecodeNavigator navi) {
-        this.navi = navi;
+    public static final String ARCOSH_TYPE = "Lorg/apache/commons/math3/analysis/function/Acosh;";
+
+    public static final String ARTANH_TYPE = "Lorg/apache/commons/math3/analysis/function/Atanh;";
+
+    public static final String ARSINH_BIN_CLASS = "org/apache/commons/math3/analysis/function/Asinh";
+
+    public static final String ARCOSH_BIN_CLASS = "org/apache/commons/math3/analysis/function/Acosh";
+
+    public static final String ARTANH_BIN_CLASS = "org/apache/commons/math3/analysis/function/Atanh";
+
+    private static final String INIT_TYPE = "<init>";
+
+    private static final String VALUE_METHOD_NAME = "value";
+
+    final LocalVariables localVariables;
+
+    private final ClassWriter cw = new ClassWriter(0);
+
+    final MethodVisitor evalMethod = cw.visitMethod(ACC_PUBLIC, "eval", "([D[D[D)V", null, null);
+
+    String className;
+
+    AbstractBytecodeVisitor(LocalVariables localVariables) {
+        this.localVariables = localVariables;
     }
 
-    public Class<? extends FunctionEvaluation> generate() throws FileNotFoundException, IOException {
+    @Override
+    public Class<? extends FunctionEvaluation> generate() {
 
         byte[] bytecode = generateBytecode();
 
-        // TODO SF Remove this
-        // For better debugging purposes write the class to disk
-        try (FileOutputStream fos = new FileOutputStream(className + ".class");) {
-            fos.write(bytecode);
-        }
+        writeClassFileToDisk(bytecode);
 
-        return (Class<? extends FunctionEvaluation>) new ClassLoader() {
-            public Class<?> defineClass(byte[] bytes) {
+        @SuppressWarnings("unchecked")
+        Class<? extends FunctionEvaluation> result = (Class<? extends FunctionEvaluation>) new ClassLoader() {
+            Class<?> defineClass(byte[] bytes) {
                 return super.defineClass(className, bytes, 0, bytes.length);
             }
         }.defineClass(bytecode);
+
+        return result;
+    }
+
+    private void writeClassFileToDisk(byte[] bytecode) {
+        if (!debuggingModeEnabled()) {
+            return;
+        }
+
+        // For better debugging purposes write the class to disk
+        try (FileOutputStream fos = new FileOutputStream(className + ".class")) {
+            fos.write(bytecode);
+        } catch (IOException e) {
+            throw new BytecodeGenerationException("Could not write class file to disk", e);
+        }
+    }
+
+    private boolean debuggingModeEnabled() {
+        return Boolean.valueOf(System.getProperty("org.f2blib.debugging", Boolean.FALSE.toString()));
     }
 
     private byte[] generateBytecode() {
@@ -65,65 +104,78 @@ public abstract class AbstractBytecodeVisitor extends AbstractVisitor {
         return cw.toByteArray();
     }
 
-    protected void generateClassHeader() {
+    void generateClassHeader() {
         cw.visit(52, ACC_PUBLIC + ACC_SUPER,
                 className.replaceAll("\\.", "/"), null, "java/lang/Object",
                 new String[]{FunctionEvaluation.class.getName().replaceAll("\\.", "/")});
     }
 
-    protected void generateStaticFields() {
+    void generateStaticFields() {
 
         FieldVisitor fv;
 
-        fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, "ARSINH", "Lorg/apache/commons/math3/analysis/function/Asinh;", null, null);
-        fv.visitEnd();
+        if (localVariables.isArsinhUsed()) {
+            fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, ARSINH, ARSINH_TYPE, null, null);
+            fv.visitEnd();
+        }
 
-        fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, "ARCOSH", "Lorg/apache/commons/math3/analysis/function/Acosh;", null, null);
-        fv.visitEnd();
+        if (localVariables.isArcoshUsed()) {
+            fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, ARCOSH, ARCOSH_TYPE, null, null);
+            fv.visitEnd();
+        }
 
-        fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, "ARTANH", "Lorg/apache/commons/math3/analysis/function/Atanh;", null, null);
-        fv.visitEnd();
-
-        fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, "BOLTZMANN", "D", null, new Double("1.38064852E-23"));
-        fv.visitEnd();
+        if (localVariables.isArtanhUsed()) {
+            fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, ARTANH, ARTANH_TYPE, null, null);
+            fv.visitEnd();
+        }
     }
 
-    protected void generateStaticInitializers() {
+    void generateStaticInitializers() {
 
         MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
         mv.visitCode();
-        mv.visitTypeInsn(NEW, "org/apache/commons/math3/analysis/function/Asinh");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "org/apache/commons/math3/analysis/function/Asinh", "<init>", "()V", false);
-        mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), "ARSINH", "Lorg/apache/commons/math3/analysis/function/Asinh;");
-        mv.visitTypeInsn(NEW, "org/apache/commons/math3/analysis/function/Acosh");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "org/apache/commons/math3/analysis/function/Acosh", "<init>", "()V", false);
-        mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), "ARCOSH", "Lorg/apache/commons/math3/analysis/function/Acosh;");
-        mv.visitTypeInsn(NEW, "org/apache/commons/math3/analysis/function/Atanh");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "org/apache/commons/math3/analysis/function/Atanh", "<init>", "()V", false);
-        mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), "ARTANH", "Lorg/apache/commons/math3/analysis/function/Atanh;");
+
+        if (localVariables.isArsinhUsed()) {
+            mv.visitTypeInsn(NEW, ARSINH_BIN_CLASS);
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, ARSINH_BIN_CLASS, INIT_TYPE, "()V", false);
+            mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), ARSINH, ARSINH_TYPE);
+        }
+
+        if (localVariables.isArcoshUsed()) {
+            mv.visitTypeInsn(NEW, ARCOSH_BIN_CLASS);
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, ARCOSH_BIN_CLASS, INIT_TYPE, "()V", false);
+            mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), ARCOSH, ARCOSH_TYPE);
+        }
+
+        if (localVariables.isArtanhUsed()) {
+            mv.visitTypeInsn(NEW, ARTANH_BIN_CLASS);
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, ARTANH_BIN_CLASS, INIT_TYPE, "()V", false);
+            mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), ARTANH, ARTANH_TYPE);
+        }
+
         mv.visitInsn(RETURN);
         mv.visitMaxs(2, 0);
         mv.visitEnd();
     }
 
-    protected void generateDefaultConstructor() {
+    void generateDefaultConstructor() {
 
-        MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+        MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, INIT_TYPE, "()V", null, null);
 
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", INIT_TYPE, "()V", false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(1, 1);
         mv.visitEnd();
     }
 
-    protected void prepareParameters() {
+    void prepareParameters() {
 
-        navi.parameterIndexIterator().forEachRemaining(entry -> {
+        localVariables.parameterIndexIterator().forEachRemaining(entry -> {
             Integer parameterIndex = entry.getKey();
             Integer indexLocalVariables = entry.getValue();
 
@@ -134,9 +186,9 @@ public abstract class AbstractBytecodeVisitor extends AbstractVisitor {
         });
     }
 
-    protected void prepareVariables() {
+    void prepareVariables() {
 
-        navi.variableIndexIterator().forEachRemaining(entry -> {
+        localVariables.variableIndexIterator().forEachRemaining(entry -> {
             Integer variableIndex = entry.getKey();
             Integer indexLocalVariables = entry.getValue();
 
@@ -147,7 +199,7 @@ public abstract class AbstractBytecodeVisitor extends AbstractVisitor {
         });
     }
 
-    protected void visitUnaryExpression(UnaryExpression element, String binaryClassName, String methodName) {
+    void visitUnaryExpression(UnaryExpression element, String binaryClassName, String methodName) {
 
         // Visiting the expression pushes the result (of type double) on the stack
         element.getExpression().accept(this);
@@ -155,31 +207,31 @@ public abstract class AbstractBytecodeVisitor extends AbstractVisitor {
         evalMethod.visitMethodInsn(INVOKESTATIC, binaryClassName, methodName, "(D)D", false);
     }
 
-    protected void visitSpecialUnaryExpression(UnaryExpression element) {
+    void visitSpecialUnaryExpression(UnaryExpression element) {
 
-        if (element instanceof Arsinh) {
+        if (element.getClass() == Arsinh.class) {
 
-            evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), "ARSINH", "Lorg/apache/commons/math3/analysis/function/Asinh;");
+            evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARSINH, ARSINH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
             element.getExpression().accept(this);
-            evalMethod.visitMethodInsn(INVOKEVIRTUAL, className.replaceAll("\\.", "/"), "value", "(D)D", false);
+            evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARSINH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
-        } else if (element instanceof Arcosh) {
+        } else if (element.getClass() == Arcosh.class) {
 
-            evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), "ARCOSH", "Lorg/apache/commons/math3/analysis/function/Asinh;");
+            evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARCOSH, ARCOSH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
             element.getExpression().accept(this);
-            evalMethod.visitMethodInsn(INVOKEVIRTUAL, className.replaceAll("\\.", "/"), "value", "(D)D", false);
+            evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARCOSH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
-        } else if (element instanceof Artanh) {
+        } else if (element.getClass() == Artanh.class) {
 
-            evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), "ARTANH", "Lorg/apache/commons/math3/analysis/function/Asinh;");
+            evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARTANH, ARTANH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
             element.getExpression().accept(this);
-            evalMethod.visitMethodInsn(INVOKEVIRTUAL, className.replaceAll("\\.", "/"), "value", "(D)D", false);
+            evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARTANH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else {
-            throw new RuntimeException("TODO SF");
+            throw new BytecodeGenerationException(format("Unrecognized special unary expression: %s", element.getClass().getName()));
         }
     }
 

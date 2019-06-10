@@ -15,10 +15,8 @@ package org.f2blib.example;
 import org.apache.commons.math3.analysis.function.Acosh;
 import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;
-import org.f2blib.ast.Addition;
-import org.f2blib.ast.Constant;
-import org.f2blib.ast.Sin;
-import org.f2blib.ast.Variable;
+import org.f2blib.ast.*;
+import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.visitor.AbstractVisitor;
 
 public class ExampleVisitor extends AbstractVisitor {
@@ -63,12 +61,16 @@ public class ExampleVisitor extends AbstractVisitor {
             case BOLTZMANN:
                 return 1.38064852e10 - 23;
             default:
-                throw new RuntimeException("TODO SF");
+                throw new BytecodeGenerationException("Unrecognized constant " + constant.name());
         }
     }
 
     private double toDouble(Number number) {
         return number.doubleValue();
+    }
+
+    public double visitArsinh() {
+        return ARSINH.value(3.0d);
     }
 
 }

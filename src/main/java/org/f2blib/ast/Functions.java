@@ -16,6 +16,7 @@ import com.google.common.base.MoreObjects;
 import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,6 +32,10 @@ public final class Functions implements ASTElement, DoubleASTElement {
 
     public Functions(Set<Function> functions) {
         this.functions.addAll(functions);
+    }
+
+    public Functions(Function... functions) {
+        this(new HashSet<>(Arrays.asList(functions)));
     }
 
     public Set<Function> getFunctions() {

@@ -23,8 +23,6 @@ import java.util.Objects;
  */
 public final class Int implements IntExpression {
 
-    private static final int PRECEDENCE = 0;
-
     private final int value;
 
     public Int(int value) {
@@ -33,11 +31,6 @@ public final class Int implements IntExpression {
 
     public int getValue() {
         return value;
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

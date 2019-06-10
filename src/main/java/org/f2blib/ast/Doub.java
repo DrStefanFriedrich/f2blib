@@ -20,8 +20,6 @@ import java.util.Objects;
 
 public class Doub implements Expression {
 
-    private static final int PRECEDENCE = 0;
-
     private final double value;
 
     public Doub(double value) {
@@ -30,11 +28,6 @@ public class Doub implements Expression {
 
     public double getValue() {
         return value;
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

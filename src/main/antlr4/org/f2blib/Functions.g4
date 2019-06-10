@@ -52,8 +52,6 @@ expression:
     ARCOSH LPAREN expression RPAREN # arcosh |
     ARTANH LPAREN expression RPAREN # artanh |
     FACULTY LPAREN integer RPAREN # faculty |
-    LAGUERRE LPAREN integer ',' expression RPAREN # laguerre |
-    LEGENDRE LPAREN integer ',' expression RPAREN # legendre |
     BINOMIAL LPAREN integer ',' integer RPAREN # binomial |
 //    NEG expression |
 //    POS expression |
@@ -100,8 +98,6 @@ TANH: 'tanh';
 ARSINH: 'arsinh';
 ARCOSH: 'arcosh';
 ARTANH: 'artanh';
-LAGUERRE: 'laguerre';
-LEGENDRE: 'legendre';
 BINOMIAL: 'binomial';
 FACULTY: 'faculty';
 

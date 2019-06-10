@@ -23,8 +23,6 @@ import java.util.Objects;
  */
 public final class Faculty implements IntExpression {
 
-    private static final int PRECEDENCE = 1;
-
     private final IntExpression intExpression;
 
     public Faculty(IntExpression intExpression) {
@@ -33,11 +31,6 @@ public final class Faculty implements IntExpression {
 
     public IntExpression getIntExpression() {
         return intExpression;
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

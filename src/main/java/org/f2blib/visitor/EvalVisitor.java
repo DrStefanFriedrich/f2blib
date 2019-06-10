@@ -17,6 +17,7 @@ import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;
 import org.f2blib.ast.*;
 
+import static java.lang.String.format;
 import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficient;
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
 
@@ -34,13 +35,13 @@ public class EvalVisitor implements DoubleVisitor {
 
     private static final Atanh ARTANH = new Atanh();
 
-    public EvalVisitor(double[] x, double[] p, int lengthResultArray) {
+    EvalVisitor(double[] x, double[] p, int lengthResultArray) {
         this.x = x;
         this.p = p;
         this.y = new double[lengthResultArray];
     }
 
-    public double[] getResult() {
+    double[] getResult() {
         return y;
     }
 
@@ -90,6 +91,11 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
+    public double visitFaculty(Faculty faculty) {
+        return factorial((int) faculty.getIntExpression().accept(this));
+    }
+
+    @Override
     public double visitConstant(Constant constant) {
         switch (constant) {
             case PI:
@@ -99,7 +105,7 @@ public class EvalVisitor implements DoubleVisitor {
             case BOLTZMANN:
                 return 1.38064852e-23;
             default:
-                throw new RuntimeException("TODO SF");
+                throw new IllegalArgumentException(format("Unrecognized constant: %s", constant.name()));
         }
     }
 
@@ -121,11 +127,6 @@ public class EvalVisitor implements DoubleVisitor {
     @Override
     public double visitExp(Exp exp) {
         return Math.exp(exp.getExpression().accept(this));
-    }
-
-    @Override
-    public double visitFaculty(Faculty faculty) {
-        return factorial((int)faculty.getIntExpression().accept(this));
     }
 
     @Override
@@ -152,7 +153,7 @@ public class EvalVisitor implements DoubleVisitor {
     @Override
     public double visitFunctions(Functions functions) {
 
-        functions.getFunctions().stream().forEach(f -> f.accept(this));
+        functions.getFunctions().forEach(f -> f.accept(this));
 
         return 0;
     }
@@ -168,13 +169,8 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
-    public double visitLaguerre(Laguerre laguerre) {
-        throw new RuntimeException("TODO SF Not implemented yet");
-    }
-
-    @Override
-    public double visitLegendre(Legendre legendre) {
-        throw new RuntimeException("TODO SF Not implemented yet");
+    public double visitSqrt(Sqrt sqrt) {
+        return Math.sqrt(sqrt.getExpression().accept(this));
     }
 
     @Override

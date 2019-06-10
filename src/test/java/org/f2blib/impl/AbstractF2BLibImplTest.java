@@ -22,6 +22,13 @@ import static org.mockito.Mockito.mock;
 
 public abstract class AbstractF2BLibImplTest {
 
+    public static class FunctionEvaluationAsset implements FunctionEvaluation {
+        @Override
+        public void eval(double[] p, double[] x, double[] y) {
+            y[0] = 1.234;
+        }
+    }
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 

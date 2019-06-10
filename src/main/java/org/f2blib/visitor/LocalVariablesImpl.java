@@ -27,9 +27,7 @@ import java.util.*;
  * 4..n: p_i
  * (n+1)..m: x_i
  */
-class BytecodeNavigatorImpl implements BytecodeNavigator {
-
-    private int lengthResultArray;
+public class LocalVariablesImpl implements LocalVariables {
 
     private final SortedSet<Integer> parameterIndexes = new TreeSet<>();
 
@@ -39,40 +37,45 @@ class BytecodeNavigatorImpl implements BytecodeNavigator {
 
     private final SortedMap<Integer, Integer> variableIndex2LocalVariableIndex = new TreeMap<>();
 
-    public void setLengthResultArray(int lengthResultArray) {
-        this.lengthResultArray = lengthResultArray;
+    private boolean arsinhUsed;
+
+    private boolean arcoshUsed;
+
+    private boolean artanhUsed;
+
+    @Override
+    public boolean isArsinhUsed() {
+        return arsinhUsed;
     }
 
-    public void addIndexToParameterIndexes(int index) {
+    @Override
+    public boolean isArcoshUsed() {
+        return arcoshUsed;
+    }
+
+    @Override
+    public boolean isArtanhUsed() {
+        return artanhUsed;
+    }
+
+    public void setArsinhUsed(boolean arsinhUsed) {
+        this.arsinhUsed = arsinhUsed;
+    }
+
+    public void setArcoshUsed(boolean arcoshUsed) {
+        this.arcoshUsed = arcoshUsed;
+    }
+
+    public void setArtanhUsed(boolean artanhUsed) {
+        this.artanhUsed = artanhUsed;
+    }
+
+    void addIndexToParameterIndexes(int index) {
         parameterIndexes.add(index);
     }
 
-    public void addIndexToVariableIndexes(int index) {
+    void addIndexToVariableIndexes(int index) {
         variableIndexes.add(index);
-    }
-
-    /**
-     * Not needed right now.
-     */
-    @Override
-    public int getLengthResultArray() {
-        return lengthResultArray;
-    }
-
-    /**
-     * Not needed right now.
-     */
-    @Override
-    public int getLengthVariables() {
-        return variableIndexes.stream().max(Comparator.naturalOrder()).get() + 1;
-    }
-
-    /**
-     * Not needed right now.
-     */
-    @Override
-    public int getLengthParameters() {
-        return parameterIndexes.stream().max(Comparator.naturalOrder()).get() + 1;
     }
 
     /**
@@ -81,8 +84,7 @@ class BytecodeNavigatorImpl implements BytecodeNavigator {
     @Override
     public int getMaxStack() {
         // Open: how to calculate the stack frame depth.
-        return 1000;
-        // throw new RuntimeException("TODO SF Not implemented yet");
+        return 1000; // TODO SF Not implemented yet
     }
 
     /**
@@ -115,7 +117,7 @@ class BytecodeNavigatorImpl implements BytecodeNavigator {
      * Do all the calculations to finalize object creation.
      * Long and double must be counted as two variables in the array of local variables.
      */
-    public void finalizeNavigator() {
+    void finalizeLocalVariables() {
 
         int localVariableIndex = 4;
 

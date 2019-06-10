@@ -15,7 +15,7 @@ package org.f2blib.impl;
 import com.google.common.annotations.VisibleForTesting;
 import org.f2blib.FunctionEvaluationKernel;
 import org.f2blib.FunctionEvaluationProvider;
-import org.f2blib.generator.ASMFunctionEvaluationBytecodeGenerator;
+import org.f2blib.generator.FunctionEvaluationBytecodeGeneratorImpl;
 import org.f2blib.parser.AntlrFunctionParser;
 
 /**
@@ -45,7 +45,7 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
 
 
     private FunctionEvaluationKernel constructF2BLibImpl() {
-        return new F2BLibImpl(new AntlrFunctionParser(), new ASMFunctionEvaluationBytecodeGenerator());
+        return new F2BLibImpl(new AntlrFunctionParser(), new FunctionEvaluationBytecodeGeneratorImpl());
     }
 
     @Override

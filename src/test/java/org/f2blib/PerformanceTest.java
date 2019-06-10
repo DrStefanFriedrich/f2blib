@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
 
+import static org.f2blib.util.TestUtil.assumePerformanceTest;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
 
 /**
  * Do a lot of function evaluations concurrently to show how good the library
@@ -35,7 +35,7 @@ public class PerformanceTest extends AbstractPerformanceTest {
         try {
             FUNCTION_DEFINITION = readFunctionByFileName("PerformanceTestFunction.f");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -53,7 +53,7 @@ public class PerformanceTest extends AbstractPerformanceTest {
 
     @Test
     public void performance() throws ExecutionException, InterruptedException {
-        assumeTrue(performanceTestsEnabled());
+        assumePerformanceTest();
 
         kernel.load(FUNCTION_DEFINITION);
 

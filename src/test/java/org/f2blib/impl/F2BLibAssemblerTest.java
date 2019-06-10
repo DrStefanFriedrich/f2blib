@@ -24,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class F2BLibAssemblerTest {
 
     private final F2BLibAssembler underTest = new F2BLibAssembler();
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 

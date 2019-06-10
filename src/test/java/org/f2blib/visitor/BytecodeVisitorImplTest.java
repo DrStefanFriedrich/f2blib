@@ -12,37 +12,33 @@
 
 package org.f2blib.visitor;
 
+import org.f2blib.ast.Expression;
 import org.f2blib.ast.FunctionDefinition;
 import org.f2blib.impl.FunctionEvaluation;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.f2blib.ast.ASTTest.createFunctionDefinition;
+import static org.f2blib.util.TestUtil.assumePerformanceTest;
+import static org.f2blib.util.TestUtil.closeTo;
 import static org.f2blib.visitor.EvalVisitorTest.createSampleFunction;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
 
-public class BytecodeVisitorTest {
+public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
 
-    private BytecodeVisitor bytecodeVisitor;
+    private BytecodeVisitorImpl bytecodeVisitor;
 
-    private ValidationVisitor validationVisitor;
-
-    boolean performanceTestsEnabled() {
-        return Boolean.valueOf(System.getProperty("org.f2blib.performancetest.enabled", Boolean.FALSE.toString()));
-    }
+    private ValidationVisitorImpl validationVisitor;
 
     @Before
     public void setup() {
-        validationVisitor = new ValidationVisitor();
+        validationVisitor = new ValidationVisitorImpl();
     }
 
     @Test
-    @Ignore("TODO SF")
     public void simpleEvaluation() throws IllegalAccessException, InstantiationException, IOException {
 
         double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -53,29 +49,29 @@ public class BytecodeVisitorTest {
 
         fd.accept(validationVisitor);
 
-        bytecodeVisitor = new BytecodeVisitor(validationVisitor.getBytecodeNavigator());
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
         fd.accept(bytecodeVisitor);
 
         FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
 
         functionEvaluation.eval(p, x, y);
 
-        assertThat(y[0], closeTo(660, 1e-8));
-        assertThat(y[1], closeTo(1.385614343926388, 1e-8));
-        assertThat(y[2], closeTo(16.47020012859959, 1e-8));
-        assertThat(y[3], closeTo(-3.7776177920749547, 1e-8));
-        assertThat(y[4], closeTo(0, 1e-8));
+        assertThat(y[0], closeTo(660));
+        assertThat(y[1], closeTo(1.385614343926388));
+        assertThat(y[2], closeTo(50.58293575689467));
+        assertThat(y[3], closeTo(-3.7776177920749547));
+        assertThat(y[4], closeTo(0));
     }
 
     @Test
     public void performance() throws IllegalAccessException, InstantiationException, IOException {
-        //assumeTrue(performanceTestsEnabled());
+        assumePerformanceTest();
 
         FunctionDefinition fd = createSampleFunction();
 
         fd.accept(validationVisitor);
 
-        bytecodeVisitor = new BytecodeVisitor(validationVisitor.getBytecodeNavigator());
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
         fd.accept(bytecodeVisitor);
 
         FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -110,4 +106,31 @@ public class BytecodeVisitorTest {
         fail("Performance should always be better. That's why we fail the unit test\n\n" +
                 "The execution took (ms): " + (end - start));
     }
+
+    @Override
+    protected void assertExpressionMatches(Expression expression, double xValue, double yValue) {
+        try {
+
+            FunctionDefinition fd = createFunctionDefinition("BytecodeTestFunc", expression);
+
+            fd.accept(validationVisitor);
+
+            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
+            fd.accept(bytecodeVisitor);
+
+            FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+
+            double[] x = new double[]{xValue};
+            double[] p = new double[]{};
+            double[] y = new double[1];
+
+            functionEvaluation.eval(p, x, y);
+
+            assertThat(y[0], closeTo(yValue));
+
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new InternalError(e);
+        }
+    }
+
 }

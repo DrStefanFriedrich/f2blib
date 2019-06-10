@@ -14,41 +14,16 @@ package org.f2blib.parser;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.f2blib.FunctionsBaseVisitor;
 import org.f2blib.FunctionsLexer;
-import org.f2blib.FunctionsListener;
 import org.f2blib.FunctionsParser;
-import org.f2blib.ast.*;
+import org.f2blib.ast.FunctionBody;
+import org.f2blib.ast.FunctionDefinition;
 
-import java.util.List;
+import static java.lang.String.format;
 
 public class AntlrFunctionParser implements FunctionParser {
 
-    // TODO SF Remove
-    @Override
-    public void applyListener(String functionDefinition, FunctionsListener listener) {
-
-        FunctionsLexer lexer = new FunctionsLexer(CharStreams.fromString(functionDefinition));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        FunctionsParser parser = new FunctionsParser(tokens);
-
-        parser.addErrorListener(new BaseErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
-                                    int line, int charPositionInLine, String msg, RecognitionException e) {
-                throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
-            }
-        });
-
-        ParseTree tree = parser.function_definition();
-        ParseTreeWalker walker = new ParseTreeWalker();
-
-        walker.walk(listener, tree);
-    }
-
-    // http://jakubdziworski.github.io/java/2016/04/01/antlr_visitor_vs_listener.html
     @Override
     public FunctionDefinition parse(String functionDefinition) {
 
@@ -60,7 +35,7 @@ public class AntlrFunctionParser implements FunctionParser {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
                                     int line, int charPositionInLine, String msg, RecognitionException e) {
-                throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + msg);
+                throw new ParseCancellationException(format("line %d: %d %s", line, charPositionInLine, msg));
             }
         });
 

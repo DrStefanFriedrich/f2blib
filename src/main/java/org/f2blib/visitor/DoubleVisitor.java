@@ -56,10 +56,6 @@ public interface DoubleVisitor {
 
     double visitInt(Int i);
 
-    double visitLaguerre(Laguerre laguerre);
-
-    double visitLegendre(Legendre legendre);
-
     double visitLn(Ln ln);
 
     double visitMultiplication(Multiplication multiplication);
@@ -89,5 +85,7 @@ public interface DoubleVisitor {
     double visitPos(Pos pos);
 
     double visitDoub(Doub doub);
+
+    double visitSqrt(Sqrt sqrt);
 
 }

@@ -12,12 +12,9 @@
 
 package org.f2blib.parser;
 
-import org.f2blib.FunctionsListener;
 import org.f2blib.ast.FunctionDefinition;
 
 public interface FunctionParser {
-
-    void applyListener(String functionDefinition, FunctionsListener listener);
 
     FunctionDefinition parse(String functionDefinition);
 

@@ -23,8 +23,6 @@ import java.util.Objects;
  */
 public final class Binomial implements IntExpression {
 
-    private static final int PRECEDENCE = 1;
-
     private final IntExpression k;
 
     private final IntExpression n;
@@ -40,11 +38,6 @@ public final class Binomial implements IntExpression {
 
     public IntExpression getN() {
         return n;
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

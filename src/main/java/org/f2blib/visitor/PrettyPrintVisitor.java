@@ -26,6 +26,10 @@ public class PrettyPrintVisitor implements Visitor {
 
     private final PrintWriter pw = new PrintWriter(out);
 
+    private final SymbolVisitor symbolVisitor = new SymbolVisitor();
+
+    private final PrecedenceVisitor precedenceVisitor = new PrecedenceVisitor();
+
     public String getString() {
         return out.getBuffer().toString();
     }
@@ -34,34 +38,48 @@ public class PrettyPrintVisitor implements Visitor {
      * Print the given symbol followed by '(', followed by the element, followed
      * by ')'.
      */
-    private void printWithParenthesis(String symbol, ASTElement element) {
+    private void printWithParenthesis(UnaryExpression unaryExpression) {
+
+        String symbol = unaryExpression.accept(symbolVisitor);
 
         pw.print(symbol + "(");
-        element.accept(this);
+        unaryExpression.getExpression().accept(this);
         pw.print(")");
 
     }
 
-    private void printWithSpace(String symbol, ASTElement element) {
+    private void printWithSpace(UnaryExpression unaryExpression) {
+
+        String symbol = unaryExpression.accept(symbolVisitor);
+
+
         pw.print(symbol + " ");
-        element.accept(this);
+        unaryExpression.getExpression().accept(this);
     }
 
-    private void printUnaryExpression(String symbol, UnaryExpression unaryExpression) {
+    private void printUnaryExpression(UnaryExpression unaryExpression) {
 
-        if (unaryExpression.precedence() < unaryExpression.getExpression().precedence()) {
+        int precedenceThis = unaryExpression.accept(precedenceVisitor);
+        int precedenceInner = unaryExpression.getExpression().accept(precedenceVisitor);
 
-            printWithParenthesis(symbol, unaryExpression.getExpression());
+        if (precedenceThis < precedenceInner) {
+
+            printWithParenthesis(unaryExpression);
 
         } else {
 
-            printWithSpace(symbol, unaryExpression.getExpression());
+            printWithSpace(unaryExpression);
         }
     }
 
-    private void printBinaryExpression(String symbol, BinaryExpression binaryExpression) {
+    private void printBinaryExpression(BinaryExpression binaryExpression) {
 
-        if (binaryExpression.precedence() < binaryExpression.getLeft().precedence()) {
+        String symbol = binaryExpression.accept(symbolVisitor);
+        int precedenceThis = binaryExpression.accept(precedenceVisitor);
+        int precedenceLeft = binaryExpression.getLeft().accept(precedenceVisitor);
+        int precedenceRight = binaryExpression.getRight().accept(precedenceVisitor);
+
+        if (precedenceThis < precedenceLeft) {
 
             pw.print("(");
             binaryExpression.getLeft().accept(this);
@@ -73,7 +91,7 @@ public class PrettyPrintVisitor implements Visitor {
             pw.print(" " + symbol + " ");
         }
 
-        if (binaryExpression.precedence() < binaryExpression.getRight().precedence()) {
+        if (precedenceThis < precedenceRight) {
 
             pw.print("(");
             binaryExpression.getRight().accept(this);
@@ -86,56 +104,127 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
+    public Void visitNeg(Neg neg) {
+
+        int precedenceThis = neg.accept(precedenceVisitor);
+        int precedenceInner = neg.getExpression().accept(precedenceVisitor);
+
+        if (precedenceThis < precedenceInner) {
+
+            printWithParenthesis(neg);
+        } else {
+            pw.print((String) neg.accept(symbolVisitor));
+            neg.getExpression().accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitPos(Pos pos) {
+
+        int precedenceThis = pos.accept(precedenceVisitor);
+        int precedenceInner = pos.getExpression().accept(precedenceVisitor);
+
+        if (precedenceThis < precedenceInner) {
+
+            printWithParenthesis(pos);
+        } else {
+            pos.getExpression().accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitFaculty(Faculty faculty) {
+
+        String symbol = faculty.accept(symbolVisitor);
+        int precedenceThis = faculty.accept(precedenceVisitor);
+        int precedenceInner = faculty.getIntExpression().accept(precedenceVisitor);
+
+        if (precedenceThis < precedenceInner) {
+
+            pw.print("(");
+            faculty.getIntExpression().accept(this);
+            pw.print(")" + symbol);
+
+        } else {
+
+            faculty.getIntExpression().accept(this);
+            pw.print(symbol);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitParenthesis(Parenthesis parenthesis) {
+
+        int precedenceThis = parenthesis.accept(precedenceVisitor);
+        int precedenceInner = parenthesis.getExpression().accept(precedenceVisitor);
+
+        if (precedenceThis < precedenceInner) {
+
+            printWithParenthesis(parenthesis);
+
+        } else {
+            parenthesis.getExpression().accept(this);
+        }
+        return null;
+    }
+
+    @Override
     public Void visitAbs(Abs abs) {
-        printUnaryExpression("abc", abs);
+        printUnaryExpression(abs);
         return null;
     }
 
     @Override
     public Void visitAddition(Addition addition) {
-        printBinaryExpression("+", addition);
+        printBinaryExpression(addition);
         return null;
     }
 
     @Override
     public Void visitArccos(Arccos arccos) {
-        printUnaryExpression("arccos", arccos);
+        printUnaryExpression(arccos);
         return null;
     }
 
     @Override
     public Void visitArcosh(Arcosh arcosh) {
-        printUnaryExpression("arcosh", arcosh);
+        printUnaryExpression(arcosh);
         return null;
     }
 
     @Override
     public Void visitArcsin(Arcsin arcsin) {
-        printUnaryExpression("arcsin", arcsin);
+        printUnaryExpression(arcsin);
         return null;
     }
 
     @Override
     public Void visitArctan(Arctan arctan) {
-        printUnaryExpression("arctan", arctan);
+        printUnaryExpression(arctan);
         return null;
     }
 
     @Override
     public Void visitArsinh(Arsinh arsinh) {
-        printUnaryExpression("arsinh", arsinh);
+        printUnaryExpression(arsinh);
         return null;
     }
 
     @Override
     public Void visitArtanh(Artanh artanh) {
-        printUnaryExpression("artanh", artanh);
+        printUnaryExpression(artanh);
         return null;
     }
 
     @Override
     public Void visitBinomial(Binomial binomial) {
-        pw.print("binomial(");
+
+        String symbol = binomial.accept(symbolVisitor);
+
+        pw.print(symbol + "(");
         binomial.getK().accept(this);
         pw.print(", ");
         binomial.getN().accept(this);
@@ -151,42 +240,25 @@ public class PrettyPrintVisitor implements Visitor {
 
     @Override
     public Void visitCos(Cos cos) {
-        printUnaryExpression("cos", cos);
+        printUnaryExpression(cos);
         return null;
     }
 
     @Override
     public Void visitCosh(Cosh cosh) {
-        printUnaryExpression("cosh", cosh);
+        printUnaryExpression(cosh);
         return null;
     }
 
     @Override
     public Void visitDivision(Division division) {
-        printBinaryExpression("/", division);
+        printBinaryExpression(division);
         return null;
     }
 
     @Override
     public Void visitExp(Exp exp) {
-        printUnaryExpression("exp", exp);
-        return null;
-    }
-
-    @Override
-    public Void visitFaculty(Faculty faculty) {
-
-        if (faculty.precedence() < faculty.getIntExpression().precedence()) {
-
-            pw.print("(");
-            faculty.getIntExpression().accept(this);
-            pw.print(")!");
-
-        } else {
-
-            faculty.getIntExpression().accept(this);
-            pw.print("!");
-        }
+        printUnaryExpression(exp);
         return null;
     }
 
@@ -233,34 +305,14 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitLaguerre(Laguerre laguerre) {
-        pw.print("laguerre(");
-        laguerre.getN().accept(this);
-        pw.print(", ");
-        laguerre.getExpression().accept(this);
-        pw.print(")");
-        return null;
-    }
-
-    @Override
-    public Void visitLegendre(Legendre legendre) {
-        pw.print("legendre(");
-        legendre.getN().accept(this);
-        pw.print(", ");
-        legendre.getExpression().accept(this);
-        pw.print(")");
-        return null;
-    }
-
-    @Override
     public Void visitLn(Ln ln) {
-        printUnaryExpression("ln", ln);
+        printUnaryExpression(ln);
         return null;
     }
 
     @Override
     public Void visitMultiplication(Multiplication multiplication) {
-        printBinaryExpression("*", multiplication);
+        printBinaryExpression(multiplication);
         return null;
     }
 
@@ -271,57 +323,44 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitParenthesis(Parenthesis parenthesis) {
-
-        if (parenthesis.precedence() < parenthesis.getExpression().precedence()) {
-
-            printWithParenthesis("", parenthesis.getExpression());
-
-        } else {
-            parenthesis.getExpression().accept(this);
-        }
-        return null;
-    }
-
-    @Override
     public Void visitPower(Power power) {
-        printBinaryExpression("^", power);
+        printBinaryExpression(power);
         return null;
     }
 
     @Override
     public Void visitRound(Round round) {
-        printUnaryExpression("round", round);
+        printUnaryExpression(round);
         return null;
     }
 
     @Override
     public Void visitSin(Sin sin) {
-        printUnaryExpression("sin", sin);
+        printUnaryExpression(sin);
         return null;
     }
 
     @Override
     public Void visitSinh(Sinh sinh) {
-        printUnaryExpression("sinh", sinh);
+        printUnaryExpression(sinh);
         return null;
     }
 
     @Override
     public Void visitSubtraction(Subtraction subtraction) {
-        printBinaryExpression("-", subtraction);
+        printBinaryExpression(subtraction);
         return null;
     }
 
     @Override
     public Void visitTan(Tan tan) {
-        printUnaryExpression("tan", tan);
+        printUnaryExpression(tan);
         return null;
     }
 
     @Override
     public Void visitTanh(Tanh tanh) {
-        printUnaryExpression("tanh", tanh);
+        printUnaryExpression(tanh);
         return null;
     }
 
@@ -332,27 +371,8 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitNeg(Neg neg) {
-
-        if (neg.precedence() < neg.getExpression().precedence()) {
-
-            printWithParenthesis("-", neg.getExpression());
-        } else {
-            pw.print("-");
-            neg.getExpression().accept(this);
-        }
-        return null;
-    }
-
-    @Override
-    public Void visitPos(Pos pos) {
-
-        if (pos.precedence() < pos.getExpression().precedence()) {
-
-            printWithParenthesis("+", pos.getExpression());
-        } else {
-            pos.getExpression().accept(this);
-        }
+    public Void visitSqrt(Sqrt sqrt) {
+        printUnaryExpression(sqrt);
         return null;
     }
 

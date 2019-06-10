@@ -16,40 +16,40 @@ import org.f2blib.ast.Function;
 import org.f2blib.ast.FunctionBody;
 import org.f2blib.ast.FunctionDefinition;
 import org.f2blib.ast.Functions;
+import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.impl.FunctionEvaluation;
 import org.junit.Before;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public abstract class AbstractBytecodeVisitorTest {
+public abstract class AbstractBytecodeVisitorImplTest {
 
-    protected BytecodeVisitor bytecodeVisitor;
+    private BytecodeVisitorImpl bytecodeVisitor;
 
-    private ValidationVisitor validationVisitor;
+    private ValidationVisitorImpl validationVisitor;
 
     @Before
     public void setup() {
-        validationVisitor = new ValidationVisitor();
+        validationVisitor = new ValidationVisitorImpl();
     }
 
-    protected FunctionDefinition createFunctionDefinition(String functionName, Function... functions) {
+    FunctionDefinition createFunctionDefinition(String functionName, Function... functions) {
         return new FunctionDefinition(functionName, new FunctionBody(new Functions(new HashSet<>(Arrays.asList(functions)))));
     }
 
-    protected FunctionEvaluation generateClass(FunctionDefinition fd) {
+    FunctionEvaluation generateClass(FunctionDefinition fd) {
         try {
 
             fd.accept(validationVisitor);
 
-            bytecodeVisitor = new BytecodeVisitor(validationVisitor.getBytecodeNavigator());
+            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
             fd.accept(bytecodeVisitor);
 
             return bytecodeVisitor.generate().newInstance();
 
-        } catch (InstantiationException | IllegalAccessException | IOException e) {
-            throw new RuntimeException(e);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new BytecodeGenerationException("Error in instantiating class", e);
         }
     }
 

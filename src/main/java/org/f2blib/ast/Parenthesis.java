@@ -20,19 +20,12 @@ import org.f2blib.visitor.Visitor;
  */
 public final class Parenthesis extends UnaryExpression {
 
-    private static final int PRECEDENCE = 0;
-
     public Parenthesis(Expression expression) {
         super(expression);
     }
 
     public <T> T accept(Visitor visitor) {
         return visitor.visitParenthesis(this);
-    }
-
-    @Override
-    public int precedence() {
-        return PRECEDENCE;
     }
 
     @Override

@@ -39,10 +39,6 @@ abstract class AbstractPerformanceTest {
         }.asCharSource(Charsets.UTF_8).read();
     }
 
-    boolean performanceTestsEnabled() {
-        return Boolean.valueOf(System.getProperty("org.f2blib.performancetest.enabled", Boolean.FALSE.toString()));
-    }
-
     Set<RequestResponse> prepareTestObjects() {
         Set<RequestResponse> result = new HashSet<>();
 

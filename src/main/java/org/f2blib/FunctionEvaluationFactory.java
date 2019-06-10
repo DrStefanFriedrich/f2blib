@@ -17,6 +17,8 @@ import com.google.common.annotations.VisibleForTesting;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
+import static java.lang.String.format;
+
 class FunctionEvaluationFactory {
 
     private final Iterable<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
@@ -42,7 +44,7 @@ class FunctionEvaluationFactory {
             }
         }
 
-        throw new IllegalArgumentException("Provider not found: " + kernelIdentifier);
+        throw new IllegalArgumentException(format("Provider not found: %s", kernelIdentifier));
     }
 
     private Iterator<FunctionEvaluationProvider> getIterator() {

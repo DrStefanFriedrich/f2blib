@@ -67,12 +67,7 @@ public final class Function implements ASTElement, DoubleASTElement {
         return Objects.hash(index, expression);
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    public Void accept(Visitor visitor) {
+    public <T> T accept(Visitor visitor) {
         return visitor.visitFunction(this);
     }
 

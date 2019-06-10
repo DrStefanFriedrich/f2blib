@@ -19,24 +19,25 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.f2blib.ast.ASTTest.createFunctionDefinition;
+import static org.f2blib.util.TestUtil.assumePerformanceTest;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.f2blib.util.TestUtil.closeTo;
 
-public class EvalVisitorTest {
+public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
 
     private EvalVisitor evalVisitor;
 
-    boolean performanceTestsEnabled() {
-        return Boolean.valueOf(System.getProperty("org.f2blib.performancetest.enabled", Boolean.FALSE.toString()));
-    }
+    private double[] x;
+
+    private double[] p;
 
     @Before
     public void setup() {
-        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        double[] p = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
-        evalVisitor = new EvalVisitor(x, p, 5);
+        x = new double[1];
+        p = new double[0];
+        evalVisitor = new EvalVisitor(x, p, 1);
     }
 
     public static FunctionDefinition createSampleFunction() {
@@ -95,19 +96,24 @@ public class EvalVisitorTest {
     @Test
     public void simpleEvaluation() {
 
+        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        double[] p = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
+        evalVisitor = new EvalVisitor(x, p, 5);
+
         FunctionDefinition fd = createSampleFunction();
 
         fd.accept(evalVisitor);
-        assertThat(evalVisitor.getResult()[0], closeTo(660, 1e-8));
-        assertThat(evalVisitor.getResult()[1], closeTo(1.385614343926388, 1e-8));
-        assertThat(evalVisitor.getResult()[2], closeTo(50.58293575689467, 1e-8));
-        assertThat(evalVisitor.getResult()[3], closeTo(-3.7776177920749547, 1e-8));
-        assertThat(evalVisitor.getResult()[4], closeTo(0, 1e-8));
+
+        assertThat(evalVisitor.getResult()[0], closeTo(660));
+        assertThat(evalVisitor.getResult()[1], closeTo(1.385614343926388));
+        assertThat(evalVisitor.getResult()[2], closeTo(50.58293575689467));
+        assertThat(evalVisitor.getResult()[3], closeTo(-3.7776177920749547));
+        assertThat(evalVisitor.getResult()[4], closeTo(0));
     }
 
     @Test
     public void performance() {
-        assumeTrue(performanceTestsEnabled());
+        assumePerformanceTest();
 
         FunctionDefinition fd = createSampleFunction();
 
@@ -140,6 +146,17 @@ public class EvalVisitorTest {
 
         fail("Performance should always be better. That's why we fail the unit test\n\n" +
                 "The execution took (ms): " + (end - start));
+    }
+
+    protected void assertExpressionMatches(Expression expression, double xValue, double yValue) {
+
+        FunctionDefinition fd = createFunctionDefinition("EvalTestFunc", expression);
+
+        x[0] = xValue;
+        fd.accept(evalVisitor);
+        double y = evalVisitor.getResult()[0];
+
+        assertThat(y, closeTo(yValue));
     }
 
 }

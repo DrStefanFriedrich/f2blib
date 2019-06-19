@@ -1,4 +1,8 @@
 .idea/
 f2blib.iml
-target/
+build/
 *.class
+.gradle/
+f2blib.iws
+f2blib.ipr
+

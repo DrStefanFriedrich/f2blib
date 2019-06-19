@@ -2,7 +2,7 @@
 # F2BLib &mdash; Function to Bytecode Library
 
 ![Language Java](https://img.shields.io/static/v1.svg?label=Language&message=Java&color=fbff8a&style=plastic)
-![Build Maven](https://img.shields.io/static/v1.svg?label=Build&message=Maven&color=ffe780&style=plastic)
+![Build Gradle](https://img.shields.io/static/v1.svg?label=Build&message=Gradle&color=ffe780&style=plastic)
 ![Version 1.0.0-SNAPSHOT](https://img.shields.io/static/v1.svg?label=Version&message=1.0.0-SNAPSHOT&color=ffcf85&style=plastic)
 ![License EPL v2.0](https://img.shields.io/static/v1.svg?label=License&message=EPL&nbsp;v2.0&color=ffb994&style=plastic)
 
@@ -15,7 +15,7 @@ them _very_ quickly.
 
 ## Introduction
 
-F2BLib &ndash; Function to Bytecode Library &ndash; defines a [Grammar](src/main/antlr4/org/f2blib/Functions.g4)
+F2BLib &ndash; Function to Bytecode Library &ndash; defines a [Grammar](src/main/antlr/org/f2blib/Functions.g4)
 for real-valued mathematical function expressions. It parses an input source using [Antlr4](https://www.antlr.org/)
 and converts the resulting abstract syntax tree (AST) to Java bytecode using [ASM](https://asm.ow2.io/). The
 functions can then be evaluated _very_ fast.
@@ -174,21 +174,13 @@ Suppose you want to evaluate a real-valued function with two variables and two p
 </math>
 </center>
 
-Introduce the property
+Introduce the dependency
 
 ```
-f2blib.version
+'org.f2blib:f2blib:${f2blibVersion}'
 ```
 
-into your Maven `pom.xml` and set it to the version of F2BLib you want to use and declare a dependency like
-
-```xml
-<dependency>
-    <groupId>org.f2blib</groupId>
-    <artifactId>f2blib</artifactId>
-    <version>${f2blib.version}</version>
-</dependency>
-```
+with the correct version of F2BLib you want to use into your Gradle `build.gradle`.
 
 Then define a function like in
 
@@ -242,13 +234,13 @@ To build the project and start developing, do
 ```
 $ git clone git@github.com/DrStefanFriedrich/f2blib
 $ cd f2blib
-$ mvn clean install
+$ ./gradlew
 ```
 
 To run the performance tests, do
 
 ```
-$ mvn test -Dorg.f2blib.performancetest.enabled=true
+$ ./gradlew -Dorg.f2blib.performancetest.enabled=true
 ```
 
 
@@ -333,7 +325,6 @@ The project is published under the [Eclipse Public License v2.0](LICENSE.txt), w
   * Finalize the project to some degree (check every single file and ask yourself: can I publish this?)
   * Check test coverage and SonarQube issues
   * 'mvn site'
-  * Introduce Gradle?
 
 * Priority 4: Build and Publish in the Cloud
   * Build the project in the cloud

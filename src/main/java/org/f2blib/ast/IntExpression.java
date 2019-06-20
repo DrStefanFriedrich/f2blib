@@ -13,7 +13,7 @@
 package org.f2blib.ast;
 
 /**
- * Models a mathematical integer expression.
+ * Models a mathematical integer expression. A pure marker interface.
  */
 public interface IntExpression extends Expression {
 }

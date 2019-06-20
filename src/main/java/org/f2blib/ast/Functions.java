@@ -16,29 +16,26 @@ import com.google.common.base.MoreObjects;
 import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
- * {@link Functions} models a set of mathematical expression. Example:<p />
+ * {@link Functions} model a set of mathematical expressions. Example:<p />
  * f_1 := x_1^2<p />
  * f_2 := 3-x_2
  */
 public final class Functions implements ASTElement, DoubleASTElement {
 
-    private final Set<Function> functions = new HashSet<>();
+    private final List<Function> functions = new ArrayList<>();
 
-    public Functions(Set<Function> functions) {
+    public Functions(List<Function> functions) {
         this.functions.addAll(functions);
     }
 
     public Functions(Function... functions) {
-        this(new HashSet<>(Arrays.asList(functions)));
+        this(Arrays.asList(functions));
     }
 
-    public Set<Function> getFunctions() {
+    public List<Function> getFunctions() {
         return functions;
     }
 
@@ -51,8 +48,12 @@ public final class Functions implements ASTElement, DoubleASTElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Functions functions1 = (Functions) o;
         return Objects.equals(functions, functions1.functions);
     }
@@ -62,6 +63,7 @@ public final class Functions implements ASTElement, DoubleASTElement {
         return Objects.hash(functions);
     }
 
+    @Override
     public Void accept(Visitor visitor) {
         return visitor.visitFunctions(this);
     }

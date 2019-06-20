@@ -19,8 +19,8 @@ import org.f2blib.visitor.Visitor;
 import java.util.Objects;
 
 /**
- * {@link Function} models a single-valued mathematical function. A function has
- * an index n and and expression: f_n := 'expression'.
+ * A {@link Function} models a single-valued mathematical function. A function
+ * consists of an index n and and expression: f_n := 'expression'.
  */
 public final class Function implements ASTElement, DoubleASTElement {
 
@@ -55,8 +55,12 @@ public final class Function implements ASTElement, DoubleASTElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Function function = (Function) o;
         return index == function.index &&
                 Objects.equals(expression, function.expression);
@@ -67,6 +71,7 @@ public final class Function implements ASTElement, DoubleASTElement {
         return Objects.hash(index, expression);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitFunction(this);
     }
@@ -75,4 +80,5 @@ public final class Function implements ASTElement, DoubleASTElement {
     public double accept(DoubleVisitor visitor) {
         return visitor.visitFunction(this);
     }
+
 }

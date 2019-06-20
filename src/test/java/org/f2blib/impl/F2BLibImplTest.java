@@ -12,7 +12,9 @@
 
 package org.f2blib.impl;
 
+import org.f2blib.FunctionEvaluationKernel;
 import org.f2blib.ast.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.f2blib.util.TestUtil.closeTo;
@@ -20,6 +22,16 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 public class F2BLibImplTest extends AbstractF2BLibImplTest {
+
+    private static final String FUNCTION_1 = "function Func;\n" +
+            "begin\n" +
+            "    f_1 := 2 * x_1;\n" +
+            "end";
+
+    private static final String FUNCTION_2 = "function Func;\n" +
+            "begin\n" +
+            "    f_1 := 4 * x_1 + 100;\n" +
+            "end";
 
     @Test
     public void cacheWorks() {
@@ -43,6 +55,40 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         exception.expect(IllegalArgumentException.class);
 
         underTest.eval("unknown", null, null, null);
+    }
+
+    @Test
+    @Ignore("TODO SF Wait until the parser is finished")
+    public void loadSameFunctionTwice() {
+        double[] y = new double[1];
+
+        FunctionEvaluationKernel fek = new F2BLibAssembler().create();
+
+        for (int i = 0; i <= 1; i++) {
+
+            fek.load(FUNCTION_1);
+            fek.eval("Func", new double[0], new double[]{1.63}, y);
+
+            assertThat(y[0], closeTo(3.26));
+        }
+    }
+
+    @Test
+    @Ignore("TODO SF Wait until the parser is finished")
+    public void loadDifferentFunctionTwice() {
+        double[] y = new double[1];
+
+        FunctionEvaluationKernel fek = new F2BLibAssembler().create();
+
+        fek.load(FUNCTION_1);
+        fek.eval("Func", new double[0], new double[]{1.63}, y);
+
+        assertThat(y[0], closeTo(3.26));
+
+        fek.load(FUNCTION_2);
+        fek.eval("Func", new double[0], new double[]{1.63}, y);
+
+        assertThat(y[0], closeTo(106.52));
     }
 
 }

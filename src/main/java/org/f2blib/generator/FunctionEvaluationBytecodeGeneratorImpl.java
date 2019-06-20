@@ -16,10 +16,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.f2blib.ast.FunctionDefinition;
 import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.impl.FunctionEvaluation;
-import org.f2blib.visitor.BytecodeVisitor;
-import org.f2blib.visitor.BytecodeVisitorImpl;
-import org.f2blib.visitor.ValidationVisitor;
-import org.f2blib.visitor.ValidationVisitorImpl;
+import org.f2blib.visitor.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -28,10 +25,11 @@ public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluati
     @Override
     public FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition) {
 
-        ValidationVisitorImpl validationVisitor = new ValidationVisitorImpl();
+        ValidationVisitor validationVisitor = new ValidationVisitorImpl();
+        LocalVariables localVariables = validationVisitor.getLocalVariables();
+        BytecodeVisitor bytecodeVisitor = new BytecodeVisitorImpl(localVariables);
 
-        return generateAndInstantiate(functionDefinition, validationVisitor,
-                new BytecodeVisitorImpl(validationVisitor.getLocalVariables()));
+        return generateAndInstantiate(functionDefinition, validationVisitor, bytecodeVisitor);
     }
 
     @VisibleForTesting

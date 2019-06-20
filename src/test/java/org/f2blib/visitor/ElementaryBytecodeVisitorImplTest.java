@@ -331,7 +331,7 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     @Test
     public void test23() {
 
-        FunctionDefinition fd = createFunctionDefinition("Test23", new Function(0, new Binomial(new Int(3), new Int(9))));
+        FunctionDefinition fd = createFunctionDefinition("Test23", new Function(0, new Binomial(new Int(9), new Int(3))));
         FunctionEvaluation fe = generateClass(fd);
 
         double[] y = new double[1];

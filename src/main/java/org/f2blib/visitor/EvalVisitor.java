@@ -21,6 +21,10 @@ import static java.lang.String.format;
 import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficient;
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
 
+/**
+ * A {@link Visitor} implementation that evaluates a mathematical expression
+ * given as abstract syntax tree by recursively walking through the tree.
+ */
 public class EvalVisitor implements DoubleVisitor {
 
     private final double[] x;

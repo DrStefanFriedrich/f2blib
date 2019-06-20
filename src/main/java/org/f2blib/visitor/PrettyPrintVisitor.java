@@ -225,9 +225,9 @@ public class PrettyPrintVisitor implements Visitor {
         String symbol = binomial.accept(symbolVisitor);
 
         pw.print(symbol + "(");
-        binomial.getK().accept(this);
-        pw.print(", ");
         binomial.getN().accept(this);
+        pw.print(", ");
+        binomial.getK().accept(this);
         pw.print(")");
         return null;
     }

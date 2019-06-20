@@ -12,6 +12,9 @@
 
 package org.f2blib;
 
+/**
+ * Encapsulate creation of a {@link FunctionEvaluationKernel}.
+ */
 public interface FunctionEvaluationProvider {
 
     /**

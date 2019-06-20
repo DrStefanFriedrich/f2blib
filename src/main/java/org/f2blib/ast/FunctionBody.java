@@ -19,8 +19,8 @@ import org.f2blib.visitor.Visitor;
 import java.util.Objects;
 
 /**
- * {@link FunctionBody} models the actual function definition in form of mathematical
- * expressions or (in the future) for loops and the like.
+ * A {@link FunctionBody} models the actual function definition in form of
+ * mathematical expressions or (in the future) for loops and the like.
  */
 public final class FunctionBody implements ASTElement, DoubleASTElement {
 
@@ -43,8 +43,12 @@ public final class FunctionBody implements ASTElement, DoubleASTElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FunctionBody that = (FunctionBody) o;
         return Objects.equals(functions, that.functions);
     }
@@ -54,6 +58,7 @@ public final class FunctionBody implements ASTElement, DoubleASTElement {
         return Objects.hash(functions);
     }
 
+    @Override
     public Void accept(Visitor visitor) {
         return visitor.visitFunctionBody(this);
     }

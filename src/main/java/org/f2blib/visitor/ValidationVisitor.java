@@ -12,6 +12,10 @@
 
 package org.f2blib.visitor;
 
+/**
+ * Abstraction layer for the validation logic. Used to decouple the system and
+ * to improve testability.
+ */
 public interface ValidationVisitor extends Visitor {
 
     LocalVariables getLocalVariables();

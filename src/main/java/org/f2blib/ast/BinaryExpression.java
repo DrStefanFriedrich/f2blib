@@ -17,7 +17,7 @@ import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 /**
- * Expression that evaluate two sub-expressions.
+ * An expression that evaluates two sub-expressions.
  */
 public abstract class BinaryExpression implements Expression {
 
@@ -48,8 +48,12 @@ public abstract class BinaryExpression implements Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         BinaryExpression that = (BinaryExpression) o;
         return Objects.equals(left, that.left) &&
                 Objects.equals(right, that.right);

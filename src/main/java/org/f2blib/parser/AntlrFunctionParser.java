@@ -14,9 +14,9 @@ package org.f2blib.parser;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.f2blib.FunctionsBaseVisitor;
-import org.f2blib.FunctionsLexer;
-import org.f2blib.FunctionsParser;
+import org.f2blib.antlr.FunctionsBaseVisitor;
+import org.f2blib.antlr.FunctionsLexer;
+import org.f2blib.antlr.FunctionsParser;
 import org.f2blib.ast.FunctionBody;
 import org.f2blib.ast.FunctionDefinition;
 

@@ -69,8 +69,8 @@ public abstract class AbstractCalculatingVisitorTest {
 
     @Test
     public void binomial() {
-        assertExpressionMatches(new Binomial(new Int(4), new Int(5)), 1.11, 5);
-        assertExpressionMatches(new Binomial(new Int(4), new Int(5)), -1.11, 5);
+        assertExpressionMatches(new Binomial(new Int(5), new Int(4)), 1.11, 5);
+        assertExpressionMatches(new Binomial(new Int(5), new Int(4)), -1.11, 5);
     }
 
     @Test

@@ -17,7 +17,7 @@ import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 /**
- * Variables or parameters like x_1 or p_1.
+ * Abstract base class for variables or parameters like x_1 or p_1.
  */
 public abstract class IndexedExpression implements Expression {
 
@@ -44,8 +44,12 @@ public abstract class IndexedExpression implements Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         IndexedExpression that = (IndexedExpression) o;
         return index == that.index;
     }

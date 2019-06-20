@@ -16,7 +16,9 @@ import org.f2blib.ast.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.f2blib.ast.ASTTest.createFunctionDefinition;
@@ -42,7 +44,7 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
 
     public static FunctionDefinition createSampleFunction() {
 
-        Set<Function> functions = new HashSet<>();
+        List<Function> functions = new ArrayList<>();
 
         // Scalar product
         Function f1 = new Function(0, new Addition(new Multiplication(new Variable(0), new Parameter(0)),

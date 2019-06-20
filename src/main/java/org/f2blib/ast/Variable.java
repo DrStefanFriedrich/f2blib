@@ -17,6 +17,7 @@ import org.f2blib.visitor.Visitor;
 
 /**
  * A variable is an expression of the form x_i, where i is a integer.
+ * See also: {@link Parameter}.
  */
 public final class Variable extends IndexedExpression {
 
@@ -24,6 +25,7 @@ public final class Variable extends IndexedExpression {
         super(index);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitVariable(this);
     }

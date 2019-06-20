@@ -35,7 +35,7 @@ public abstract class AbstractBytecodeVisitorImplTest {
     }
 
     FunctionDefinition createFunctionDefinition(String functionName, Function... functions) {
-        return new FunctionDefinition(functionName, new FunctionBody(new Functions(new HashSet<>(Arrays.asList(functions)))));
+        return new FunctionDefinition(functionName, new FunctionBody(new Functions(Arrays.asList(functions))));
     }
 
     FunctionEvaluation generateClass(FunctionDefinition fd) {

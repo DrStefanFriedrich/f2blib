@@ -16,7 +16,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -111,10 +113,10 @@ public class ASTTest {
         @Test
         public void binomial() {
 
-            assertThat(new Binomial(new Int(3), new Int(4)).toString(),
-                    is("Binomial{k=Int{value=3}, n=Int{value=4}}"));
-            assertThat(new Faculty(new Binomial(new Int(3), new Int(4))).toString(),
-                    is("Faculty{intExpression=Binomial{k=Int{value=3}, n=Int{value=4}}}"));
+            assertThat(new Binomial(new Int(4), new Int(3)).toString(),
+                    is("Binomial{n=Int{value=4}, k=Int{value=3}}"));
+            assertThat(new Faculty(new Binomial(new Int(4), new Int(3))).toString(),
+                    is("Faculty{intExpression=Binomial{n=Int{value=4}, k=Int{value=3}}}"));
         }
 
         @Test
@@ -416,9 +418,9 @@ public class ASTTest {
         @Test
         public void binomial() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Binomial(new Int(3), new Int(4)));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Binomial(new Int(3), new Int(4)));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Binomial(new Int(3), new Int(5)));
+            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Binomial(new Int(4), new Int(3)));
+            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Binomial(new Int(4), new Int(3)));
+            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Binomial(new Int(5), new Int(3)));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -737,11 +739,11 @@ public class ASTTest {
 
     public static FunctionDefinition createFunctionDefinition(String name, Expression expression) {
 
-        Set<Function> set = new HashSet<>();
+        List<Function> list = new ArrayList<>();
         Function f = new Function(0, expression);
-        set.add(f);
+        list.add(f);
 
-        FunctionDefinition fd = new FunctionDefinition("MyFunc", new FunctionBody(new Functions(set)));
+        FunctionDefinition fd = new FunctionDefinition("MyFunc", new FunctionBody(new Functions(list)));
 
         return fd;
     }

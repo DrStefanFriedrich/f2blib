@@ -22,6 +22,7 @@ public enum Constant implements Expression {
 
     PI, E, BOLTZMANN;
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitConstant(this);
     }

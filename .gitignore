@@ -5,4 +5,5 @@ build/
 .gradle/
 f2blib.iws
 f2blib.ipr
+out/
 

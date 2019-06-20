@@ -16,7 +16,7 @@ import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 /**
- * -expression
+ * -expression, i.e. the unary negation operator.
  */
 public final class Neg extends UnaryExpression {
 

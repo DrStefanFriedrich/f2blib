@@ -42,5 +42,5 @@ dependencies {
 
 generateGrammarSource {
     maxHeapSize = "64m"
-    arguments += ["-visitor", "-package", "org.f2blib"]
+    arguments += ["-visitor", "-package", "org.f2blib.antlr"]
 }

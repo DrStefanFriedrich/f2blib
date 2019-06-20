@@ -1,3 +1,14 @@
+<!----------------------------------------------------------------------------
+
+   Copyright (c) 2019 Stefan Friedrich
+
+   This program and the accompanying materials are made available under the
+   terms of the Eclipse Public License 2.0 which is available at
+   https://www.eclipse.org/legal/epl-2.0/
+
+   SPDX-License-Identifier: EPL-2.0
+
+ ------------------------------------------------------------------------------>
 
 # F2BLib &mdash; Function to Bytecode Library
 
@@ -304,33 +315,24 @@ The project is published under the [Eclipse Public License v2.0](LICENSE.txt), w
 
 ## Open Issues
 
-* Priority 1: General improvements
-  * Implement a lot more unit tests or remove functions from the AST
-    * PrettyPrintVisitorTest
-    * Check in unit test what happens if we load the same (or a different) function twice
-    * ValidationVisitorTest
-    * (All visitors must be improved tremendously)
-  * Look through everything and identify improvements
-
-* Priority 2: Grammar
+* Priority 1: Grammar
   * Improve class name and remove JAVALETTER, JAVALETTERORDIGIT
   * Implement a Visitor to convert CST to AST
   * Check operator precedence
   * NEG, POS
   * Implement unit test for the grammar and parsing
 
-* Priority 3: Finalization
+* Priority 2: Finalization
   * Implement getMaxStack
   * Remove 'TODO SF'
-  * Finalize the project to some degree (check every single file and ask yourself: can I publish this?)
   * Check test coverage and SonarQube issues
-  * 'mvn site'
+  * './gradlew javadoc'
 
-* Priority 4: Build and Publish in the Cloud
+* Priority 3: Build and Publish in the Cloud
   * Build the project in the cloud
   * Publish the project in the cloud
 
-* Priority 5: Markov Chains
+* Priority 4: Markov Chains
   * Implement integer expressions and IntVisitor
   * DiffVisitor
   * Introduce Sum and Prod

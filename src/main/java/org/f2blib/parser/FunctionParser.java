@@ -14,8 +14,19 @@ package org.f2blib.parser;
 
 import org.f2blib.ast.FunctionDefinition;
 
+/**
+ * Abstraction for parsing function definition strings to {@link FunctionDefinition}s.
+ * Mainly used to decouple the system and to improve testability.
+ */
 public interface FunctionParser {
 
+    /**
+     * Convert a function definition to a Java object.
+     *
+     * @param functionDefinition The function definition as a string; must conform
+     *                           to the grammar.
+     * @return The Java object representing the function definition.
+     */
     FunctionDefinition parse(String functionDefinition);
 
 }

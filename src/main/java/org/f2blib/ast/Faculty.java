@@ -42,8 +42,12 @@ public final class Faculty implements IntExpression {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Faculty faculty = (Faculty) o;
         return Objects.equals(intExpression, faculty.intExpression);
     }
@@ -54,6 +58,7 @@ public final class Faculty implements IntExpression {
         return Objects.hash(intExpression);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitFaculty(this);
     }

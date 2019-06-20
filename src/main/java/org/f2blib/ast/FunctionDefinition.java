@@ -19,8 +19,8 @@ import org.f2blib.visitor.Visitor;
 import java.util.Objects;
 
 /**
- * {@link FunctionDefinition} is the main entry point to the abstract syntax
- * tree (AST).
+ * A {@link FunctionDefinition} is the top-level element in the abstract syntax
+ * tree, and thus the main entry point for all function evaluation logic.
  */
 public final class FunctionDefinition implements ASTElement, DoubleASTElement {
 
@@ -51,8 +51,12 @@ public final class FunctionDefinition implements ASTElement, DoubleASTElement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         FunctionDefinition that = (FunctionDefinition) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(functionBody, that.functionBody);
@@ -63,6 +67,7 @@ public final class FunctionDefinition implements ASTElement, DoubleASTElement {
         return Objects.hash(name, functionBody);
     }
 
+    @Override
     public Void accept(Visitor visitor) {
         return visitor.visitFunctionDefinition(this);
     }

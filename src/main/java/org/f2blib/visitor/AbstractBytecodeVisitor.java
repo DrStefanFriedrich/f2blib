@@ -29,6 +29,10 @@ import java.io.IOException;
 import static java.lang.String.format;
 import static org.objectweb.asm.Opcodes.*;
 
+/**
+ * Base class for the byte code visitor. This class is used to keep the actual visitor
+ * a little bit cleaner.
+ */
 public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
 
     public static final String ARSINH = "ARSINH";

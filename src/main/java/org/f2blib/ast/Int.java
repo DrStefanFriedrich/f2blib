@@ -42,8 +42,12 @@ public final class Int implements IntExpression {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Int anInt = (Int) o;
         return value == anInt.value;
     }
@@ -53,6 +57,7 @@ public final class Int implements IntExpression {
         return Objects.hash(value);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitInt(this);
     }

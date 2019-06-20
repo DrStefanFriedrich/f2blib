@@ -18,6 +18,9 @@ import org.f2blib.visitor.Visitor;
 
 import java.util.Objects;
 
+/**
+ * A {@link Doub} models a real-valued constant in the abstract syntax tree.
+ */
 public class Doub implements Expression {
 
     private final double value;
@@ -39,8 +42,12 @@ public class Doub implements Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Doub doub = (Doub) o;
         return Double.compare(doub.value, value) == 0;
     }

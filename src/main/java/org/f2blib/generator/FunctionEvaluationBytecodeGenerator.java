@@ -15,8 +15,9 @@ package org.f2blib.generator;
 import org.f2blib.ast.FunctionDefinition;
 import org.f2blib.impl.FunctionEvaluation;
 
-import java.io.IOException;
-
+/**
+ * Abstraction layer to decouple the system and to improve testability.
+ */
 public interface FunctionEvaluationBytecodeGenerator {
 
     FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition);

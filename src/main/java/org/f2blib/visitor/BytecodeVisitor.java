@@ -14,6 +14,10 @@ package org.f2blib.visitor;
 
 import org.f2blib.impl.FunctionEvaluation;
 
+/**
+ * Abstraction to convert an abstract syntax tree to Java bytecode. Mainly used
+ * to decouple the system and to improve testability.
+ */
 public interface BytecodeVisitor extends Visitor {
 
     Class<? extends FunctionEvaluation> generate();

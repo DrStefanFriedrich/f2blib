@@ -15,7 +15,7 @@ package org.f2blib.ast;
 import org.f2blib.visitor.Visitor;
 
 /**
- * Accept a visitor on an element of our abstract syntax tree (AST).
+ * Accept a visitor on an element of the abstract syntax tree (AST).
  */
 public interface ASTElement {
 

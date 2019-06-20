@@ -15,55 +15,57 @@ package org.f2blib.visitor;
 import org.f2blib.ast.*;
 
 /**
- * A {@link Visitor} that return the operator precedence of each node. Operator
+ * A {@link Visitor} that returns the operator precedence of each node. Operator
  * precedence is the order in which operators will be evaluated or applied. 0
  * means the highest binding or coupling.
  */
 public class PrecedenceVisitor implements Visitor {
 
+    public static final String EXCEPTION_MESSAGE = "This method must not be called on the PrecedenceVisitor class";
+
     @Override
     public Integer visitAbs(Abs abs) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitAddition(Addition addition) {
-        return 3;
+        return 6;
     }
 
     @Override
     public Integer visitArccos(Arccos arccos) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitArcosh(Arcosh arcosh) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitArcsin(Arcsin arcsin) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitArctan(Arctan arctan) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitArsinh(Arsinh arsinh) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitArtanh(Artanh artanh) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitBinomial(Binomial binomial) {
-        return 1;
+        return 4;
     }
 
     @Override
@@ -73,47 +75,47 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitCos(Cos cos) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitCosh(Cosh cosh) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitDivision(Division division) {
-        return 2;
+        return 5;
     }
 
     @Override
     public Integer visitExp(Exp exp) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitFaculty(Faculty faculty) {
-        return 1;
+        return 2;
     }
 
     @Override
     public Integer visitFunction(Function function) {
-        throw new IllegalStateException("This method must not be called on the PrecedenceVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public Integer visitFunctionBody(FunctionBody functionBody) {
-        throw new IllegalStateException("This method must not be called on the PrecedenceVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public Integer visitFunctionDefinition(FunctionDefinition functionDefinition) {
-        throw new IllegalStateException("This method must not be called on the PrecedenceVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public Integer visitFunctions(Functions functions) {
-        throw new IllegalStateException("This method must not be called on the PrecedenceVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -123,12 +125,12 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitLn(Ln ln) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitMultiplication(Multiplication multiplication) {
-        return 2;
+        return 5;
     }
 
     @Override
@@ -138,7 +140,7 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitParenthesis(Parenthesis parenthesis) {
-        return 0;
+        return 4;
     }
 
     @Override
@@ -148,32 +150,32 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitRound(Round round) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitSin(Sin sin) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitSinh(Sinh sinh) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitSubtraction(Subtraction subtraction) {
-        return 3;
+        return 6;
     }
 
     @Override
     public Integer visitTan(Tan tan) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitTanh(Tanh tanh) {
-        return 1;
+        return 4;
     }
 
     @Override
@@ -183,12 +185,12 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitNeg(Neg neg) {
-        return 1;
+        return 4;
     }
 
     @Override
     public Integer visitPos(Pos pos) {
-        return 1;
+        return 4;
     }
 
     @Override
@@ -198,7 +200,7 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitSqrt(Sqrt sqrt) {
-        return 1;
+        return 4;
     }
 
 }

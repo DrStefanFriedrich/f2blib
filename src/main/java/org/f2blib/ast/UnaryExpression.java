@@ -17,7 +17,7 @@ import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 /**
- * Expression that evaluates only one sub-expression.
+ * An expression that evaluates only one sub-expression.
  */
 public abstract class UnaryExpression implements Expression {
 
@@ -40,8 +40,12 @@ public abstract class UnaryExpression implements Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UnaryExpression that = (UnaryExpression) o;
         return Objects.equals(expression, that.expression);
     }

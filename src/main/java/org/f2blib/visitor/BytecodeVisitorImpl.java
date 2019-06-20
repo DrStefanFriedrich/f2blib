@@ -17,6 +17,9 @@ import org.f2blib.ast.*;
 import static java.lang.String.format;
 import static org.objectweb.asm.Opcodes.*;
 
+/**
+ * Generate bytecode for the Java virtual machine by visiting AST nodes.
+ */
 public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     public static final String MATH_TYPE = "java/lang/Math";

@@ -119,6 +119,18 @@ public class LocalVariablesImpl implements LocalVariables {
      */
     void finalizeLocalVariables() {
 
+        if (!parameterIndexes.isEmpty()) {
+            for (int i = 0; i <= parameterIndexes.last(); i++) {
+                parameterIndexes.add(i);
+            }
+        }
+
+        if (!variableIndexes.isEmpty()) {
+            for (int i = 0; i <= variableIndexes.last(); i++) {
+                variableIndexes.add(i);
+            }
+        }
+
         int localVariableIndex = 4;
 
         for (Integer i : parameterIndexes) {

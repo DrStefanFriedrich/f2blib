@@ -13,7 +13,7 @@
 package org.f2blib;
 
 /**
- * Evaluates mathematical functions. This interface defines a kernel (i.e. a
+ * Handles mathematical functions. This interface defines a kernel (i.e. a
  * library interface) for the evaluation of mathematical functions. The functions
  * can be specified according to a grammar and be loaded into the kernel. Then a
  * simple call of the eval method starts the calculation. By functions we mean

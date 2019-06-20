@@ -15,7 +15,7 @@ package org.f2blib.visitor;
 import org.f2blib.ast.*;
 import org.f2blib.exception.BytecodeGenerationException;
 
-import java.util.Set;
+import java.util.List;
 import java.util.TreeSet;
 
 import static java.lang.String.format;
@@ -58,7 +58,7 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
      * returned.
      * Example for a wrong function definition: f_1, f_3; 0 will be returned.
      */
-    private void checkFunctionsAndCalcArrayLength(Set<Function> functions) {
+    private void checkFunctionsAndCalcArrayLength(List<Function> functions) {
 
         TreeSet<Integer> indexes = new TreeSet<>();
 

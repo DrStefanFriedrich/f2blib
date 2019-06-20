@@ -21,6 +21,8 @@ import org.f2blib.ast.*;
  */
 public class SymbolVisitor implements Visitor {
 
+    public static final String EXCEPTION_MESSAGE = "This method must not be called on the SymbolVisitor class";
+
     @Override
     public String visitAbs(Abs abs) {
         return "abs";
@@ -68,7 +70,7 @@ public class SymbolVisitor implements Visitor {
 
     @Override
     public String visitConstant(Constant constant) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -98,27 +100,27 @@ public class SymbolVisitor implements Visitor {
 
     @Override
     public String visitFunction(Function function) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public String visitFunctionBody(FunctionBody functionBody) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public String visitFunctionDefinition(FunctionDefinition functionDefinition) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public String visitFunctions(Functions functions) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public String visitInt(Int i) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class SymbolVisitor implements Visitor {
 
     @Override
     public String visitParameter(Parameter parameter) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -178,7 +180,7 @@ public class SymbolVisitor implements Visitor {
 
     @Override
     public String visitVariable(Variable variable) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -193,7 +195,7 @@ public class SymbolVisitor implements Visitor {
 
     @Override
     public String visitDoub(Doub doub) {
-        throw new IllegalStateException("This method must not be called on the SymbolVisitor class");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override

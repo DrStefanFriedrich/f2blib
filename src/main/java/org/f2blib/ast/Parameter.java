@@ -17,6 +17,9 @@ import org.f2blib.visitor.Visitor;
 
 /**
  * A parameter is an expression of the form p_i, where i is a integer.
+ * Semantically, variables are used for "variable" arguments, whereas parameters
+ * are used more as additional information that will be supplied to the formula.
+ * Technically, they are identical.
  */
 public final class Parameter extends IndexedExpression {
 
@@ -24,6 +27,7 @@ public final class Parameter extends IndexedExpression {
         super(index);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitParameter(this);
     }

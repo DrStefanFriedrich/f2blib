@@ -24,6 +24,7 @@ public final class Ln extends UnaryExpression {
         super(expression);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitLn(this);
     }

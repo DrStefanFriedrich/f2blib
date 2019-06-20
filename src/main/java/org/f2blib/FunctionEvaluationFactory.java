@@ -19,6 +19,12 @@ import java.util.ServiceLoader;
 
 import static java.lang.String.format;
 
+/**
+ * A factory class for obtaining a {@link FunctionEvaluationProvider}. The class
+ * is implemented without static methods to improve testing. Internally, is uses
+ * the Java Service Provider Interface, a.k.a. {@link ServiceLoader} to obtain
+ * references to implementations.
+ */
 class FunctionEvaluationFactory {
 
     private final Iterable<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
@@ -28,10 +34,16 @@ class FunctionEvaluationFactory {
         return serviceLoader;
     }
 
+    /**
+     * Returns the default implementation. This is the one that uses the bytecode generator.
+     */
     FunctionEvaluationProvider get() {
-        return getIterator().next();
+        return get("f2blib");
     }
 
+    /**
+     * Returns the first implementation matching the given kernel identifier.
+     */
     FunctionEvaluationProvider get(String kernelIdentifier) {
 
         Iterator<FunctionEvaluationProvider> iter = getIterator();

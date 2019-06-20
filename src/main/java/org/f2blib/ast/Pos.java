@@ -16,7 +16,7 @@ import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
 
 /**
- * +expression
+ * +expression, i.e. the unary plus sign.
  */
 public final class Pos extends UnaryExpression {
 

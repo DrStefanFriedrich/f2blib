@@ -19,50 +19,55 @@ import org.f2blib.visitor.Visitor;
 import java.util.Objects;
 
 /**
- * Binomial coefficient k over n.
+ * Binomial coefficient n over k.
  */
 public final class Binomial implements IntExpression {
 
-    private final IntExpression k;
-
     private final IntExpression n;
 
-    public Binomial(IntExpression k, IntExpression n) {
+    private final IntExpression k;
+
+    public Binomial(IntExpression n, IntExpression k) {
         this.k = k;
         this.n = n;
-    }
-
-    public IntExpression getK() {
-        return k;
     }
 
     public IntExpression getN() {
         return n;
     }
 
+    public IntExpression getK() {
+        return k;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("k", k)
                 .add("n", n)
+                .add("k", k)
                 .toString();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Binomial binomial = (Binomial) o;
-        return Objects.equals(k, binomial.k) &&
-                Objects.equals(n, binomial.n);
+        return Objects.equals(n, binomial.n) &&
+                Objects.equals(k, binomial.k);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(k, n);
+        return Objects.hash(n, k);
     }
 
+    @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitBinomial(this);
     }

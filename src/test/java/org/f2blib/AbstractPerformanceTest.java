@@ -92,6 +92,7 @@ abstract class AbstractPerformanceTest {
         public void run() {
             try {
 
+                // Infinit loop will be terminated by Future.cancle(true)
                 while (true) {
 
                     RequestResponse rr = requestQueue.take();
@@ -100,7 +101,7 @@ abstract class AbstractPerformanceTest {
                 }
 
             } catch (InterruptedException e) {
-                // In case of an interruption, end the thread
+                Thread.currentThread().interrupt();
             }
         }
 
@@ -128,7 +129,7 @@ abstract class AbstractPerformanceTest {
                 }
 
             } catch (InterruptedException e) {
-                // In case of an interruption, end the thread
+                Thread.currentThread().interrupt();
             }
         }
 

@@ -12,7 +12,6 @@
 
 package org.f2blib.parser;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -25,6 +24,9 @@ import static org.junit.Assert.fail;
  */
 public class SyntaxTest {
 
+    public static final String FUNCTION_XYZ_START = "function a.b.c.Xyz;\n";
+    public static final String BEGIN = "begin\n";
+    public static final String END = "end";
     private final FunctionParser parser = new AntlrFunctionParser();
 
     @Rule
@@ -89,19 +91,19 @@ public class SyntaxTest {
     @Test
     public void simpleFunction() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := x_1 + x_2;\n" +
                 "    f_2 := p_1 + p_2;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void simpleFunctionWithComments() {
         assertGrammar("" +
                 "# This is a function definition!\n" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    # Some more comments\n" +
                 "    f_1 := x_1 + x_2;\n" +
                 "  # Comment\r\r\n\n" +
@@ -114,98 +116,96 @@ public class SyntaxTest {
     @Test
     public void functionWithDiscontinuousVariables() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_20 := p_5 + p_1 + p_20;\n" +
                 "    f_1 := x_1 + x_10;\n" +
-                "end");
+                END);
     }
 
     @Test
-    @Ignore("TODO SF")
     public void definedTwice() {
         assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_123 := p_5 + p_1 + p_20;\n" +
                 "    f_123 := x_1 + x_10;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void indexInFunctionNotANumber() {
         assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := p_5 + p_1 + p_20;\n" +
                 "    f_u := x_1 + x_10;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void indexInVariableNotANumber() {
         assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := p_5 + p_1 + p_20;\n" +
                 "    f_u := x_a + x_10;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void indexInParameterNotANumber() {
         assertWrongGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := p_x + p_1 + p_20;\n" +
                 "    f_u := x_1 + x_10;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void variablePrecendence() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_ 1 := x_ 1 + pi + e;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void parenthesis() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := (x_1 + x_2)*73;\n" +
-                "end");
+                END);
     }
 
     @Test
-    @Ignore("TODO SF Fix later")
     public void unaryPlus() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := +x_1;\n" +
-                "end");
+                END);
     }
 
     @Test
     public void absoluteValue() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := abs(x_1);\n" +
-                "end");
+                END);
     }
 
     @Test
     public void pi() {
         assertGrammar("" +
-                "function a.b.c.Xyz;\n" +
-                "begin\n" +
+                FUNCTION_XYZ_START +
+                BEGIN +
                 "    f_1 := 3*pi+7;\n" +
-                "end");
+                END);
     }
 
 }

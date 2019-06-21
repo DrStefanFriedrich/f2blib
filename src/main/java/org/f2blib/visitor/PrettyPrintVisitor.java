@@ -273,7 +273,7 @@ public class PrettyPrintVisitor implements Visitor {
     @Override
     public Void visitFunctionBody(FunctionBody functionBody) {
         pw.println("begin");
-        functionBody.getFunctions().accept(this);
+        functionBody.getFunctionsWrapper().accept(this);
         pw.println("end");
         return null;
     }
@@ -286,8 +286,8 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitFunctions(Functions functions) {
-        functions.getFunctions().stream()
+    public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+        functionsWrapper.getFunctions().stream()
                 .forEach(f -> f.accept(this));
         return null;
     }

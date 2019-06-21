@@ -114,7 +114,7 @@ public class SymbolVisitor implements Visitor {
     }
 
     @Override
-    public String visitFunctions(Functions functions) {
+    public String visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 

@@ -44,3 +44,7 @@ generateGrammarSource {
     maxHeapSize = "64m"
     arguments += ["-visitor", "-package", "org.f2blib.antlr"]
 }
+
+test {
+    systemProperty "org.f2blib.performancetest.enabled", System.getProperty("org.f2blib.performancetest.enabled")
+}

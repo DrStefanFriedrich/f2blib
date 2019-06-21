@@ -33,13 +33,14 @@ import static org.mockito.Mockito.mock;
 
 public class FunctionEvaluationBytecodeGeneratorImplTest {
 
+    public static final String CANNOT_INSTANTIATE_CLASS = "Cannot instantiate class";
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     private FunctionEvaluationBytecodeGeneratorImplThrowing underTest;
 
     private final FunctionDefinition functionDefinition = new FunctionDefinition("FuncName",
-            new FunctionBody(new Functions(new Function(0, new Sin(new Variable(0))))));
+            new FunctionBody(new FunctionsWrapper(new Function(0, new Sin(new Variable(0))))));
 
     private ValidationVisitor validationVisitorMocked;
 
@@ -82,7 +83,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
                 case NO_SUCH_METHOD_EXCEPTION:
                     throw new NoSuchMethodException();
                 default:
-                    throw new RuntimeException(format("Unrecognized ExceptionType: %s", exceptionType.name()));
+                    throw new IllegalArgumentException(format("Unrecognized ExceptionType: %s", exceptionType.name()));
             }
         }
 
@@ -114,7 +115,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         underTest = new FunctionEvaluationBytecodeGeneratorImplThrowing(NO_SUCH_METHOD_EXCEPTION);
 
         exception.expect(BytecodeGenerationException.class);
-        exception.expectMessage("Cannot instantiate class");
+        exception.expectMessage(CANNOT_INSTANTIATE_CLASS);
         exception.expectCause(instanceOf(NoSuchMethodException.class));
 
         underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
@@ -126,7 +127,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         underTest = new FunctionEvaluationBytecodeGeneratorImplThrowing(ILLEGAL_ACCESS_EXCEPTION);
 
         exception.expect(BytecodeGenerationException.class);
-        exception.expectMessage("Cannot instantiate class");
+        exception.expectMessage(CANNOT_INSTANTIATE_CLASS);
         exception.expectCause(instanceOf(IllegalAccessException.class));
 
         underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
@@ -138,7 +139,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         underTest = new FunctionEvaluationBytecodeGeneratorImplThrowing(INSTANTIATION_EXCEPTION);
 
         exception.expect(BytecodeGenerationException.class);
-        exception.expectMessage("Cannot instantiate class");
+        exception.expectMessage(CANNOT_INSTANTIATE_CLASS);
         exception.expectCause(instanceOf(InstantiationException.class));
 
         underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);

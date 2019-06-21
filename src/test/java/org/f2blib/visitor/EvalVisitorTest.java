@@ -17,9 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.f2blib.ast.ASTTest.createFunctionDefinition;
 import static org.f2blib.util.TestUtil.assumePerformanceTest;
@@ -33,12 +31,10 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
 
     private double[] x;
 
-    private double[] p;
-
     @Before
     public void setup() {
         x = new double[1];
-        p = new double[0];
+        double[] p = new double[0];
         evalVisitor = new EvalVisitor(x, p, 1);
     }
 
@@ -92,15 +88,15 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         functions.add(f4);
         functions.add(f5);
 
-        return new FunctionDefinition("MyFunc", new FunctionBody(new Functions(functions)));
+        return new FunctionDefinition("MyFunc", new FunctionBody(new FunctionsWrapper(functions)));
     }
 
     @Test
     public void simpleEvaluation() {
 
-        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        double[] p = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
-        evalVisitor = new EvalVisitor(x, p, 5);
+        double[] xArray = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        double[] pArray = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
+        evalVisitor = new EvalVisitor(xArray, pArray, 5);
 
         FunctionDefinition fd = createSampleFunction();
 
@@ -129,11 +125,11 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
                             for (int i6 = 0; i6 < 10; i6++) {
                                 for (int i7 = 0; i7 < 10; i7++) {
 
-                                    double[] x = new double[]{(double) i1 / 10, 1 + (double) i2 / 10, 2 + (double) i3 / 10,
+                                    double[] xArray = new double[]{(double) i1 / 10, 1 + (double) i2 / 10, 2 + (double) i3 / 10,
                                             3 + (double) i4 / 10, 5, 6, 7, 8, 9, 10};
-                                    double[] p = new double[]{(double) i5 / 10, 1 + (double) i6 / 10,
+                                    double[] pArray = new double[]{(double) i5 / 10, 1 + (double) i6 / 10,
                                             3 + (double) i7 / 10, 6, 8, 10, 12, 14, 16, 18};
-                                    evalVisitor = new EvalVisitor(x, p, 5);
+                                    evalVisitor = new EvalVisitor(xArray, pArray, 5);
 
                                     fd.accept(evalVisitor);
                                 }

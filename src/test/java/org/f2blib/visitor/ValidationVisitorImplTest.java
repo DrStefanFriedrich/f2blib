@@ -27,7 +27,7 @@ public class ValidationVisitorImplTest {
     private ValidationVisitorImpl underTest;
 
     private FunctionDefinition createFunctionDefinition(Function... functions) {
-        return new FunctionDefinition("ValidationVisitorFunctionTest", new FunctionBody(new Functions(functions)));
+        return new FunctionDefinition("ValidationVisitorFunctionTest", new FunctionBody(new FunctionsWrapper(functions)));
     }
 
     @Rule
@@ -41,7 +41,7 @@ public class ValidationVisitorImplTest {
     @Test
     public void emptyFunctionDefinition() {
 
-        FunctionDefinition fd = createFunctionDefinition(new Function[0]);
+        FunctionDefinition fd = createFunctionDefinition();
 
         exception.expect(BytecodeGenerationException.class);
         exception.expectMessage("Empty function definition is not allowed");
@@ -127,7 +127,7 @@ public class ValidationVisitorImplTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getLocalVariables().isArsinhUsed(), is(true));
+        assertThat(underTest.getSpecialFunctionsUsage().isArsinhUsed(), is(true));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ValidationVisitorImplTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getLocalVariables().isArsinhUsed(), is(false));
+        assertThat(underTest.getSpecialFunctionsUsage().isArsinhUsed(), is(false));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class ValidationVisitorImplTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getLocalVariables().isArcoshUsed(), is(true));
+        assertThat(underTest.getSpecialFunctionsUsage().isArcoshUsed(), is(true));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class ValidationVisitorImplTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getLocalVariables().isArcoshUsed(), is(false));
+        assertThat(underTest.getSpecialFunctionsUsage().isArcoshUsed(), is(false));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class ValidationVisitorImplTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getLocalVariables().isArtanhUsed(), is(true));
+        assertThat(underTest.getSpecialFunctionsUsage().isArtanhUsed(), is(true));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class ValidationVisitorImplTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getLocalVariables().isArtanhUsed(), is(false));
+        assertThat(underTest.getSpecialFunctionsUsage().isArtanhUsed(), is(false));
     }
 
     @Test

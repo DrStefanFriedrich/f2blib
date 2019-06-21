@@ -25,13 +25,12 @@ single_valued_functions: single_valued_function*;
 
 single_valued_function: FUNC f=INDEX DEFINE expression SEMI;
 
-// TODO SF NEG, POS
 expression:
     variable # var |
     parameter # param |
     LPAREN expression RPAREN # parenthesis |
     expression POWER expression # power |
-    expression PLUS expression # plus | // TODO SF Unit test should fail!!
+    expression PLUS expression # plus |
     expression MINUS expression # minus |
     expression TIMES expression # times |
     expression DIVIDE expression # divide |
@@ -101,7 +100,6 @@ ARTANH: 'artanh';
 BINOMIAL: 'binomial';
 FACULTY: 'faculty';
 
-// TODO SF Improve class name and remove JAVALETTER, JAVALETTERORDIGIT
 class_name:	FULLY_QUALIFIED_CLASS_NAME;
 
 FULLY_QUALIFIED_CLASS_NAME: [a-zA-Z\\.]+;

@@ -19,13 +19,13 @@ import org.objectweb.asm.MethodVisitor;
 import java.util.*;
 
 /**
- * Implementation note on the array of local variables:<p />
- * 0: this
- * 1: p[]
- * 2: x[]
- * 3: y[]
- * 4..n: p_i
- * (n+1)..m: x_i
+ * Implementation note on the array of local variables:<p>
+ * <code>0: this</code><p>
+ * <code>1: p[]</code><p>
+ * <code>2: x[]</code><p>
+ * <code>3: y[]</code><p>
+ * <code>4..n: p_i</code><p>
+ * <code>(n+1)..m: x_i</code>
  */
 public class LocalVariablesImpl implements LocalVariables {
 
@@ -36,39 +36,6 @@ public class LocalVariablesImpl implements LocalVariables {
     private final SortedMap<Integer, Integer> parameterIndex2LocalVariableIndex = new TreeMap<>();
 
     private final SortedMap<Integer, Integer> variableIndex2LocalVariableIndex = new TreeMap<>();
-
-    private boolean arsinhUsed;
-
-    private boolean arcoshUsed;
-
-    private boolean artanhUsed;
-
-    @Override
-    public boolean isArsinhUsed() {
-        return arsinhUsed;
-    }
-
-    @Override
-    public boolean isArcoshUsed() {
-        return arcoshUsed;
-    }
-
-    @Override
-    public boolean isArtanhUsed() {
-        return artanhUsed;
-    }
-
-    public void setArsinhUsed(boolean arsinhUsed) {
-        this.arsinhUsed = arsinhUsed;
-    }
-
-    public void setArcoshUsed(boolean arcoshUsed) {
-        this.arcoshUsed = arcoshUsed;
-    }
-
-    public void setArtanhUsed(boolean artanhUsed) {
-        this.artanhUsed = artanhUsed;
-    }
 
     void addIndexToParameterIndexes(int index) {
         parameterIndexes.add(index);
@@ -84,7 +51,7 @@ public class LocalVariablesImpl implements LocalVariables {
     @Override
     public int getMaxStack() {
         // Open: how to calculate the stack frame depth.
-        return 1000; // TODO SF Not implemented yet
+        return 1000;
     }
 
     /**

@@ -17,9 +17,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -31,16 +29,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @RunWith(Enclosed.class)
 public class ASTTest {
 
+    private ASTTest() {
+    }
+
+    public static final String FUNCTION_NAME = "MyFunc";
+
     public static class ToStringTest {
 
         @Test
         public void functionDefinition() {
 
-            FunctionDefinition fd = createFunctionDefinition("MyFunc",
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
             assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, functionBody=FunctionBody{" +
-                    "functions=Functions{functions=[Function{index=0, expression=Sin{expression=" +
+                    "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=Sin{expression=" +
                     "Multiplication{left=PI, right=Variable{index=0}}}}]}}}"));
         }
 
@@ -286,10 +289,10 @@ public class ASTTest {
         @Test
         public void equalityByValue() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc",
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc",
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
             assertThat(fd1.equals(fd2), is(true));
@@ -300,10 +303,10 @@ public class ASTTest {
         @Test
         public void unequal() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc",
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(new Variable(0), Constant.PI)));
 
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc",
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
             assertThat(fd1.equals(fd2), is(false));
@@ -314,9 +317,9 @@ public class ASTTest {
         @Test
         public void abs() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Abs(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Abs(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Abs(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Abs(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Abs(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Abs(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -327,9 +330,9 @@ public class ASTTest {
         @Test
         public void addition() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Addition(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Addition(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Addition(innerExpression2(), innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Addition(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Addition(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Addition(innerExpression2(), innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -340,9 +343,9 @@ public class ASTTest {
         @Test
         public void arccos() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Arccos(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Arccos(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Arccos(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Arccos(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Arccos(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Arccos(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -353,9 +356,9 @@ public class ASTTest {
         @Test
         public void arcosh() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Arcosh(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Arcosh(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Arcosh(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Arcosh(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Arcosh(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Arcosh(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -366,9 +369,9 @@ public class ASTTest {
         @Test
         public void arcsin() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Arcsin(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Arcsin(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Arcsin(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Arcsin(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Arcsin(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Arcsin(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -379,9 +382,9 @@ public class ASTTest {
         @Test
         public void arctan() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Arctan(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Arctan(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Arctan(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Arctan(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Arctan(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Arctan(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -392,9 +395,9 @@ public class ASTTest {
         @Test
         public void arsinh() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Arsinh(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Arsinh(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Arsinh(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Arsinh(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Arsinh(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Arsinh(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -405,9 +408,9 @@ public class ASTTest {
         @Test
         public void artanh() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Artanh(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Artanh(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Artanh(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Artanh(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Artanh(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Artanh(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -418,9 +421,9 @@ public class ASTTest {
         @Test
         public void binomial() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Binomial(new Int(4), new Int(3)));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Binomial(new Int(4), new Int(3)));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Binomial(new Int(5), new Int(3)));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Binomial(new Int(4), new Int(3)));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Binomial(new Int(4), new Int(3)));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Binomial(new Int(5), new Int(3)));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -431,9 +434,9 @@ public class ASTTest {
         @Test
         public void constant() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", Constant.BOLTZMANN);
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", Constant.BOLTZMANN);
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", Constant.E);
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, Constant.BOLTZMANN);
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, Constant.BOLTZMANN);
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, Constant.E);
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -444,9 +447,9 @@ public class ASTTest {
         @Test
         public void cos() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Cos(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Cos(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Cos(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Cos(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Cos(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Cos(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -457,9 +460,9 @@ public class ASTTest {
         @Test
         public void cosh() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Cosh(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Cosh(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Cosh(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Cosh(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Cosh(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Cosh(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -470,9 +473,9 @@ public class ASTTest {
         @Test
         public void doub() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Doub(5.674));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Doub(5.674));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Doub(5.6741));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Doub(5.674));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Doub(5.674));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Doub(5.6741));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -483,9 +486,9 @@ public class ASTTest {
         @Test
         public void exp() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Exp(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Exp(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Exp(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Exp(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Exp(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Exp(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -496,9 +499,9 @@ public class ASTTest {
         @Test
         public void ln() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Ln(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Ln(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Ln(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Ln(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Ln(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Ln(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -509,9 +512,9 @@ public class ASTTest {
         @Test
         public void neg() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Neg(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Neg(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Neg(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Neg(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Neg(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Neg(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -522,9 +525,9 @@ public class ASTTest {
         @Test
         public void pos() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Pos(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Pos(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Pos(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Pos(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Pos(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Pos(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -535,9 +538,9 @@ public class ASTTest {
         @Test
         public void parenthesis() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Parenthesis(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Parenthesis(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Parenthesis(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Parenthesis(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Parenthesis(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Parenthesis(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -548,9 +551,9 @@ public class ASTTest {
         @Test
         public void sin() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Sin(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Sin(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Sin(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sin(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Sin(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Sin(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -561,9 +564,9 @@ public class ASTTest {
         @Test
         public void sinh() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Sinh(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Sinh(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Sinh(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sinh(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Sinh(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Sinh(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -574,9 +577,9 @@ public class ASTTest {
         @Test
         public void sqrt() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Sqrt(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Sqrt(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Sqrt(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sqrt(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Sqrt(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Sqrt(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -587,9 +590,9 @@ public class ASTTest {
         @Test
         public void tan() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Tan(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Tan(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Tan(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Tan(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Tan(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Tan(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -600,9 +603,9 @@ public class ASTTest {
         @Test
         public void tanh() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Tanh(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Tanh(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Tanh(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Tanh(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Tanh(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Tanh(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -613,9 +616,9 @@ public class ASTTest {
         @Test
         public void variable() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Variable(0));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Variable(0));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Variable(1));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Variable(0));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Variable(0));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Variable(1));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -626,9 +629,9 @@ public class ASTTest {
         @Test
         public void parameter() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Parameter(0));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Parameter(0));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Parameter(1));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Parameter(0));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Parameter(0));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Parameter(1));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -639,9 +642,9 @@ public class ASTTest {
         @Test
         public void integer() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Int(1));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Int(1));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Int(2));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Int(1));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Int(1));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Int(2));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -652,9 +655,9 @@ public class ASTTest {
         @Test
         public void faculty() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Faculty(new Int(5)));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Faculty(new Int(5)));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Faculty(new Int(6)));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Faculty(new Int(5)));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Faculty(new Int(5)));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Faculty(new Int(6)));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -665,9 +668,9 @@ public class ASTTest {
         @Test
         public void round() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Round(innerExpression1()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Round(innerExpression1()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Round(innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Round(innerExpression1()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Round(innerExpression1()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Round(innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -678,9 +681,9 @@ public class ASTTest {
         @Test
         public void division() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Division(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Division(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Division(innerExpression2(), innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Division(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Division(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Division(innerExpression2(), innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -691,9 +694,9 @@ public class ASTTest {
         @Test
         public void multiplication() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Multiplication(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Multiplication(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Multiplication(innerExpression2(), innerExpression2()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Multiplication(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Multiplication(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Multiplication(innerExpression2(), innerExpression2()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -704,9 +707,9 @@ public class ASTTest {
         @Test
         public void subtraction() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Subtraction(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Subtraction(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Subtraction(innerExpression2(), innerExpression1()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Subtraction(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Subtraction(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Subtraction(innerExpression2(), innerExpression1()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -717,9 +720,9 @@ public class ASTTest {
         @Test
         public void power() {
 
-            FunctionDefinition fd1 = createFunctionDefinition("MyFunc", new Power(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd2 = createFunctionDefinition("MyFunc", new Power(innerExpression1(), innerExpression2()));
-            FunctionDefinition fd3 = createFunctionDefinition("MyFunc", new Power(innerExpression2(), innerExpression1()));
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Power(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Power(innerExpression1(), innerExpression2()));
+            FunctionDefinition fd3 = createFunctionDefinition(FUNCTION_NAME, new Power(innerExpression2(), innerExpression1()));
 
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
@@ -727,14 +730,14 @@ public class ASTTest {
             assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
-    }
+        private static Expression innerExpression1() {
+            return new Power(new Sin(new Variable(0)), new Addition(new Exp(new Parameter(0)), new Parameter(1)));
+        }
 
-    private static Expression innerExpression1() {
-        return new Power(new Sin(new Variable(0)), new Addition(new Exp(new Parameter(0)), new Parameter(1)));
-    }
+        private static Expression innerExpression2() {
+            return new Power(new Sin(new Variable(0)), new Addition(new Exp(new Parameter(0)), new Parameter(0)));
+        }
 
-    private static Expression innerExpression2() {
-        return new Power(new Sin(new Variable(0)), new Addition(new Exp(new Parameter(0)), new Parameter(0)));
     }
 
     public static FunctionDefinition createFunctionDefinition(String name, Expression expression) {
@@ -743,9 +746,7 @@ public class ASTTest {
         Function f = new Function(0, expression);
         list.add(f);
 
-        FunctionDefinition fd = new FunctionDefinition("MyFunc", new FunctionBody(new Functions(list)));
-
-        return fd;
+        return new FunctionDefinition(name, new FunctionBody(new FunctionsWrapper(list)));
     }
 
 }

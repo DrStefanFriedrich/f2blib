@@ -12,11 +12,12 @@
 
 package org.f2blib.visitor;
 
-import org.f2blib.ast.Expression;
-import org.f2blib.ast.FunctionDefinition;
+import org.f2blib.ast.*;
 import org.f2blib.impl.FunctionEvaluation;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
@@ -28,6 +29,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private BytecodeVisitorImpl bytecodeVisitor;
 
@@ -49,7 +53,8 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
 
         fd.accept(validationVisitor);
 
-        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage());
         fd.accept(bytecodeVisitor);
 
         FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -71,7 +76,8 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
 
         fd.accept(validationVisitor);
 
-        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage());
         fd.accept(bytecodeVisitor);
 
         FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -115,7 +121,8 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
 
             fd.accept(validationVisitor);
 
-            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
+            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                    validationVisitor.getSpecialFunctionsUsage());
             fd.accept(bytecodeVisitor);
 
             FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -131,6 +138,92 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
         } catch (IllegalAccessException | InstantiationException e) {
             throw new InternalError(e);
         }
+    }
+
+    @Test
+    public void parametersAndVariablesWithGaps() {
+
+        testParametersAndVariablesWithGaps(100, 100);
+    }
+
+    @Test
+    public void maxNumberOfParametersAndVariables() {
+
+        testParametersAndVariablesWithGaps(128, 128);
+    }
+
+    @Test
+    public void tooManyParameters() {
+
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+
+        testParametersAndVariablesWithGaps(128, 129);
+    }
+
+    @Test
+    public void tooManyVariables() {
+
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+
+        testParametersAndVariablesWithGaps(129, 128);
+    }
+
+    private void testParametersAndVariablesWithGaps(int numberOfVariables, int numberOfParameters) {
+        try {
+
+            FunctionDefinition fd = createFunctionDefinition("ManyParametersAndVariables",
+                    new Addition(scalarProductOfParameters(numberOfParameters), scalarProductOfVariables(numberOfVariables)));
+
+            fd.accept(validationVisitor);
+
+            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                    validationVisitor.getSpecialFunctionsUsage());
+            fd.accept(bytecodeVisitor);
+
+            FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+
+            double[] x = new double[numberOfVariables];
+            double[] p = new double[numberOfParameters];
+            double[] y = new double[1];
+
+            for (int i = 0; i < numberOfVariables; i++) {
+                x[i] = (double) i + 1;
+            }
+            for (int i = 0; i < numberOfParameters; i++) {
+                p[i] = (double) i + 1;
+            }
+
+            functionEvaluation.eval(p, x, y);
+
+            // Verify the sum formula of the young Carl Friedrich Gauß...
+            assertThat(y[0], closeTo(numberOfParameters * (numberOfParameters + 1) / 2 + numberOfVariables * (numberOfVariables + 1) / 2));
+            // ...he was right
+
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new InternalError(e);
+        }
+    }
+
+    private Expression scalarProductOfParameters(int numberOfParameters) {
+
+        Expression result = new Multiplication(new Int(1), new Parameter(0));
+
+        for (int i = 1; i < numberOfParameters; i++) {
+            result = new Addition(new Multiplication(new Int(1), new Parameter(i)), result);
+        }
+
+        return result;
+    }
+
+    private Expression scalarProductOfVariables(int numberOfVariables) {
+
+        Expression result = new Multiplication(new Int(1), new Variable(0));
+
+        for (int i = 1; i < numberOfVariables; i++) {
+            result = new Addition(new Multiplication(new Int(1), new Variable(i)), result);
+        }
+
+        return result;
     }
 
 }

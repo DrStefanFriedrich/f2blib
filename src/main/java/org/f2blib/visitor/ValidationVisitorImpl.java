@@ -27,9 +27,16 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
 
     private final LocalVariablesImpl localVariables = new LocalVariablesImpl();
 
+    private final SpecialFunctionsUsageImpl specialFunctionsUsage = new SpecialFunctionsUsageImpl();
+
     @Override
     public LocalVariables getLocalVariables() {
         return localVariables;
+    }
+
+    @Override
+    public SpecialFunctionsUsage getSpecialFunctionsUsage() {
+        return specialFunctionsUsage;
     }
 
     @Override
@@ -41,11 +48,11 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
     }
 
     @Override
-    public Void visitFunctions(Functions functions) {
+    public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
 
-        checkFunctionsAndCalcArrayLength(functions.getFunctions());
+        checkFunctionsAndCalcArrayLength(functionsWrapper.getFunctions());
 
-        super.visitFunctions(functions);
+        super.visitFunctionsWrapper(functionsWrapper);
 
         return null;
     }
@@ -99,19 +106,19 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
 
     @Override
     public Void visitArsinh(Arsinh arsinh) {
-        localVariables.setArsinhUsed(true);
+        specialFunctionsUsage.setArsinhUsed();
         return super.visitArsinh(arsinh);
     }
 
     @Override
     public Void visitArcosh(Arcosh arcosh) {
-        localVariables.setArcoshUsed(true);
+        specialFunctionsUsage.setArcoshUsed();
         return super.visitArcosh(arcosh);
     }
 
     @Override
     public Void visitArtanh(Artanh artanh) {
-        localVariables.setArtanhUsed(true);
+        specialFunctionsUsage.setArtanhUsed();
         return super.visitArtanh(artanh);
     }
 

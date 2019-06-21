@@ -14,7 +14,6 @@ package org.f2blib.impl;
 
 import org.f2blib.FunctionEvaluationKernel;
 import org.f2blib.ast.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.f2blib.util.TestUtil.closeTo;
@@ -36,7 +35,7 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
     @Test
     public void cacheWorks() {
 
-        FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new Functions(new Function(0, new Variable(0)))));
+        FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
         double[] y = new double[1];
 
         when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
@@ -58,7 +57,6 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
     }
 
     @Test
-    @Ignore("TODO SF Wait until the parser is finished")
     public void loadSameFunctionTwice() {
         double[] y = new double[1];
 
@@ -74,7 +72,6 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
     }
 
     @Test
-    @Ignore("TODO SF Wait until the parser is finished")
     public void loadDifferentFunctionTwice() {
         double[] y = new double[1];
 

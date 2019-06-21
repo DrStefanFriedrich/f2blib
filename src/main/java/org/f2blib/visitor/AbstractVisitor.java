@@ -120,7 +120,7 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitFunctionBody(FunctionBody functionBody) {
-        functionBody.getFunctions().accept(this);
+        functionBody.getFunctionsWrapper().accept(this);
         return null;
     }
 
@@ -131,8 +131,8 @@ public abstract class AbstractVisitor implements Visitor {
     }
 
     @Override
-    public <T> T visitFunctions(Functions functions) {
-        functions.getFunctions().forEach(f -> f.accept(this));
+    public <T> T visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+        functionsWrapper.getFunctions().forEach(f -> f.accept(this));
         return null;
     }
 

@@ -59,14 +59,17 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
 
     final LocalVariables localVariables;
 
+    final SpecialFunctionsUsage specialFunctionsUsage;
+
     private final ClassWriter cw = new ClassWriter(0);
 
     final MethodVisitor evalMethod = cw.visitMethod(ACC_PUBLIC, "eval", "([D[D[D)V", null, null);
 
     String className;
 
-    AbstractBytecodeVisitor(LocalVariables localVariables) {
+    AbstractBytecodeVisitor(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage) {
         this.localVariables = localVariables;
+        this.specialFunctionsUsage = specialFunctionsUsage;
     }
 
     @Override
@@ -118,17 +121,17 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
 
         FieldVisitor fv;
 
-        if (localVariables.isArsinhUsed()) {
+        if (specialFunctionsUsage.isArsinhUsed()) {
             fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, ARSINH, ARSINH_TYPE, null, null);
             fv.visitEnd();
         }
 
-        if (localVariables.isArcoshUsed()) {
+        if (specialFunctionsUsage.isArcoshUsed()) {
             fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, ARCOSH, ARCOSH_TYPE, null, null);
             fv.visitEnd();
         }
 
-        if (localVariables.isArtanhUsed()) {
+        if (specialFunctionsUsage.isArtanhUsed()) {
             fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, ARTANH, ARTANH_TYPE, null, null);
             fv.visitEnd();
         }
@@ -139,21 +142,21 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
         MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
         mv.visitCode();
 
-        if (localVariables.isArsinhUsed()) {
+        if (specialFunctionsUsage.isArsinhUsed()) {
             mv.visitTypeInsn(NEW, ARSINH_BIN_CLASS);
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, ARSINH_BIN_CLASS, INIT_TYPE, "()V", false);
             mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), ARSINH, ARSINH_TYPE);
         }
 
-        if (localVariables.isArcoshUsed()) {
+        if (specialFunctionsUsage.isArcoshUsed()) {
             mv.visitTypeInsn(NEW, ARCOSH_BIN_CLASS);
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, ARCOSH_BIN_CLASS, INIT_TYPE, "()V", false);
             mv.visitFieldInsn(PUTSTATIC, className.replaceAll("\\.", "/"), ARCOSH, ARCOSH_TYPE);
         }
 
-        if (localVariables.isArtanhUsed()) {
+        if (specialFunctionsUsage.isArtanhUsed()) {
             mv.visitTypeInsn(NEW, ARTANH_BIN_CLASS);
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, ARTANH_BIN_CLASS, INIT_TYPE, "()V", false);
@@ -183,10 +186,10 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
             Integer parameterIndex = entry.getKey();
             Integer indexLocalVariables = entry.getValue();
 
-            evalMethod.visitVarInsn(ALOAD, 1);
-            evalMethod.visitIntInsn(BIPUSH, parameterIndex); // TODO SF
+            evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
+            evalMethod.visitIntInsn(BIPUSH, parameterIndex);
             evalMethod.visitInsn(DALOAD);
-            evalMethod.visitVarInsn(DSTORE, indexLocalVariables); // TODO SF
+            evalMethod.visitVarInsn(DSTORE, indexLocalVariables);
         });
     }
 
@@ -196,10 +199,10 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
             Integer variableIndex = entry.getKey();
             Integer indexLocalVariables = entry.getValue();
 
-            evalMethod.visitVarInsn(ALOAD, 2);
-            evalMethod.visitIntInsn(BIPUSH, variableIndex);  // TODO SF
+            evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+            evalMethod.visitIntInsn(BIPUSH, variableIndex);
             evalMethod.visitInsn(DALOAD);
-            evalMethod.visitVarInsn(DSTORE, indexLocalVariables); // TODO SF
+            evalMethod.visitVarInsn(DSTORE, indexLocalVariables);
         });
     }
 

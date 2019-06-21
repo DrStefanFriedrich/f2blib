@@ -46,7 +46,7 @@ public class PrecedenceVisitorTest {
 
         assertException();
 
-        new FunctionBody(new Functions(new Function(0, new Int(0)))).accept(underTest);
+        new FunctionBody(new FunctionsWrapper(new Function(0, new Int(0)))).accept(underTest);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class PrecedenceVisitorTest {
 
         assertException();
 
-        new FunctionDefinition("F", new FunctionBody(new Functions(new Function(0, new Int(0))))).accept(underTest);
+        new FunctionDefinition("F", new FunctionBody(new FunctionsWrapper(new Function(0, new Int(0))))).accept(underTest);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class PrecedenceVisitorTest {
 
         assertException();
 
-        new Functions(new Function(0, new Int(0))).accept(underTest);
+        new FunctionsWrapper(new Function(0, new Int(0))).accept(underTest);
     }
 
 }

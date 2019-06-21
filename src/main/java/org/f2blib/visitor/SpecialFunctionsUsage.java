@@ -13,13 +13,14 @@
 package org.f2blib.visitor;
 
 /**
- * Abstraction layer for the validation logic. Used to decouple the system and
- * to improve testability.
+ * Tracks usage of special functions like arsinh, arcosh, and artanh.
  */
-public interface ValidationVisitor extends Visitor {
+public interface SpecialFunctionsUsage {
 
-    LocalVariables getLocalVariables();
+    boolean isArsinhUsed();
 
-    SpecialFunctionsUsage getSpecialFunctionsUsage();
+    boolean isArcoshUsed();
+
+    boolean isArtanhUsed();
 
 }

@@ -24,8 +24,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     public static final String MATH_TYPE = "java/lang/Math";
 
-    public BytecodeVisitorImpl(LocalVariables localVariables) {
-        super(localVariables);
+    public BytecodeVisitorImpl(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage) {
+        super(localVariables, specialFunctionsUsage);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         prepareParameters();
         prepareVariables();
 
-        functionBody.getFunctions().accept(this);
+        functionBody.getFunctionsWrapper().accept(this);
 
         evalMethod.visitMaxs(localVariables.getMaxStack(), localVariables.getMaxLocals());
         evalMethod.visitInsn(RETURN);
@@ -66,8 +66,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         int index = function.getIndex();
 
-        evalMethod.visitVarInsn(ALOAD, 3);
-        evalMethod.visitIntInsn(SIPUSH, index); // TODO SF index aufspalten in hi/lo
+        evalMethod.visitVarInsn(ALOAD, 3); // push y[] on the operand stack
+        evalMethod.visitIntInsn(BIPUSH, index);
 
         // Visiting the function expression pushes the result value on the stack
         function.acceptExpression(this);
@@ -87,7 +87,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
                 evalMethod.visitFieldInsn(GETSTATIC, MATH_TYPE, "E", "D");
                 break;
             case BOLTZMANN:
-                evalMethod.visitLdcInsn(new Double(1.38064852e-23));
+                evalMethod.visitLdcInsn(1.38064852e-23);
                 break;
             default:
                 throw new IllegalStateException(format("Unrecognized constant: %s", constant.name()));
@@ -279,13 +279,13 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitInt(Int i) {
-        evalMethod.visitLdcInsn(new Double(i.getValue()));
+        evalMethod.visitLdcInsn((double)i.getValue());
         return null;
     }
 
     @Override
     public Void visitDoub(Doub doub) {
-        evalMethod.visitLdcInsn(new Double(doub.getValue()));
+        evalMethod.visitLdcInsn(doub.getValue());
         return null;
     }
 
@@ -307,8 +307,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitFunctions(Functions functions) {
-        functions.getFunctions().forEach(f -> f.accept(this));
+    public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+        functionsWrapper.getFunctions().forEach(f -> f.accept(this));
         return null;
     }
 

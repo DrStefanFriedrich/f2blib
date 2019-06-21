@@ -114,7 +114,7 @@ public class PrecedenceVisitor implements Visitor {
     }
 
     @Override
-    public Integer visitFunctions(Functions functions) {
+    public Integer visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 

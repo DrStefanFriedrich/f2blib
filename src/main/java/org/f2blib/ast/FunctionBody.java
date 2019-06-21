@@ -24,20 +24,20 @@ import java.util.Objects;
  */
 public final class FunctionBody implements ASTElement, DoubleASTElement {
 
-    private final Functions functions;
+    private final FunctionsWrapper functionsWrapper;
 
-    public FunctionBody(Functions functions) {
-        this.functions = functions;
+    public FunctionBody(FunctionsWrapper functionsWrapper) {
+        this.functionsWrapper = functionsWrapper;
     }
 
-    public Functions getFunctions() {
-        return functions;
+    public FunctionsWrapper getFunctionsWrapper() {
+        return functionsWrapper;
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("functions", functions)
+                .add("functionsWrapper", functionsWrapper)
                 .toString();
     }
 
@@ -50,12 +50,12 @@ public final class FunctionBody implements ASTElement, DoubleASTElement {
             return false;
         }
         FunctionBody that = (FunctionBody) o;
-        return Objects.equals(functions, that.functions);
+        return Objects.equals(functionsWrapper, that.functionsWrapper);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(functions);
+        return Objects.hash(functionsWrapper);
     }
 
     @Override

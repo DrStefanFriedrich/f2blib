@@ -60,7 +60,7 @@ public class FunctionEvaluationFactoryTest {
 
         exception.expect(IllegalArgumentException.class);
 
-        FunctionEvaluationProvider provider = underTest.get("x");
+        underTest.get("x");
     }
 
     @Test

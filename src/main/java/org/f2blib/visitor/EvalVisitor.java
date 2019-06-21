@@ -145,7 +145,7 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitFunctionBody(FunctionBody functionBody) {
-        return functionBody.getFunctions().accept(this);
+        return functionBody.getFunctionsWrapper().accept(this);
     }
 
     @Override
@@ -154,9 +154,9 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
-    public double visitFunctions(Functions functions) {
+    public double visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
 
-        functions.getFunctions().forEach(f -> f.accept(this));
+        functionsWrapper.getFunctions().forEach(f -> f.accept(this));
 
         return 0;
     }

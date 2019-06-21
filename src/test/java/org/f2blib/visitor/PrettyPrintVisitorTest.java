@@ -10,6 +10,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PrettyPrintVisitorTest {
 
+    public static final String FUNCTION_NAME = "MyFunc";
+    public static final String SIMPLE_FUNCTION_DEFINITION = "function MyFunc;\nbegin\n    f_1 := x_1;\nend\n";
     private PrettyPrintVisitor underTest;
 
     @Before
@@ -20,7 +22,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void simpleFormula() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
         fd.accept(underTest);
@@ -31,7 +33,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void operatorPrecendence() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Multiplication(new Addition(new Int(3), new Int(4)), new Int(5)));
 
         fd.accept(underTest);
@@ -42,7 +44,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void absSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Abs(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Abs(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -52,7 +54,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void absLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Neg(new Abs(new Variable(0))));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Neg(new Abs(new Variable(0))));
 
         fd.accept(underTest);
 
@@ -62,7 +64,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void absHigherPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Multiplication(new Abs(new Variable(0)), new Int(5)));
 
         fd.accept(underTest);
@@ -73,7 +75,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void additionSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Addition(new Variable(0), new Parameter(0)));
 
         fd.accept(underTest);
@@ -84,7 +86,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void additionLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Multiplication(new Addition(new Variable(0), new Parameter(0)), new Int(3)));
 
         fd.accept(underTest);
@@ -95,7 +97,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arccosSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arccos(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arccos(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -105,7 +107,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arccosLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Addition(new Arccos(new Variable(0)), new Variable(1)));
 
         fd.accept(underTest);
@@ -116,7 +118,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arccosLowerPrecedenceInside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arccos(new Neg(new Variable(0))));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arccos(new Neg(new Variable(0))));
 
         fd.accept(underTest);
 
@@ -126,7 +128,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arcoshSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arcosh(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arcosh(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -136,7 +138,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arcoshLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Division(new Int(1), new Arcosh(new Variable(0))));
 
         fd.accept(underTest);
@@ -147,7 +149,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arcoshLowerPrecedenceInside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arcosh(new Faculty(new Int(5))));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arcosh(new Faculty(new Int(5))));
 
         fd.accept(underTest);
 
@@ -157,7 +159,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arcsinSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arcsin(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arcsin(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -167,7 +169,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arctanSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arctan(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arctan(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -177,7 +179,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void arsinhSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Arsinh(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Arsinh(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -187,7 +189,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void artanhSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Artanh(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Artanh(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -197,7 +199,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void binomialSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Binomial(new Int(3), new Int(1)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Binomial(new Int(3), new Int(1)));
 
         fd.accept(underTest);
 
@@ -207,7 +209,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void binomialLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Neg(new Binomial(new Int(3), new Int(1))));
 
         fd.accept(underTest);
@@ -218,7 +220,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void binomialHigherPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Addition(new Parameter(0), new Binomial(new Int(3), new Int(1))));
 
         fd.accept(underTest);
@@ -229,7 +231,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void constantSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", Constant.PI);
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, Constant.PI);
 
         fd.accept(underTest);
 
@@ -239,7 +241,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void constantHigherPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Faculty(new Int(5)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Faculty(new Int(5)));
 
         fd.accept(underTest);
 
@@ -249,7 +251,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void cosSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Cos(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -259,7 +261,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void coshSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Cosh(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cosh(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -269,7 +271,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void divisionSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Division(new Variable(0), new Parameter(0)));
 
         fd.accept(underTest);
@@ -280,7 +282,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void divisionLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Neg(new Division(new Variable(0), new Parameter(0))));
 
         fd.accept(underTest);
@@ -291,7 +293,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void divisionHigherPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Addition(new Division(new Variable(0), new Parameter(0)), new Int(4)));
 
         fd.accept(underTest);
@@ -303,7 +305,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void divisionLowerPrecedenceInside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Division(new Sinh(new Variable(0)), new Faculty(new Int(3))));
 
         fd.accept(underTest);
@@ -314,7 +316,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void divisionHigherPrecedenceInside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Division(new Addition(new Int(3), new Int(4)), new Int(5)));
 
         fd.accept(underTest);
@@ -326,7 +328,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void doubSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Doub(6.71));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Doub(6.71));
 
         fd.accept(underTest);
 
@@ -336,7 +338,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void expSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Exp(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Exp(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -346,7 +348,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void facultySimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Faculty(new Int(1)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Faculty(new Int(1)));
 
         fd.accept(underTest);
 
@@ -356,7 +358,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void facultyLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Power(new Int(3), new Faculty(new Int(4))));
 
         fd.accept(underTest);
@@ -367,7 +369,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void intSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Int(1));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Int(1));
 
         fd.accept(underTest);
 
@@ -377,7 +379,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void lnSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Ln(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Ln(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -387,7 +389,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void multiplicationSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Multiplication(new Variable(0), new Parameter(0)));
 
         fd.accept(underTest);
@@ -398,7 +400,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void multiplicationLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Neg(new Multiplication(new Sinh(new Variable(0)), Constant.PI)));
 
         fd.accept(underTest);
@@ -409,7 +411,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void negSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Neg(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Neg(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -419,7 +421,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void negLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Power(new Neg(new Int(3)), new Int(4)));
 
         fd.accept(underTest);
@@ -430,7 +432,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void negHigherPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Sin(new Neg(new Variable(0))));
 
         fd.accept(underTest);
@@ -441,7 +443,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void parameterSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Parameter(0));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Parameter(0));
 
         fd.accept(underTest);
 
@@ -451,17 +453,17 @@ public class PrettyPrintVisitorTest {
     @Test
     public void parenthesisSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Parenthesis(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Parenthesis(new Variable(0)));
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := x_1;\nend\n"));
+        assertThat(underTest.getString(), is(SIMPLE_FUNCTION_DEFINITION));
     }
 
     @Test
     public void parenthesisLowerPrecedenceInside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Parenthesis(new Sin(new Parenthesis(new Variable(0)))));
 
         fd.accept(underTest);
@@ -472,17 +474,17 @@ public class PrettyPrintVisitorTest {
     @Test
     public void posSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Pos(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Pos(new Variable(0)));
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := x_1;\nend\n"));
+        assertThat(underTest.getString(), is(SIMPLE_FUNCTION_DEFINITION));
     }
 
     @Test
     public void posLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Pos(new Addition(new Pos(new Variable(0)), new Pos(new Variable(1)))));
 
         fd.accept(underTest);
@@ -493,7 +495,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void powerSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Power(new Variable(0), new Parameter(0)));
 
         fd.accept(underTest);
@@ -504,7 +506,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void roundSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Round(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Round(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -514,7 +516,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void sinSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Sin(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -524,7 +526,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void sinhSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Sinh(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sinh(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -534,7 +536,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void sqrtSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Sqrt(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sqrt(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -544,7 +546,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void subtractionSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Subtraction(new Variable(0), new Parameter(0)));
 
         fd.accept(underTest);
@@ -555,7 +557,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void subtractionLowerPrecedenceOutside() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc",
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                 new Multiplication(new Subtraction(new Multiplication(new Variable(0), new Parameter(0)),
                         Constant.PI), new Variable(0)));
 
@@ -567,7 +569,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void tanSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Tan(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Tan(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -577,7 +579,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void tanhSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Tanh(new Variable(0)));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Tanh(new Variable(0)));
 
         fd.accept(underTest);
 
@@ -587,11 +589,11 @@ public class PrettyPrintVisitorTest {
     @Test
     public void variableSimple() {
 
-        FunctionDefinition fd = createFunctionDefinition("MyFunc", new Variable(0));
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Variable(0));
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := x_1;\nend\n"));
+        assertThat(underTest.getString(), is(SIMPLE_FUNCTION_DEFINITION));
     }
 
 }

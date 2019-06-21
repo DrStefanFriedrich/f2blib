@@ -52,7 +52,7 @@ public interface Visitor {
 
     <T> T visitFunctionDefinition(FunctionDefinition functionDefinition);
 
-    <T> T visitFunctions(Functions functions);
+    <T> T visitFunctionsWrapper(FunctionsWrapper functionsWrapper);
 
     <T> T visitInt(Int i);
 

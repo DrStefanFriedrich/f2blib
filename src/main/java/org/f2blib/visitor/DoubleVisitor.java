@@ -52,7 +52,7 @@ public interface DoubleVisitor {
 
     double visitFunctionDefinition(FunctionDefinition functionDefinition);
 
-    double visitFunctions(Functions functions);
+    double visitFunctionsWrapper(FunctionsWrapper functionsWrapper);
 
     double visitInt(Int i);
 

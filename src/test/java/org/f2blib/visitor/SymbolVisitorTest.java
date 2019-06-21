@@ -54,7 +54,7 @@ public class SymbolVisitorTest {
 
         assertException();
 
-        new FunctionBody(new Functions(new Function(0, new Int(1)))).accept(underTest);
+        new FunctionBody(new FunctionsWrapper(new Function(0, new Int(1)))).accept(underTest);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class SymbolVisitorTest {
 
         assertException();
 
-        new FunctionDefinition("F", new FunctionBody(new Functions(new Function(0, new Int(1))))).accept(underTest);
+        new FunctionDefinition("F", new FunctionBody(new FunctionsWrapper(new Function(0, new Int(1))))).accept(underTest);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class SymbolVisitorTest {
 
         assertException();
 
-        new Functions(new Function(0, new Int(3))).accept(underTest);
+        new FunctionsWrapper(new Function(0, new Int(3))).accept(underTest);
     }
 
     @Test

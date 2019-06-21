@@ -19,19 +19,19 @@ import org.f2blib.visitor.Visitor;
 import java.util.*;
 
 /**
- * {@link Functions} model a set of mathematical expressions. Example:<p />
- * f_1 := x_1^2<p />
- * f_2 := 3-x_2
+ * {@link FunctionsWrapper} model a set of mathematical expressions. Example:<p>
+ * <code>f_1 := x_1^2</code><p>
+ * <code>f_2 := 3-x_2</code>
  */
-public final class Functions implements ASTElement, DoubleASTElement {
+public final class FunctionsWrapper implements ASTElement, DoubleASTElement {
 
     private final List<Function> functions = new ArrayList<>();
 
-    public Functions(List<Function> functions) {
+    public FunctionsWrapper(List<Function> functions) {
         this.functions.addAll(functions);
     }
 
-    public Functions(Function... functions) {
+    public FunctionsWrapper(Function... functions) {
         this(Arrays.asList(functions));
     }
 
@@ -54,8 +54,8 @@ public final class Functions implements ASTElement, DoubleASTElement {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Functions functions1 = (Functions) o;
-        return Objects.equals(functions, functions1.functions);
+        FunctionsWrapper functionsWrapper = (FunctionsWrapper) o;
+        return Objects.equals(functions, functionsWrapper.functions);
     }
 
     @Override
@@ -65,12 +65,12 @@ public final class Functions implements ASTElement, DoubleASTElement {
 
     @Override
     public Void accept(Visitor visitor) {
-        return visitor.visitFunctions(this);
+        return visitor.visitFunctionsWrapper(this);
     }
 
     @Override
     public double accept(DoubleVisitor visitor) {
-        return visitor.visitFunctions(this);
+        return visitor.visitFunctionsWrapper(this);
     }
 
 }

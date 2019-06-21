@@ -27,7 +27,8 @@ public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluati
 
         ValidationVisitor validationVisitor = new ValidationVisitorImpl();
         LocalVariables localVariables = validationVisitor.getLocalVariables();
-        BytecodeVisitor bytecodeVisitor = new BytecodeVisitorImpl(localVariables);
+        SpecialFunctionsUsage specialFunctionsUsage = validationVisitor.getSpecialFunctionsUsage();
+        BytecodeVisitor bytecodeVisitor = new BytecodeVisitorImpl(localVariables, specialFunctionsUsage);
 
         return generateAndInstantiate(functionDefinition, validationVisitor, bytecodeVisitor);
     }
@@ -51,8 +52,7 @@ public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluati
         } catch (InvocationTargetException e) {
             Throwable cause = e.getTargetException();
             if (cause instanceof RuntimeException) {
-                RuntimeException rte = (RuntimeException) cause;
-                throw rte;
+                throw (RuntimeException) cause;
             }
             throw new BytecodeGenerationException("Exception thrown from constructor invocation", cause);
         }

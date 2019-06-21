@@ -15,17 +15,14 @@ package org.f2blib.visitor;
 import org.f2blib.ast.Function;
 import org.f2blib.ast.FunctionBody;
 import org.f2blib.ast.FunctionDefinition;
-import org.f2blib.ast.Functions;
+import org.f2blib.ast.FunctionsWrapper;
 import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.impl.FunctionEvaluation;
 import org.junit.Before;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 public abstract class AbstractBytecodeVisitorImplTest {
-
-    private BytecodeVisitorImpl bytecodeVisitor;
 
     private ValidationVisitorImpl validationVisitor;
 
@@ -35,7 +32,7 @@ public abstract class AbstractBytecodeVisitorImplTest {
     }
 
     FunctionDefinition createFunctionDefinition(String functionName, Function... functions) {
-        return new FunctionDefinition(functionName, new FunctionBody(new Functions(Arrays.asList(functions))));
+        return new FunctionDefinition(functionName, new FunctionBody(new FunctionsWrapper(Arrays.asList(functions))));
     }
 
     FunctionEvaluation generateClass(FunctionDefinition fd) {
@@ -43,7 +40,8 @@ public abstract class AbstractBytecodeVisitorImplTest {
 
             fd.accept(validationVisitor);
 
-            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables());
+            BytecodeVisitorImpl bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                    validationVisitor.getSpecialFunctionsUsage());
             fd.accept(bytecodeVisitor);
 
             return bytecodeVisitor.generate().newInstance();

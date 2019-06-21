@@ -17,8 +17,8 @@ package org.f2blib;
  * library interface) for the evaluation of mathematical functions. The functions
  * can be specified according to a grammar and be loaded into the kernel. Then a
  * simple call of the eval method starts the calculation. By functions we mean
- * real-valued functions f_p: IR^n -> IR^m, p in IR^k. This is just syntactic
- * sugar for f: IR^k x IR^n -> IR^m.
+ * real-valued functions <code>f_p: IR^n -&gt; IR^m, p in IR^k</code>.
+ * This is just syntactic sugar for <code>f: IR^k x IR^n -&gt; IR^m</code>.
  */
 public interface FunctionEvaluationKernel {
 
@@ -31,9 +31,9 @@ public interface FunctionEvaluationKernel {
 
     /**
      * Evaluates the given real-valued function. The contract for the function
-     * evaluation is as follows: the function depends on p and x only. During
-     * function evaluation y must not be considered. The only purpose of y is
-     * to store the result.
+     * evaluation is as follows: the function depends on <code>p</code> and
+     * <code>x</code> only. During function evaluation <code>y</code> must not be
+     * considered. The only purpose of <code>y</code> is to store the result.
      *
      * @param functionName The name of the function to evaluate.
      * @param p            The parameters of the function. p in IR^k

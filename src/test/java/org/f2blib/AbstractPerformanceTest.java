@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 
 abstract class AbstractPerformanceTest {
 
-    static final int NUMBER_OBJECTS = 10000000;
+    static final int NUMBER_OBJECTS = 1000000;
 
     static final int NUMBER_CORES = Runtime.getRuntime().availableProcessors();
 
@@ -102,6 +102,7 @@ abstract class AbstractPerformanceTest {
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
             }
         }
 
@@ -130,6 +131,7 @@ abstract class AbstractPerformanceTest {
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
             }
         }
 

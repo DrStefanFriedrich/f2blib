@@ -7,3 +7,12 @@
 #
 #    SPDX-License-Identifier: EPL-2.0
 #
+
+function org.f2blib.performance.TestFunction;
+begin
+
+    f_1 := sin(cos(x_1) * p_1) + exp(1 / (1 + x_2 ^ 2)) - p_2;
+
+    f_2 := binomial(10, 6) + sqrt(1 + x_1 * x_1 + x_2 * x_2) - (p_1 * p_1 + p_2 * p_2);
+
+end

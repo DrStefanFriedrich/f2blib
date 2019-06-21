@@ -14,10 +14,8 @@ package org.f2blib.parser;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.f2blib.antlr.FunctionsBaseVisitor;
 import org.f2blib.antlr.FunctionsLexer;
 import org.f2blib.antlr.FunctionsParser;
-import org.f2blib.ast.FunctionBody;
 import org.f2blib.ast.FunctionDefinition;
 
 import static java.lang.String.format;
@@ -28,32 +26,22 @@ public class AntlrFunctionParser implements FunctionParser {
     public FunctionDefinition parse(String functionDefinition) {
 
         FunctionsLexer lexer = new FunctionsLexer(CharStreams.fromString(functionDefinition));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        FunctionsParser parser = new FunctionsParser(tokens);
+        lexer.removeErrorListeners();
 
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        FunctionsParser parser = new FunctionsParser(tokens);
+        parser.removeErrorListeners();
         parser.addErrorListener(new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
                                     int line, int charPositionInLine, String msg, RecognitionException e) {
-                throw new ParseCancellationException(format("line %d: %d %s", line, charPositionInLine, msg));
+                throw new ParseCancellationException(format("line: %d, column: %d, message: %s, offendingSymbol: %s, exception: %s",
+                        line, charPositionInLine, msg, offendingSymbol, e));
             }
         });
 
-        return new FunctionDefinitionVisitor().visit(parser.function_definition());
-    }
-
-    private static final class FunctionDefinitionVisitor extends FunctionsBaseVisitor<FunctionDefinition> {
-        @Override
-        public FunctionDefinition visitFunction_definition(FunctionsParser.Function_definitionContext ctx) {
-
-            FunctionBodyVisitor functionBodyVisitor = new FunctionBodyVisitor();
-            String className = ctx.class_name().getText();
-            return new FunctionDefinition(className, ctx.function_body().accept(functionBodyVisitor));
-        }
-    }
-
-    private static final class FunctionBodyVisitor extends FunctionsBaseVisitor<FunctionBody> {
-
+        return (FunctionDefinition) new AntlrVisitor().visitFunction_definition(parser.function_definition());
     }
 
 }

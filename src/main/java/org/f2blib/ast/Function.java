@@ -12,6 +12,7 @@
 
 package org.f2blib.ast;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
 import org.f2blib.visitor.DoubleVisitor;
 import org.f2blib.visitor.Visitor;
@@ -39,6 +40,11 @@ public final class Function implements ASTElement, DoubleASTElement {
 
     public int getIndex() {
         return index;
+    }
+
+    @VisibleForTesting
+    public Expression getExpression() {
+        return expression;
     }
 
     public void acceptExpression(Visitor visitor) {

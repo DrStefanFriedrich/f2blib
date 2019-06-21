@@ -26,7 +26,7 @@ them _very_ quickly.
 
 ## Introduction
 
-F2BLib &ndash; Function to Bytecode Library &ndash; defines a [Grammar](src/main/antlr/org/f2blib/Functions.g4)
+F2BLib &ndash; Function to Bytecode Library &ndash; defines a [Grammar](src/main/antlr/org/f2blib/antlr/Functions.g4)
 for real-valued mathematical function expressions. It parses an input source using [Antlr4](https://www.antlr.org/)
 and converts the resulting abstract syntax tree (AST) to Java bytecode using [ASM](https://asm.ow2.io/). The
 functions can then be evaluated _very_ fast.

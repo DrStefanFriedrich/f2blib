@@ -12,36 +12,12 @@
 
 package org.f2blib.parser;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Test elementary grammar syntax.
  */
-public class SyntaxTest {
-
-    public static final String FUNCTION_XYZ_START = "function a.b.c.Xyz;\n";
-    public static final String BEGIN = "begin\n";
-    public static final String END = "end";
-    private final FunctionParser parser = new AntlrFunctionParser();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
-    private void assertGrammar(String functionDefinition) {
-        parser.parse(functionDefinition);
-        assertTrue(true);
-    }
-
-    private void assertWrongGrammar(String functionDefinition) {
-        exception.expect(RuntimeException.class);
-        parser.parse(functionDefinition);
-        fail("The parser wrongly recognized this rule and did not throw an exception");
-    }
+public class SyntaxTest extends AbstractParserTest {
 
     @Test
     public void wrongFunctionDefinition() {
@@ -125,7 +101,8 @@ public class SyntaxTest {
 
     @Test
     public void definedTwice() {
-        assertWrongGrammar("" +
+        // The grammar can't recognize this; must be done by a validator
+        assertGrammar("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_123 := p_5 + p_1 + p_20;\n" +
@@ -164,15 +141,6 @@ public class SyntaxTest {
     }
 
     @Test
-    public void variablePrecendence() {
-        assertGrammar("" +
-                FUNCTION_XYZ_START +
-                BEGIN +
-                "    f_ 1 := x_ 1 + pi + e;\n" +
-                END);
-    }
-
-    @Test
     public void parenthesis() {
         assertGrammar("" +
                 FUNCTION_XYZ_START +
@@ -196,6 +164,52 @@ public class SyntaxTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := abs(x_1);\n" +
+                END);
+    }
+
+    @Test
+    public void absoluteValueWithoutParenthesis() {
+        // Only pretty printing works this way
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := abs x_1;\n" +
+                END);
+    }
+
+    @Test
+    public void coshWithoutArgument() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := cosh();\n" +
+                END);
+    }
+
+    @Test
+    public void multipleParenthesis() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := (sin(cosh(cos((x_1)))));\n" +
+                END);
+    }
+
+    @Test
+    public void missingClosingParenthesis() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := (sin(cosh(cos((x_1))));\n" +
+                END);
+    }
+
+    @Test
+    public void additionalStartingParenthesis() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := (sin((cosh(cos((x_1)))));\n" +
                 END);
     }
 

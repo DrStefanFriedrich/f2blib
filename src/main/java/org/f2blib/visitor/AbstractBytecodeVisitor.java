@@ -206,7 +206,7 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
     void visitUnaryExpression(UnaryExpression element, String binaryClassName, String methodName) {
 
         // Visiting the expression pushes the result (of type double) on the stack
-        element.getExpression().accept(this);
+        element.acceptExpression(this);
 
         evalMethod.visitMethodInsn(INVOKESTATIC, binaryClassName, methodName, "(D)D", false);
     }
@@ -217,21 +217,21 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
 
             evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARSINH, ARSINH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
-            element.getExpression().accept(this);
+            element.acceptExpression(this);
             evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARSINH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else if (element.getClass() == Arcosh.class) {
 
             evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARCOSH, ARCOSH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
-            element.getExpression().accept(this);
+            element.acceptExpression(this);
             evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARCOSH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else if (element.getClass() == Artanh.class) {
 
             evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARTANH, ARTANH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
-            element.getExpression().accept(this);
+            element.acceptExpression(this);
             evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARTANH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else {

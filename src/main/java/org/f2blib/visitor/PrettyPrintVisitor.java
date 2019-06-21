@@ -43,7 +43,7 @@ public class PrettyPrintVisitor implements Visitor {
         String symbol = unaryExpression.accept(symbolVisitor);
 
         pw.print(symbol + "(");
-        unaryExpression.getExpression().accept(this);
+        unaryExpression.acceptExpression(this);
         pw.print(")");
 
     }
@@ -54,13 +54,13 @@ public class PrettyPrintVisitor implements Visitor {
 
 
         pw.print(symbol + " ");
-        unaryExpression.getExpression().accept(this);
+        unaryExpression.acceptExpression(this);
     }
 
     private void printUnaryExpression(UnaryExpression unaryExpression) {
 
         int precedenceThis = unaryExpression.accept(precedenceVisitor);
-        int precedenceInner = unaryExpression.getExpression().accept(precedenceVisitor);
+        int precedenceInner = unaryExpression.acceptExpression(precedenceVisitor);
 
         if (precedenceThis < precedenceInner) {
 
@@ -76,30 +76,30 @@ public class PrettyPrintVisitor implements Visitor {
 
         String symbol = binaryExpression.accept(symbolVisitor);
         int precedenceThis = binaryExpression.accept(precedenceVisitor);
-        int precedenceLeft = binaryExpression.getLeft().accept(precedenceVisitor);
-        int precedenceRight = binaryExpression.getRight().accept(precedenceVisitor);
+        int precedenceLeft = binaryExpression.acceptLeft(precedenceVisitor);
+        int precedenceRight = binaryExpression.acceptRight(precedenceVisitor);
 
         if (precedenceThis < precedenceLeft) {
 
             pw.print("(");
-            binaryExpression.getLeft().accept(this);
+            binaryExpression.acceptLeft(this);
             pw.print(") " + symbol + " ");
 
         } else {
 
-            binaryExpression.getLeft().accept(this);
+            binaryExpression.acceptLeft(this);
             pw.print(" " + symbol + " ");
         }
 
         if (precedenceThis < precedenceRight) {
 
             pw.print("(");
-            binaryExpression.getRight().accept(this);
+            binaryExpression.acceptRight(this);
             pw.print(")");
 
         } else {
 
-            binaryExpression.getRight().accept(this);
+            binaryExpression.acceptRight(this);
         }
     }
 
@@ -107,14 +107,14 @@ public class PrettyPrintVisitor implements Visitor {
     public Void visitNeg(Neg neg) {
 
         int precedenceThis = neg.accept(precedenceVisitor);
-        int precedenceInner = neg.getExpression().accept(precedenceVisitor);
+        int precedenceInner = neg.acceptExpression(precedenceVisitor);
 
         if (precedenceThis < precedenceInner) {
 
             printWithParenthesis(neg);
         } else {
             pw.print((String) neg.accept(symbolVisitor));
-            neg.getExpression().accept(this);
+            neg.acceptExpression(this);
         }
         return null;
     }
@@ -123,13 +123,13 @@ public class PrettyPrintVisitor implements Visitor {
     public Void visitPos(Pos pos) {
 
         int precedenceThis = pos.accept(precedenceVisitor);
-        int precedenceInner = pos.getExpression().accept(precedenceVisitor);
+        int precedenceInner = pos.acceptExpression(precedenceVisitor);
 
         if (precedenceThis < precedenceInner) {
 
             printWithParenthesis(pos);
         } else {
-            pos.getExpression().accept(this);
+            pos.acceptExpression(this);
         }
         return null;
     }
@@ -159,14 +159,14 @@ public class PrettyPrintVisitor implements Visitor {
     public Void visitParenthesis(Parenthesis parenthesis) {
 
         int precedenceThis = parenthesis.accept(precedenceVisitor);
-        int precedenceInner = parenthesis.getExpression().accept(precedenceVisitor);
+        int precedenceInner = parenthesis.acceptExpression(precedenceVisitor);
 
         if (precedenceThis < precedenceInner) {
 
             printWithParenthesis(parenthesis);
 
         } else {
-            parenthesis.getExpression().accept(this);
+            parenthesis.acceptExpression(this);
         }
         return null;
     }
@@ -265,7 +265,7 @@ public class PrettyPrintVisitor implements Visitor {
     @Override
     public Void visitFunction(Function function) {
         pw.print("    f_" + (function.getIndex() + 1) + " := ");
-        function.getExpression().accept(this);
+        function.acceptExpression(this);
         pw.println(";");
         return null;
     }

@@ -70,7 +70,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitIntInsn(SIPUSH, index); // TODO SF index aufspalten in hi/lo
 
         // Visiting the function expression pushes the result value on the stack
-        function.getExpression().accept(this);
+        function.acceptExpression(this);
 
         evalMethod.visitInsn(DASTORE);
 
@@ -175,7 +175,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitParenthesis(Parenthesis parenthesis) {
-        parenthesis.getExpression().accept(this);
+        parenthesis.acceptExpression(this);
         return null;
     }
 
@@ -206,7 +206,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitNeg(Neg neg) {
 
-        neg.getExpression().accept(this);
+        neg.acceptExpression(this);
         evalMethod.visitInsn(DNEG);
 
         return null;
@@ -214,38 +214,38 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitPos(Pos pos) {
-        pos.getExpression().accept(this);
+        pos.acceptExpression(this);
         return null;
     }
 
     @Override
     public Void visitAddition(Addition addition) {
-        addition.getLeft().accept(this);
-        addition.getRight().accept(this);
+        addition.acceptLeft(this);
+        addition.acceptRight(this);
         evalMethod.visitInsn(DADD);
         return null;
     }
 
     @Override
     public Void visitSubtraction(Subtraction subtraction) {
-        subtraction.getLeft().accept(this);
-        subtraction.getRight().accept(this);
+        subtraction.acceptLeft(this);
+        subtraction.acceptRight(this);
         evalMethod.visitInsn(DSUB);
         return null;
     }
 
     @Override
     public Void visitMultiplication(Multiplication multiplication) {
-        multiplication.getLeft().accept(this);
-        multiplication.getRight().accept(this);
+        multiplication.acceptLeft(this);
+        multiplication.acceptRight(this);
         evalMethod.visitInsn(DMUL);
         return null;
     }
 
     @Override
     public Void visitDivision(Division division) {
-        division.getLeft().accept(this);
-        division.getRight().accept(this);
+        division.acceptLeft(this);
+        division.acceptRight(this);
         evalMethod.visitInsn(DDIV);
         return null;
     }
@@ -291,8 +291,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitPower(Power power) {
-        power.getLeft().accept(this);
-        power.getRight().accept(this);
+        power.acceptLeft(this);
+        power.acceptRight(this);
         evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
         return null;
     }
@@ -300,7 +300,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitRound(Round round) {
         // Visiting the expression pushes the result (of type double) on the stack
-        round.getExpression().accept(this);
+        round.acceptExpression(this);
         evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "round", "(D)J", false);
         evalMethod.visitInsn(L2D);
         return null;

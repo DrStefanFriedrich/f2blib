@@ -41,11 +41,11 @@ public class ExampleVisitor extends AbstractVisitor {
     }
 
     public Double visitSin(Sin sin) {
-        return Math.sin(toDouble(sin.getExpression().accept(this)));
+        return Math.sin(toDouble(sin.acceptExpression(this)));
     }
 
     public Double visitAddition(Addition addition) {
-        return (toDouble(addition.getLeft().accept(this))) + (toDouble(addition.getRight().accept(this)));
+        return (toDouble(addition.acceptLeft(this))) + (toDouble(addition.acceptRight(this)));
     }
 
     public Double visitVariable(Variable variable) {

@@ -51,42 +51,42 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitAbs(Abs abs) {
-        return Math.abs(abs.getExpression().accept(this));
+        return Math.abs(abs.acceptExpression(this));
     }
 
     @Override
     public double visitAddition(Addition addition) {
-        return addition.getLeft().accept(this) + addition.getRight().accept(this);
+        return addition.acceptLeft(this) + addition.acceptRight(this);
     }
 
     @Override
     public double visitArccos(Arccos arccos) {
-        return Math.acos(arccos.getExpression().accept(this));
+        return Math.acos(arccos.acceptExpression(this));
     }
 
     @Override
     public double visitArcosh(Arcosh arcosh) {
-        return ARCOSH.value(arcosh.getExpression().accept(this));
+        return ARCOSH.value(arcosh.acceptExpression(this));
     }
 
     @Override
     public double visitArcsin(Arcsin arcsin) {
-        return Math.asin(arcsin.getExpression().accept(this));
+        return Math.asin(arcsin.acceptExpression(this));
     }
 
     @Override
     public double visitArctan(Arctan arctan) {
-        return Math.atan(arctan.getExpression().accept(this));
+        return Math.atan(arctan.acceptExpression(this));
     }
 
     @Override
     public double visitArsinh(Arsinh arsinh) {
-        return ARSINH.value(arsinh.getExpression().accept(this));
+        return ARSINH.value(arsinh.acceptExpression(this));
     }
 
     @Override
     public double visitArtanh(Artanh artanh) {
-        return ARTANH.value(artanh.getExpression().accept(this));
+        return ARTANH.value(artanh.acceptExpression(this));
     }
 
     @Override
@@ -115,31 +115,30 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitCos(Cos cos) {
-        return Math.cos(cos.getExpression().accept(this));
+        return Math.cos(cos.acceptExpression(this));
     }
 
     @Override
     public double visitCosh(Cosh cosh) {
-        return Math.cosh(cosh.getExpression().accept(this));
+        return Math.cosh(cosh.acceptExpression(this));
     }
 
     @Override
     public double visitDivision(Division division) {
-        return division.getLeft().accept(this) / division.getRight().accept(this);
+        return division.acceptLeft(this) / division.acceptRight(this);
     }
 
     @Override
     public double visitExp(Exp exp) {
-        return Math.exp(exp.getExpression().accept(this));
+        return Math.exp(exp.acceptExpression(this));
     }
 
     @Override
     public double visitFunction(Function function) {
 
         int index = function.getIndex();
-        Expression expression = function.getExpression();
 
-        y[index] = expression.accept(this);
+        y[index] = function.acceptExpression(this);
 
         return 0;
     }
@@ -174,17 +173,17 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitSqrt(Sqrt sqrt) {
-        return Math.sqrt(sqrt.getExpression().accept(this));
+        return Math.sqrt(sqrt.acceptExpression(this));
     }
 
     @Override
     public double visitLn(Ln ln) {
-        return Math.log(ln.getExpression().accept(this));
+        return Math.log(ln.acceptExpression(this));
     }
 
     @Override
     public double visitMultiplication(Multiplication multiplication) {
-        return multiplication.getLeft().accept(this) * multiplication.getRight().accept(this);
+        return multiplication.acceptLeft(this) * multiplication.acceptRight(this);
     }
 
     @Override
@@ -194,42 +193,42 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitParenthesis(Parenthesis parenthesis) {
-        return parenthesis.getExpression().accept(this);
+        return parenthesis.acceptExpression(this);
     }
 
     @Override
     public double visitPower(Power power) {
-        return Math.pow(power.getLeft().accept(this), power.getRight().accept(this));
+        return Math.pow(power.acceptLeft(this), power.acceptRight(this));
     }
 
     @Override
     public double visitRound(Round round) {
-        return Math.round(round.getExpression().accept(this));
+        return Math.round(round.acceptExpression(this));
     }
 
     @Override
     public double visitSin(Sin sin) {
-        return Math.sin(sin.getExpression().accept(this));
+        return Math.sin(sin.acceptExpression(this));
     }
 
     @Override
     public double visitSinh(Sinh sinh) {
-        return Math.sinh(sinh.getExpression().accept(this));
+        return Math.sinh(sinh.acceptExpression(this));
     }
 
     @Override
     public double visitSubtraction(Subtraction subtraction) {
-        return subtraction.getLeft().accept(this) - subtraction.getRight().accept(this);
+        return subtraction.acceptLeft(this) - subtraction.acceptRight(this);
     }
 
     @Override
     public double visitTan(Tan tan) {
-        return Math.tan(tan.getExpression().accept(this));
+        return Math.tan(tan.acceptExpression(this));
     }
 
     @Override
     public double visitTanh(Tanh tanh) {
-        return Math.tanh(tanh.getExpression().accept(this));
+        return Math.tanh(tanh.acceptExpression(this));
     }
 
     @Override
@@ -239,12 +238,12 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitNeg(Neg neg) {
-        return -neg.getExpression().accept(this);
+        return -neg.acceptExpression(this);
     }
 
     @Override
     public double visitPos(Pos pos) {
-        return pos.getExpression().accept(this);
+        return pos.acceptExpression(this);
     }
 
 }

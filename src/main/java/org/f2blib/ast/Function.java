@@ -41,8 +41,12 @@ public final class Function implements ASTElement, DoubleASTElement {
         return index;
     }
 
-    public Expression getExpression() {
-        return expression;
+    public void acceptExpression(Visitor visitor) {
+        expression.accept(visitor);
+    }
+
+    public double acceptExpression(DoubleVisitor visitor) {
+        return expression.accept(visitor);
     }
 
     @Override

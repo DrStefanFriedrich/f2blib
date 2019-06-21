@@ -22,50 +22,50 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitAbs(Abs abs) {
-        abs.getExpression().accept(this);
+        abs.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitAddition(Addition addition) {
-        addition.getLeft().accept(this);
-        addition.getRight().accept(this);
+        addition.acceptLeft(this);
+        addition.acceptRight(this);
         return null;
     }
 
     @Override
     public <T> T visitArccos(Arccos arccos) {
-        arccos.getExpression().accept(this);
+        arccos.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitArcosh(Arcosh arcosh) {
-        arcosh.getExpression().accept(this);
+        arcosh.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitArcsin(Arcsin arcsin) {
-        arcsin.getExpression().accept(this);
+        arcsin.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitArctan(Arctan arctan) {
-        arctan.getExpression().accept(this);
+        arctan.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitArsinh(Arsinh arsinh) {
-        arsinh.getExpression().accept(this);
+        arsinh.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitArtanh(Artanh artanh) {
-        artanh.getExpression().accept(this);
+        artanh.acceptExpression(this);
         return null;
     }
 
@@ -83,26 +83,26 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitCos(Cos cos) {
-        cos.getExpression().accept(this);
+        cos.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitCosh(Cosh cosh) {
-        cosh.getExpression().accept(this);
+        cosh.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitDivision(Division division) {
-        division.getLeft().accept(this);
-        division.getRight().accept(this);
+        division.acceptLeft(this);
+        division.acceptRight(this);
         return null;
     }
 
     @Override
     public <T> T visitExp(Exp exp) {
-        exp.getExpression().accept(this);
+        exp.acceptExpression(this);
         return null;
     }
 
@@ -114,7 +114,7 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitFunction(Function function) {
-        function.getExpression().accept(this);
+        function.acceptExpression(this);
         return null;
     }
 
@@ -148,14 +148,14 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitLn(Ln ln) {
-        ln.getExpression().accept(this);
+        ln.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitMultiplication(Multiplication multiplication) {
-        multiplication.getLeft().accept(this);
-        multiplication.getRight().accept(this);
+        multiplication.acceptLeft(this);
+        multiplication.acceptRight(this);
         return null;
     }
 
@@ -166,51 +166,51 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitParenthesis(Parenthesis parenthesis) {
-        parenthesis.getExpression().accept(this);
+        parenthesis.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitPower(Power power) {
-        power.getLeft().accept(this);
-        power.getRight().accept(this);
+        power.acceptLeft(this);
+        power.acceptRight(this);
         return null;
     }
 
     @Override
     public <T> T visitRound(Round round) {
-        round.getExpression().accept(this);
+        round.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitSin(Sin sin) {
-        sin.getExpression().accept(this);
+        sin.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitSinh(Sinh sinh) {
-        sinh.getExpression().accept(this);
+        sinh.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitSubtraction(Subtraction subtraction) {
-        subtraction.getLeft().accept(this);
-        subtraction.getRight().accept(this);
+        subtraction.acceptLeft(this);
+        subtraction.acceptRight(this);
         return null;
     }
 
     @Override
     public <T> T visitTan(Tan tan) {
-        tan.getExpression().accept(this);
+        tan.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitTanh(Tanh tanh) {
-        tanh.getExpression().accept(this);
+        tanh.acceptExpression(this);
         return null;
     }
 
@@ -221,19 +221,19 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitNeg(Neg neg) {
-        neg.getExpression().accept(this);
+        neg.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitPos(Pos pos) {
-        pos.getExpression().accept(this);
+        pos.acceptExpression(this);
         return null;
     }
 
     @Override
     public <T> T visitSqrt(Sqrt sqrt) {
-        sqrt.getExpression().accept(this);
+        sqrt.acceptExpression(this);
         return null;
     }
 

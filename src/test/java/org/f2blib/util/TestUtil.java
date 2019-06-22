@@ -15,6 +15,7 @@ package org.f2blib.util;
 import org.hamcrest.Matcher;
 import org.hamcrest.number.IsCloseTo;
 
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 public final class TestUtil {
@@ -24,6 +25,15 @@ public final class TestUtil {
 
     public static Matcher<Double> closeTo(double operand) {
         return IsCloseTo.closeTo(operand, 1e-8);
+    }
+
+    public static void assumeNotRunFromGradle() {
+        assumeFalse("This test runs infinite when run from Gradle. " +
+                "Maven and IntelliJ do not have this problem", runFromGradle());
+    }
+
+    private static boolean runFromGradle() {
+        return Boolean.valueOf(System.getProperty("org.f2blib.performancetest.gradle", Boolean.FALSE.toString()));
     }
 
     public static void assumePerformanceTest() {

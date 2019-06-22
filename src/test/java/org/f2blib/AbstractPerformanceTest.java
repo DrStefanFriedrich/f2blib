@@ -24,11 +24,11 @@ import java.util.stream.IntStream;
 
 abstract class AbstractPerformanceTest {
 
-    static final int NUMBER_OBJECTS = 1000000;
+    static final int NUMBER_OBJECTS = 10000000;
 
     static final int NUMBER_CORES = Runtime.getRuntime().availableProcessors();
 
-    private static final String FUNCTION_NAME = "org.f2blib.PerformanceTestFunction";
+    private static final String FUNCTION_NAME = "org.f2blib.performance.TestFunction";
 
     static String readFunctionByFileName(String fileName) throws IOException {
         return new ByteSource() {
@@ -69,10 +69,12 @@ abstract class AbstractPerformanceTest {
 
     }
 
+    protected static final RequestResponse END_OF_QUEUE = new RequestResponse();
+
     /**
      * This thread takes in an infinite loop elements from the requestQueue, processes them
-     * (i.e. evaluates the function), and puts the result back in the responseQueue until no
-     * more elements are available in the requestQueue.
+     * (i.e. evaluates the function), and puts the result back in the responseQueue until
+     * the end of the queue is reached.
      */
     protected static class Evaluator implements Runnable {
 
@@ -92,17 +94,21 @@ abstract class AbstractPerformanceTest {
         public void run() {
             try {
 
-                // Infinit loop will be terminated by Future.cancle(true)
                 while (true) {
 
                     RequestResponse rr = requestQueue.take();
+
+                    if (rr == END_OF_QUEUE) {
+                        responseQueue.put(rr);
+                        break;
+                    }
+
                     kernel.eval(FUNCTION_NAME, rr.getP(), rr.getX(), rr.getY());
                     responseQueue.put(rr);
                 }
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
             }
         }
 
@@ -123,15 +129,16 @@ abstract class AbstractPerformanceTest {
         public void run() {
             try {
 
-                int counter = 0;
-                while (counter < NUMBER_OBJECTS) {
-                    responseQueue.take();
-                    counter++;
-                }
+                RequestResponse rr;
+
+                do {
+
+                    rr = responseQueue.take();
+
+                } while (rr != END_OF_QUEUE);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
             }
         }
 

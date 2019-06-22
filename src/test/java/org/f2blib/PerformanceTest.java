@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
 
+import static org.f2blib.util.TestUtil.assumeNotRunFromGradle;
 import static org.f2blib.util.TestUtil.assumePerformanceTest;
 import static org.junit.Assert.fail;
 
@@ -39,57 +40,65 @@ public class PerformanceTest extends AbstractPerformanceTest {
         }
     }
 
-    private final BlockingQueue<RequestResponse> requestQueue = new ArrayBlockingQueue<>(NUMBER_OBJECTS + NUMBER_CORES);
+    private final BlockingQueue<RequestResponse> requestQueue = new ArrayBlockingQueue<>(NUMBER_OBJECTS + 1);
 
-    private final BlockingQueue<RequestResponse> responseQueue = new ArrayBlockingQueue<>(NUMBER_OBJECTS + NUMBER_CORES);
+    private final BlockingQueue<RequestResponse> responseQueue = new ArrayBlockingQueue<>(NUMBER_OBJECTS + 1);
 
     private final FunctionEvaluationKernel kernel = new FunctionEvaluationFactory().get().create();
 
-    private final ExecutorService worker = Executors.newFixedThreadPool(NUMBER_CORES);
-
-    private final ExecutorService responseCollector = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_CORES + 1);
 
     private final List<Future<?>> workerFutures = new ArrayList<>();
 
     @Test
-    public void performance() throws ExecutionException, InterruptedException {
+    public void performance() throws ExecutionException, InterruptedException, TimeoutException {
         assumePerformanceTest();
+        assumeNotRunFromGradle();
 
-        kernel.load(FUNCTION_DEFINITION);
+        try {
 
-        // Start the workers
-        for (int i = 0; i < NUMBER_CORES; i++) {
-            workerFutures.add(worker.submit(new Evaluator(requestQueue, responseQueue, kernel)));
+            kernel.load(FUNCTION_DEFINITION);
+
+            // Start the workers
+            for (int i = 0; i < NUMBER_CORES; i++) {
+                workerFutures.add(executorService.submit(new Evaluator(requestQueue, responseQueue, kernel)));
+            }
+
+            // Start the response collector
+            Future<?> waitForResultConsumer = executorService.
+                    submit(new ResultConsumer(responseQueue));
+
+            long start = System.currentTimeMillis();
+
+            // Enqueue the requests
+            Set<RequestResponse> testObjects = prepareTestObjects();
+            for (RequestResponse rr : testObjects) {
+                requestQueue.put(rr);
+            }
+            requestQueue.put(END_OF_QUEUE);
+
+            // Wait until all responses arrived
+            waitForResultConsumer.get(100, TimeUnit.SECONDS);
+
+            // Stop the workers
+            workerFutures.forEach(f -> f.cancel(true));
+
+            long end = System.currentTimeMillis();
+
+            fail("Performance should always be better. That's why we fail the unit test.\n\n" +
+                    "Number of objects: " + NUMBER_OBJECTS + "\n" +
+                    "Number of cores: " + NUMBER_CORES + "\n" +
+                    "Total duration (ms): " + (end - start) + "\n" +
+                    "Objects per second: " + ((double) (NUMBER_OBJECTS)) / (end - start) * 1000);
+
+
+        } catch (TimeoutException e) {
+            for (Future<?> future : workerFutures) {
+                future.get(10, TimeUnit.SECONDS);
+            }
+        } finally {
+            executorService.shutdown();
         }
-
-        // Start the response collector
-        Future<BlockingQueue<RequestResponse>> waitForResultConsumer = responseCollector.
-                submit(new ResultConsumer(responseQueue), requestQueue);
-
-        long start = System.currentTimeMillis();
-
-        // Enqueue the requests
-        Set<RequestResponse> testObjects = prepareTestObjects();
-        for (RequestResponse rr : testObjects) {
-            requestQueue.put(rr);
-        }
-
-        // Wait until all responses arrived
-        waitForResultConsumer.get();
-
-        // Stop the workers
-        workerFutures.forEach(f -> f.cancel(true));
-
-        long end = System.currentTimeMillis();
-
-        worker.shutdown();
-        responseCollector.shutdown();
-
-        fail("Performance should always be better. That's why we fail the unit test.\n\n" +
-                "Number of objects: " + NUMBER_OBJECTS + "\n" +
-                "Number of cores: " + NUMBER_CORES + "\n" +
-                "Total duration (ms): " + (end - start) + "\n" +
-                "Objects per second: " + ((double) (NUMBER_OBJECTS)) / (end - start) * 1000);
     }
 
 }

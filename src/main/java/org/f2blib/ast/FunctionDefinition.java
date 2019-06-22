@@ -37,6 +37,10 @@ public final class FunctionDefinition implements ASTElement, DoubleASTElement {
         return name;
     }
 
+    /*
+     * We violate the Law of Demeter in order to have a more fluent coding style
+     * later in the visitors (i.e. Java Streams)
+     */
     public FunctionBody getFunctionBody() {
         return functionBody;
     }
@@ -68,7 +72,7 @@ public final class FunctionDefinition implements ASTElement, DoubleASTElement {
     }
 
     @Override
-    public Void accept(Visitor visitor) {
+    public <T> T accept(Visitor visitor) {
         return visitor.visitFunctionDefinition(this);
     }
 

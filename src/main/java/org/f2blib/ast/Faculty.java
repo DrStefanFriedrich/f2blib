@@ -29,8 +29,12 @@ public final class Faculty implements IntExpression {
         this.intExpression = intExpression;
     }
 
-    public IntExpression getIntExpression() {
-        return intExpression;
+    public <T> T acceptIntExpression(Visitor visitor) {
+        return intExpression.accept(visitor);
+    }
+
+    public double acceptIntExpression(DoubleVisitor visitor) {
+        return intExpression.accept(visitor);
     }
 
     @Override

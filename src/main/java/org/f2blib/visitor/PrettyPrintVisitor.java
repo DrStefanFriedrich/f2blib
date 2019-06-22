@@ -139,17 +139,17 @@ public class PrettyPrintVisitor implements Visitor {
 
         String symbol = faculty.accept(symbolVisitor);
         int precedenceThis = faculty.accept(precedenceVisitor);
-        int precedenceInner = faculty.getIntExpression().accept(precedenceVisitor);
+        int precedenceInner = faculty.acceptIntExpression(precedenceVisitor);
 
         if (precedenceThis < precedenceInner) {
 
             pw.print("(");
-            faculty.getIntExpression().accept(this);
+            faculty.acceptIntExpression(this);
             pw.print(")" + symbol);
 
         } else {
 
-            faculty.getIntExpression().accept(this);
+            faculty.acceptIntExpression(this);
             pw.print(symbol);
         }
         return null;
@@ -225,9 +225,9 @@ public class PrettyPrintVisitor implements Visitor {
         String symbol = binomial.accept(symbolVisitor);
 
         pw.print(symbol + "(");
-        binomial.getN().accept(this);
+        binomial.acceptN(this);
         pw.print(", ");
-        binomial.getK().accept(this);
+        binomial.acceptK(this);
         pw.print(")");
         return null;
     }
@@ -374,6 +374,11 @@ public class PrettyPrintVisitor implements Visitor {
     public Void visitSqrt(Sqrt sqrt) {
         printUnaryExpression(sqrt);
         return null;
+    }
+
+    @Override
+    public <T> T visitNoOp(NoOp noOp) {
+        throw new IllegalStateException("visitNoOp must not be called on the PrettyPrintVisitor");
     }
 
 }

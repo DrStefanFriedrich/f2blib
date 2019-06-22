@@ -91,12 +91,12 @@ public class EvalVisitor implements DoubleVisitor {
 
     @Override
     public double visitBinomial(Binomial binomial) {
-        return binomialCoefficient((int) binomial.getN().accept(this), (int) binomial.getK().accept(this));
+        return binomialCoefficient((int) binomial.acceptN(this), (int) binomial.acceptK(this));
     }
 
     @Override
     public double visitFaculty(Faculty faculty) {
-        return factorial((int) faculty.getIntExpression().accept(this));
+        return factorial((int) faculty.acceptIntExpression(this));
     }
 
     @Override
@@ -174,6 +174,11 @@ public class EvalVisitor implements DoubleVisitor {
     @Override
     public double visitSqrt(Sqrt sqrt) {
         return Math.sqrt(sqrt.acceptExpression(this));
+    }
+
+    @Override
+    public double visitNoOp(NoOp noOp) {
+        throw new IllegalStateException("visitNoOp must not be called on the EvalVisitor");
     }
 
     @Override

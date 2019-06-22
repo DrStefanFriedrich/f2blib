@@ -71,8 +71,8 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitBinomial(Binomial binomial) {
-        binomial.getN().accept(this);
-        binomial.getK().accept(this);
+        binomial.acceptN(this);
+        binomial.acceptK(this);
         return null;
     }
 
@@ -108,7 +108,7 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitFaculty(Faculty faculty) {
-        faculty.getIntExpression().accept(this);
+        faculty.acceptIntExpression(this);
         return null;
     }
 

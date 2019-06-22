@@ -26,9 +26,12 @@ public abstract class AbstractBytecodeVisitorImplTest {
 
     private ValidationVisitorImpl validationVisitor;
 
+    private StackDepthVisitorImpl stackDepthVisitor;
+
     @Before
     public void setup() {
         validationVisitor = new ValidationVisitorImpl();
+        stackDepthVisitor = new StackDepthVisitorImpl();
     }
 
     FunctionDefinition createFunctionDefinition(String functionName, Function... functions) {
@@ -39,9 +42,10 @@ public abstract class AbstractBytecodeVisitorImplTest {
         try {
 
             fd.accept(validationVisitor);
+            fd.accept(stackDepthVisitor);
 
             BytecodeVisitorImpl bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                    validationVisitor.getSpecialFunctionsUsage());
+                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
             fd.accept(bytecodeVisitor);
 
             return bytecodeVisitor.generate().newInstance();

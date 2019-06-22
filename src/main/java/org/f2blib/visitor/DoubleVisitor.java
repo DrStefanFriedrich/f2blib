@@ -88,4 +88,6 @@ public interface DoubleVisitor {
 
     double visitSqrt(Sqrt sqrt);
 
+    double visitNoOp(NoOp noOp);
+
 }

@@ -28,19 +28,23 @@ public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluati
         ValidationVisitor validationVisitor = new ValidationVisitorImpl();
         LocalVariables localVariables = validationVisitor.getLocalVariables();
         SpecialFunctionsUsage specialFunctionsUsage = validationVisitor.getSpecialFunctionsUsage();
-        BytecodeVisitor bytecodeVisitor = new BytecodeVisitorImpl(localVariables, specialFunctionsUsage);
 
-        return generateAndInstantiate(functionDefinition, validationVisitor, bytecodeVisitor);
+        StackDepthVisitor stackDepthVisitor = new StackDepthVisitorImpl();
+
+        BytecodeVisitor bytecodeVisitor = new BytecodeVisitorImpl(localVariables, specialFunctionsUsage, stackDepthVisitor);
+
+        return generateAndInstantiate(functionDefinition, validationVisitor, bytecodeVisitor, stackDepthVisitor);
     }
 
     @VisibleForTesting
     protected FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition,
                                                         ValidationVisitor validationVisitor,
-                                                        BytecodeVisitor bytecodeVisitor) {
+                                                        BytecodeVisitor bytecodeVisitor,
+                                                        StackDepthVisitor stackDepthVisitor) {
         try {
 
             functionDefinition.accept(validationVisitor);
-
+            functionDefinition.accept(stackDepthVisitor);
             functionDefinition.accept(bytecodeVisitor);
 
             Class<? extends FunctionEvaluation> clazz = bytecodeVisitor.generate();

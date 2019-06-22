@@ -14,8 +14,6 @@ import java.util.Map;
  */
 public interface LocalVariables {
 
-    int getMaxStack();
-
     int getMaxLocals();
 
     int getIndexForVariable(Variable variable);

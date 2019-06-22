@@ -122,4 +122,9 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
         return super.visitArtanh(artanh);
     }
 
+    @Override
+    public Void visitNoOp(NoOp noOp) {
+        return null;
+    }
+
 }

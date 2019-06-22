@@ -24,8 +24,9 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     public static final String MATH_TYPE = "java/lang/Math";
 
-    public BytecodeVisitorImpl(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage) {
-        super(localVariables, specialFunctionsUsage);
+    public BytecodeVisitorImpl(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage,
+                               StackDepthVisitor stackDepthVisitor) {
+        super(localVariables, specialFunctionsUsage, stackDepthVisitor);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         functionBody.getFunctionsWrapper().accept(this);
 
-        evalMethod.visitMaxs(localVariables.getMaxStack(), localVariables.getMaxLocals());
+        evalMethod.visitMaxs(stackDepthVisitor.getMaxStackDepth(), localVariables.getMaxLocals());
         evalMethod.visitInsn(RETURN);
         evalMethod.visitEnd();
 
@@ -253,10 +254,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitBinomial(Binomial binomial) {
 
-        binomial.getN().accept(this);
+        binomial.acceptN(this);
         evalMethod.visitInsn(D2I);
 
-        binomial.getK().accept(this);
+        binomial.acceptK(this);
         evalMethod.visitInsn(D2I);
 
         evalMethod.visitMethodInsn(INVOKESTATIC, "org/apache/commons/math3/util/CombinatoricsUtils", "binomialCoefficient", "(II)J", false);
@@ -268,7 +269,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitFaculty(Faculty faculty) {
 
-        faculty.getIntExpression().accept(this);
+        faculty.acceptIntExpression(this);
         evalMethod.visitInsn(D2I);
 
         evalMethod.visitMethodInsn(INVOKESTATIC, "org/apache/commons/math3/util/CombinatoricsUtils", "factorial", "(I)J", false);
@@ -279,7 +280,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitInt(Int i) {
-        evalMethod.visitLdcInsn((double)i.getValue());
+        evalMethod.visitLdcInsn((double) i.getValue());
         return null;
     }
 
@@ -315,6 +316,11 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitSqrt(Sqrt sqrt) {
         visitUnaryExpression(sqrt, MATH_TYPE, "sqrt");
+        return null;
+    }
+
+    @Override
+    public Void visitNoOp(NoOp noOp) {
         return null;
     }
 

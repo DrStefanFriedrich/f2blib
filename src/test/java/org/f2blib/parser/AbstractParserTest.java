@@ -31,6 +31,8 @@ public abstract class AbstractParserTest {
 
     protected static final String END = "end";
 
+    public static final String NO_FUNCTION_SPECIFIED = "No function specified";
+
     protected final FunctionParser parser = new AntlrFunctionParser();
 
     @Rule
@@ -55,7 +57,9 @@ public abstract class AbstractParserTest {
     protected void assertAST(String functionDefinition, Expression expression) {
 
         Expression ex = parser.parse(functionDefinition).getFunctionBody()
-                .getFunctionsWrapper().getFunctions().get(0).getExpression();
+                .getFunctionsWrapper().getFunctions().stream()
+                .findFirst().orElseThrow(() -> new IllegalStateException(NO_FUNCTION_SPECIFIED))
+                .getExpression();
 
         assertThat(ex, is(expression));
     }
@@ -66,7 +70,9 @@ public abstract class AbstractParserTest {
         exception.expectMessage(startsWith(exceptionMessage));
 
         parser.parse(functionDefinition).getFunctionBody()
-                .getFunctionsWrapper().getFunctions().get(0).getExpression();
+                .getFunctionsWrapper().getFunctions().stream()
+                .findFirst().orElseThrow(() -> new IllegalStateException(NO_FUNCTION_SPECIFIED))
+                .getExpression();
     }
 
 }

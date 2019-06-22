@@ -61,15 +61,19 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
 
     final SpecialFunctionsUsage specialFunctionsUsage;
 
+    final StackDepthVisitor stackDepthVisitor;
+
     private final ClassWriter cw = new ClassWriter(0);
 
     final MethodVisitor evalMethod = cw.visitMethod(ACC_PUBLIC, "eval", "([D[D[D)V", null, null);
 
     String className;
 
-    AbstractBytecodeVisitor(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage) {
+    AbstractBytecodeVisitor(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage,
+                            StackDepthVisitor stackDepthVisitor) {
         this.localVariables = localVariables;
         this.specialFunctionsUsage = specialFunctionsUsage;
+        this.stackDepthVisitor = stackDepthVisitor;
     }
 
     @Override

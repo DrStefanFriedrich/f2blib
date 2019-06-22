@@ -16,6 +16,7 @@ import org.f2blib.ast.*;
 import org.f2blib.exception.BytecodeGenerationException;
 import org.f2blib.impl.FunctionEvaluation;
 import org.f2blib.visitor.BytecodeVisitor;
+import org.f2blib.visitor.StackDepthVisitor;
 import org.f2blib.visitor.ValidationVisitor;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.mock;
 public class FunctionEvaluationBytecodeGeneratorImplTest {
 
     public static final String CANNOT_INSTANTIATE_CLASS = "Cannot instantiate class";
+
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -46,6 +48,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
 
     private BytecodeVisitor bytecodeVisitorMocked;
 
+    private StackDepthVisitor stackDepthVisitorMocked;
 
     public static class FunctionEvaluationBytecodeGeneratorImplThrowing extends FunctionEvaluationBytecodeGeneratorImpl {
 
@@ -61,11 +64,6 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
 
         public FunctionEvaluationBytecodeGeneratorImplThrowing(ExceptionType exceptionType) {
             this.exceptionType = exceptionType;
-        }
-
-        @Override
-        public FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition, ValidationVisitor validationVisitor, BytecodeVisitor bytecodeVisitor) {
-            return super.generateAndInstantiate(functionDefinition, validationVisitor, bytecodeVisitor);
         }
 
         @Override
@@ -93,6 +91,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
     public void setup() {
         validationVisitorMocked = mock(ValidationVisitor.class);
         bytecodeVisitorMocked = mock(BytecodeVisitor.class);
+        stackDepthVisitorMocked = mock(StackDepthVisitor.class);
     }
 
     @Test
@@ -118,7 +117,8 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         exception.expectMessage(CANNOT_INSTANTIATE_CLASS);
         exception.expectCause(instanceOf(NoSuchMethodException.class));
 
-        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
+        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked,
+                stackDepthVisitorMocked);
     }
 
     @Test
@@ -130,7 +130,8 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         exception.expectMessage(CANNOT_INSTANTIATE_CLASS);
         exception.expectCause(instanceOf(IllegalAccessException.class));
 
-        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
+        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked,
+                stackDepthVisitorMocked);
     }
 
     @Test
@@ -142,7 +143,8 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         exception.expectMessage(CANNOT_INSTANTIATE_CLASS);
         exception.expectCause(instanceOf(InstantiationException.class));
 
-        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
+        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked,
+                stackDepthVisitorMocked);
     }
 
     @Test
@@ -152,7 +154,8 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
 
         exception.expect(ArrayIndexOutOfBoundsException.class);
 
-        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
+        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked,
+                stackDepthVisitorMocked);
     }
 
     @Test
@@ -164,7 +167,8 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
         exception.expectMessage("Exception thrown from constructor invocation");
         exception.expectCause(instanceOf(Exception.class));
 
-        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked);
+        underTest.generateAndInstantiate(functionDefinition, validationVisitorMocked, bytecodeVisitorMocked,
+                stackDepthVisitorMocked);
     }
 
 }

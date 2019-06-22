@@ -32,12 +32,20 @@ public final class Binomial implements IntExpression {
         this.n = n;
     }
 
-    public IntExpression getN() {
-        return n;
+    public <T> T acceptN(Visitor visitor) {
+        return n.accept(visitor);
     }
 
-    public IntExpression getK() {
-        return k;
+    public <T> T acceptK(Visitor visitor) {
+        return k.accept(visitor);
+    }
+
+    public double acceptN(DoubleVisitor visitor) {
+        return n.accept(visitor);
+    }
+
+    public double acceptK(DoubleVisitor visitor) {
+        return k.accept(visitor);
     }
 
     @Override

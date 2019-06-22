@@ -62,7 +62,6 @@ public class ValidationVisitorImplTest {
         assertThat(localVariables.parameterIndexIterator().hasNext(), is(false));
         assertThat(localVariables.variableIndexIterator().hasNext(), is(false));
         assertThat(localVariables.getMaxLocals(), is(4));
-        assertThat(localVariables.getMaxStack(), is(1000));
     }
 
     @Test

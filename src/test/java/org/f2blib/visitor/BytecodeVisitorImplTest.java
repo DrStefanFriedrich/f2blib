@@ -37,9 +37,12 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
 
     private ValidationVisitorImpl validationVisitor;
 
+    private StackDepthVisitorImpl stackDepthVisitor;
+
     @Before
     public void setup() {
         validationVisitor = new ValidationVisitorImpl();
+        stackDepthVisitor = new StackDepthVisitorImpl();
     }
 
     @Test
@@ -52,9 +55,10 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
         FunctionDefinition fd = createSampleFunction();
 
         fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
 
         bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                validationVisitor.getSpecialFunctionsUsage());
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
         fd.accept(bytecodeVisitor);
 
         FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -75,9 +79,10 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
         FunctionDefinition fd = createSampleFunction();
 
         fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
 
         bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                validationVisitor.getSpecialFunctionsUsage());
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
         fd.accept(bytecodeVisitor);
 
         FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -120,9 +125,10 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
             FunctionDefinition fd = createFunctionDefinition("BytecodeTestFunc", expression);
 
             fd.accept(validationVisitor);
+            fd.accept(stackDepthVisitor);
 
             bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                    validationVisitor.getSpecialFunctionsUsage());
+                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
             fd.accept(bytecodeVisitor);
 
             FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
@@ -175,9 +181,10 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
                     new Addition(scalarProductOfParameters(numberOfParameters), scalarProductOfVariables(numberOfVariables)));
 
             fd.accept(validationVisitor);
+            fd.accept(stackDepthVisitor);
 
             bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                    validationVisitor.getSpecialFunctionsUsage());
+                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
             fd.accept(bytecodeVisitor);
 
             FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();

@@ -88,4 +88,6 @@ public interface Visitor {
 
     <T> T visitSqrt(Sqrt sqrt);
 
+    <T> T visitNoOp(NoOp noOp);
+
 }

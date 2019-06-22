@@ -203,4 +203,9 @@ public class SymbolVisitor implements Visitor {
         return "sqrt";
     }
 
+    @Override
+    public String visitNoOp(NoOp noOp) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
 }

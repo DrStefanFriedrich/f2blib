@@ -18,6 +18,8 @@ import org.objectweb.asm.MethodVisitor;
 
 import java.util.*;
 
+import static java.util.stream.IntStream.range;
+
 /**
  * Implementation note on the array of local variables:<p>
  * <code>0: this</code><p>
@@ -43,15 +45,6 @@ public class LocalVariablesImpl implements LocalVariables {
 
     void addIndexToVariableIndexes(int index) {
         variableIndexes.add(index);
-    }
-
-    /**
-     * The maximum stack size as needed by {@link MethodVisitor}.visitMaxs.
-     */
-    @Override
-    public int getMaxStack() {
-        // Open: how to calculate the stack frame depth.
-        return 1000;
     }
 
     /**
@@ -82,20 +75,17 @@ public class LocalVariablesImpl implements LocalVariables {
 
     /**
      * Do all the calculations to finalize object creation.
-     * Long and double must be counted as two variables in the array of local variables.
+     * Long and double must be counted as two variables in the array of local variables,
+     * according to the Java virtual machine specification.
      */
     void finalizeLocalVariables() {
 
         if (!parameterIndexes.isEmpty()) {
-            for (int i = 0; i <= parameterIndexes.last(); i++) {
-                parameterIndexes.add(i);
-            }
+            range(0, parameterIndexes.last() + 1).forEach(parameterIndexes::add);
         }
 
         if (!variableIndexes.isEmpty()) {
-            for (int i = 0; i <= variableIndexes.last(); i++) {
-                variableIndexes.add(i);
-            }
+            range(0, variableIndexes.last() + 1).forEach(variableIndexes::add);
         }
 
         int localVariableIndex = 4;

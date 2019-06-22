@@ -35,6 +35,10 @@ public final class FunctionsWrapper implements ASTElement, DoubleASTElement {
         this(Arrays.asList(functions));
     }
 
+    /*
+     * We violate the Law of Demeter in order to have a more fluent coding style
+     * later in the visitors (i.e. Java Streams)
+     */
     public List<Function> getFunctions() {
         return functions;
     }
@@ -64,7 +68,7 @@ public final class FunctionsWrapper implements ASTElement, DoubleASTElement {
     }
 
     @Override
-    public Void accept(Visitor visitor) {
+    public <T> T accept(Visitor visitor) {
         return visitor.visitFunctionsWrapper(this);
     }
 

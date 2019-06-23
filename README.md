@@ -10,6 +10,42 @@
 
  ------------------------------------------------------------------------------>
 
+<style>
+ul.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+li.menu {
+  float: left;
+  font-weight: bold;
+  border-right: 2px solid #bbb;
+}
+li.menu:last-child {
+  border-right: none;
+}
+li a.menu {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+li a.menu:hover {
+  background-color: #111;
+}
+</style>
+<ul class="menu">
+  <li class="menu"><a class="menu" href="https://github.com/DrStefanFriedrich/f2blib/wiki">Wiki</a></li>
+  <li class="menu"><a class="menu" href="https://github.com/DrStefanFriedrich/f2blib/issues">Issues</a></li>
+  <li class="menu"><a class="menu" href="https://github.com/DrStefanFriedrich/f2blib">Code</a></li>
+  <li class="menu"><a class="menu" href="https://travis-ci.org/DrStefanFriedrich/f2blib/">Travis CI</a></li>
+  <li class="menu"><a class="menu" href="https://sonarcloud.io/dashboard?id=DrStefanFriedrich_f2blib">SonarQube</a></li>
+  <li class="menu"><a class="menu" href="https://oss.sonatype.org/">Nexus</a></li>
+</ul>
+
 # F2BLib &mdash; Function to Bytecode Library
 
 ![Language Java](https://img.shields.io/static/v1.svg?label=Language&message=Java&color=fbff8a&style=plastic)

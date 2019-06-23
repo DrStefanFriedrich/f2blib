@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.NoOp;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 

@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.parser;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
-import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Test;
 
 public class ParserTest extends AbstractParserTest {

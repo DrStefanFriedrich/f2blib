@@ -12,8 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.ASTTest;
-import com.github.drstefanfriedrich.f2blib.ast.Neg;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +19,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.drstefanfriedrich.f2blib.ast.ASTTest.createFunctionDefinition;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.assumePerformanceTest;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;

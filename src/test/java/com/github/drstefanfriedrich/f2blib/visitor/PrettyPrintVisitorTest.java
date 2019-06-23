@@ -1,14 +1,9 @@
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.ASTTest;
-import com.github.drstefanfriedrich.f2blib.ast.Neg;
-import com.github.drstefanfriedrich.f2blib.ast.Pos;
-import com.github.drstefanfriedrich.f2blib.ast.Sqrt;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.github.drstefanfriedrich.f2blib.ast.ASTTest.createFunctionDefinition;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

@@ -12,9 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.Neg;
-import com.github.drstefanfriedrich.f2blib.ast.Pos;
-import com.github.drstefanfriedrich.f2blib.ast.Sqrt;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
 import org.junit.Test;

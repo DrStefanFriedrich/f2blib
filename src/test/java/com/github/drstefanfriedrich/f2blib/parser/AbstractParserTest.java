@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.parser;
 
-import com.github.drstefanfriedrich.f2blib.ast.Expression;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import com.github.drstefanfriedrich.f2blib.ast.Expression;
 import org.junit.Rule;

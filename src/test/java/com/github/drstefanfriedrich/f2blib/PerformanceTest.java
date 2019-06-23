@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
 
-import static com.github.drstefanfriedrich.f2blib.util.TestUtil.assumeNotRunFromGradle;
-import static com.github.drstefanfriedrich.f2blib.util.TestUtil.assumePerformanceTest;
 import static org.junit.Assert.fail;
 
 /**

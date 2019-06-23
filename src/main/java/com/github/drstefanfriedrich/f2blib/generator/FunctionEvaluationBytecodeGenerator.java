@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.generator;
 
 import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
-import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
 
 /**

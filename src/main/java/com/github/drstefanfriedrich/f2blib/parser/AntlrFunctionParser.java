@@ -12,9 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.parser;
 
-import com.github.drstefanfriedrich.f2blib.antlr.FunctionsLexer;
-import com.github.drstefanfriedrich.f2blib.antlr.FunctionsParser;
-import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import com.github.drstefanfriedrich.f2blib.antlr.FunctionsLexer;

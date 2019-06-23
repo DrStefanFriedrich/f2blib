@@ -12,10 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.Function;
-import com.github.drstefanfriedrich.f2blib.ast.FunctionBody;
-import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
-import com.github.drstefanfriedrich.f2blib.ast.FunctionsWrapper;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Rule;
 import org.junit.Test;

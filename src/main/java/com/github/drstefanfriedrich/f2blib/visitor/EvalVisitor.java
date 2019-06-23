@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.apache.commons.math3.analysis.function.Acosh;
 import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;

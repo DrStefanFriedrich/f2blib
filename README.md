@@ -231,7 +231,7 @@ double[] y = new double[2];
 kernel.eval("some.packagename.SomeClassName", p, x, y);
 ```
 
-We refer to [IntegrationTest.java](src/test/java/org/f2blib/IntegrationTest.java).
+We refer to [IntegrationTest.java](src/test/java/com/github/drstefanfriedrich/f2blib/IntegrationTest.java).
 
 
 ## Architecture
@@ -316,3 +316,4 @@ Here is a list of mathematical expression evaluation frameworks similar to this 
 
 The project is published under the [Eclipse Public License v2.0](LICENSE.txt), which is online available at
 [this](https://www.eclipse.org/legal/epl-2.0/) URL.
+ 

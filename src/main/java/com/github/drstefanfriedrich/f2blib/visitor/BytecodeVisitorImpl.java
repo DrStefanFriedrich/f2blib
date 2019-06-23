@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
-import com.github.drstefanfriedrich.f2blib.ast.*;
 
 import static java.lang.String.format;
 import static org.objectweb.asm.Opcodes.*;

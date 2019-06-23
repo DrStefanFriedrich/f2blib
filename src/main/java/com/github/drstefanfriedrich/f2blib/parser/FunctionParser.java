@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.parser;
 
 import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
-import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 
 /**
  * Abstraction for parsing function definition strings to {@link FunctionDefinition}s.

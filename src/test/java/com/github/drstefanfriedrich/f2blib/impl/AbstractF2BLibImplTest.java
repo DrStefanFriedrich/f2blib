@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.impl;
 
-import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
 import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGenerator;
 import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
 import org.junit.Before;

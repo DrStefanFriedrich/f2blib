@@ -16,9 +16,6 @@ import com.github.drstefanfriedrich.f2blib.util.TestUtil;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
-import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 /**
  * Some very simple integration tests for the project.
  */

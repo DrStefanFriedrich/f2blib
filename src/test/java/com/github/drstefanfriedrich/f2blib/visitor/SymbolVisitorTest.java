@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
-import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

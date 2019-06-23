@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.ASTTest;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
 import org.junit.Before;
@@ -22,10 +21,8 @@ import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
-import static com.github.drstefanfriedrich.f2blib.ast.ASTTest.createFunctionDefinition;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.assumePerformanceTest;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
-import static com.github.drstefanfriedrich.f2blib.visitor.EvalVisitorTest.createSampleFunction;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -47,7 +44,7 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
     }
 
     @Test
-    public void simpleEvaluation() throws IllegalAccessException, InstantiationException, IOException {
+    public void simpleEvaluation() throws IllegalAccessException, InstantiationException {
 
         double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         double[] p = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
@@ -74,7 +71,7 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
     }
 
     @Test
-    public void performance() throws IllegalAccessException, InstantiationException, IOException {
+    public void performance() throws IllegalAccessException, InstantiationException {
         assumePerformanceTest();
 
         FunctionDefinition fd = EvalVisitorTest.createSampleFunction();

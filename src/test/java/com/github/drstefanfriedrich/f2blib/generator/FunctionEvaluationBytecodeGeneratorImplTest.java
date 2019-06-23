@@ -12,13 +12,7 @@
 
 package com.github.drstefanfriedrich.f2blib.generator;
 
-import com.github.drstefanfriedrich.f2blib.ast.*;
-import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
-import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
 import com.github.drstefanfriedrich.f2blib.util.TestUtil;
-import com.github.drstefanfriedrich.f2blib.visitor.BytecodeVisitor;
-import com.github.drstefanfriedrich.f2blib.visitor.StackDepthVisitor;
-import com.github.drstefanfriedrich.f2blib.visitor.ValidationVisitor;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
@@ -35,8 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import static java.lang.String.format;
 import static com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGeneratorImplTest.FunctionEvaluationBytecodeGeneratorImplThrowing.ExceptionType.*;
-import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Mockito.mock;
 
@@ -67,7 +59,7 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
             ILLEGAL_ACCESS_EXCEPTION,
             INVOCATION_TARGET_EXCEPTION_WITH_WRAPPED_RTE,
             INVOCATION_TARGET_EXCEPTION_WITHOUT_WRAPPED_RTE,
-            INSTANTIATION_EXCEPTION;
+            INSTANTIATION_EXCEPTION
         }
 
         public FunctionEvaluationBytecodeGeneratorImplThrowing(ExceptionType exceptionType) {

@@ -12,10 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.generator;
 
-import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
-import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
-import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
-import com.github.drstefanfriedrich.f2blib.visitor.*;
 import com.google.common.annotations.VisibleForTesting;
 import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;

@@ -16,10 +16,10 @@ plugins {
 
 description = "Function to Bytecode Library"
 
-group = 'org.f2blib'
+group = 'com.github.drstefanfriedrich.f2blib'
 version = '1.0.0-SNAPSHOT'
 
-defaultTasks 'build', 'sonarqube'
+defaultTasks 'build'
 
 apply plugin: 'java'
 apply plugin: 'antlr'
@@ -46,12 +46,12 @@ dependencies {
 
 generateGrammarSource {
     maxHeapSize = "64m"
-    arguments += ["-visitor", "-package", "org.f2blib.antlr"]
+    arguments += ["-visitor", "-package", "com.github.drstefanfriedrich.f2blib.antlr"]
 }
 
 test {
-    systemProperty "org.f2blib.performancetest.enabled", System.getProperty("org.f2blib.performancetest.enabled")
-    systemProperty "org.f2blib.performancetest.gradle", "true"
+    systemProperty "com.github.drstefanfriedrich.f2blib.performancetest.enabled", System.getProperty("com.github.drstefanfriedrich.f2blib.performancetest.enabled")
+    systemProperty "com.github.drstefanfriedrich.f2blib.performancetest.gradle", "true"
     maxHeapSize = '1G'
     jvmArgs '-XX:MaxMetaspaceSize=256m'
     maxParallelForks = 3 * Runtime.runtime.availableProcessors().intdiv(4) ?: 1
@@ -63,4 +63,6 @@ sonarqube {
     }
 }
 
-project.tasks["check"].dependsOn "sonarqube"
+if (System.getenv("F2BLIB_SONAR_CLOUD_TOKEN")) {
+    project.tasks["check"].dependsOn "sonarqube"
+}

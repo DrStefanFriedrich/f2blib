@@ -19,7 +19,7 @@ description = "Function to Bytecode Library"
 group = 'org.f2blib'
 version = '1.0.0-SNAPSHOT'
 
-defaultTasks 'build'
+defaultTasks 'build', 'sonarqube'
 
 apply plugin: 'java'
 apply plugin: 'antlr'
@@ -56,3 +56,11 @@ test {
     jvmArgs '-XX:MaxMetaspaceSize=256m'
     maxParallelForks = 3 * Runtime.runtime.availableProcessors().intdiv(4) ?: 1
 }
+
+sonarqube {
+    properties {
+        property "sonar.login", System.getenv("F2BLIB_SONAR_CLOUD_TOKEN")
+    }
+}
+
+project.tasks["check"].dependsOn "sonarqube"

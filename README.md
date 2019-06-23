@@ -31,12 +31,15 @@ for real-valued mathematical function expressions. It parses an input source usi
 and converts the resulting abstract syntax tree (AST) to Java bytecode using [ASM](https://asm.ow2.io/). The
 functions can then be evaluated _very_ fast.
 
+Example of an abstract syntax tree:
+
 ![Example of an Abstract Syntax Tree](src/main/docs/ast.png)
 
 By real-valued mathematical functions we mean mappings of the form
 
 <center>
 <!-- Generated with https://www.mathtowebonline.com/ -->
+<!--
 <math xmlns="http://www.w3.org/1998/Math/MathML">
 <mrow>
 	<mi>f</mi>
@@ -78,14 +81,20 @@ By real-valued mathematical functions we mean mappings of the form
 	</mrow>
 </mrow>
 </math>
+-->
+<img src="src/main/docs/formula.png" />
 </center>
 
 
 ## Getting Started
 
+_Note_: Right now this project is still in its initial phase; there is no library available
+for download on Maven Central. You have to build the project by your own.
+
 Suppose you want to evaluate a real-valued function with two variables and two parameters:
 
 <center>
+<!--
 <math xmlns="http://www.w3.org/1998/Math/MathML">
 <mrow>
 	<msub>
@@ -183,6 +192,8 @@ Suppose you want to evaluate a real-valued function with two variables and two p
 	</mrow>
 </mrow>
 </math>
+-->
+<img src="src/main/docs/sample_formula.png" />
 </center>
 
 Introduce the dependency
@@ -247,17 +258,16 @@ $ ./gradlew -Dorg.f2blib.performancetest.enabled=true
 
 ## Limitations
 
-Right now variables must be named x_i, where i is an integer and parameters must be named p_j, where j is
-an integer.
-
-The maximum number of parameters and variables is 128, respectively.
+* Right now variables must be named x_i, where i is an integer and parameters must be named p_j, where j is
+  an integer.
+* The maximum number of parameters and variables is 128, respectively.
 
 
 ## References
 
 ### Parser Generators
 
-Here is a list of parser generators. I used the list during evaluation of the different frameworks.
+Here is a list of parser generators. We used the list during evaluation of the different frameworks.
 
 * [Antlr4](https://www.antlr.org/)
 * [JavaCC](https://javacc.org/)
@@ -269,7 +279,7 @@ and has a lot of features we don't need.
 
 ### Bytecode Generation
 
-Here is a list of Java bytecode generation frameworks. I used the list during evaluation of the different frameworks.
+Here is a list of Java bytecode generation frameworks. We used the list during evaluation of the different frameworks.
 
 * [ASM](https://asm.ow2.io/)
 * [Commons BCEL](https://commons.apache.org/proper/commons-bcel/)
@@ -295,7 +305,8 @@ Here is a list of mathematical expression evaluation frameworks similar to this 
 ### Finance Mathematics
 
 * Volkert Paulsen: [Versicherungsmathematik](https://wwwmath.uni-muenster.de/statistik/paulsen/WeiterePublikationen/Versicherungsmathematik.pdf) (only available in German)
-* Michael Koller: [Stochastische Modelle in der Versicherungsmathematik und Lebensversicherungsmathematik](http://www.math.ethz.ch/finance/Skripte/LV12_v060_151003.pdf) (only available in German)
+* Michael Koller: [Lebensversicherungsmathematik](https://www.actuaries.ch/de/downloads/aid!b4ae4834-66cd-464b-bd27-1497194efc96/id!101/Koller_LV_2013.pdf) (only available in German)
+* Michael Koller: Stochastische Modelle in der Lebensversicherung, Springer, ISBN 978-3-642-11252-2
 * Hartmut Milbrodt, Manfred Helbig: Mathematische Methoden der Personenversicherung, de Gruyter, 1999.
 
 

@@ -10,6 +10,10 @@
  *
  ******************************************************************************/
 
+plugins {
+    id "org.sonarqube" version "2.7"
+}
+
 description = "Function to Bytecode Library"
 
 group = 'org.f2blib'

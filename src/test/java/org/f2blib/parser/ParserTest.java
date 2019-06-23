@@ -214,7 +214,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := 1.25e5;\n" +
-                END, new Doub(125000));
+                END, new Doub(125000d));
     }
 
     @Test

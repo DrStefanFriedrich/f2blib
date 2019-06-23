@@ -24,6 +24,7 @@ defaultTasks 'build'
 apply plugin: 'java'
 apply plugin: 'antlr'
 apply plugin: 'idea'
+apply plugin: 'jacoco'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'

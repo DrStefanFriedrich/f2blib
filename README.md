@@ -231,6 +231,8 @@ double[] y = new double[2];
 kernel.eval("some.packagename.SomeClassName", p, x, y);
 ```
 
+We refer to [IntegrationTest.java](src/test/java/org/f2blib/IntegrationTest.java).
+
 
 ## Architecture
 

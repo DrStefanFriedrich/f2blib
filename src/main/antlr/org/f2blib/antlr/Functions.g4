@@ -13,7 +13,7 @@
 grammar Functions;
 
 function_definition:
-    FUNCTION className = class_name ';'
+    FUNCTION className = class_name SEMI
     BEGIN
         function_body
     END

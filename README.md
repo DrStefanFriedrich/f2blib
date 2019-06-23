@@ -254,7 +254,7 @@ $ ./gradlew
 To run the performance tests, do
 
 ```
-$ ./gradlew -Dorg.f2blib.performancetest.enabled=true
+$ ./gradlew -Dcom.github.drstefanfriedrich.f2blib.performancetest.enabled=true
 ```
 
 

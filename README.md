@@ -10,49 +10,15 @@
 
  ------------------------------------------------------------------------------>
 
-<style>
-ul.menu {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-}
-li.menu {
-  float: left;
-  font-weight: bold;
-  border-right: 2px solid #bbb;
-}
-li.menu:last-child {
-  border-right: none;
-}
-li a.menu {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-li a.menu:hover {
-  background-color: #111;
-}
-</style>
-<ul class="menu">
-  <li class="menu"><a class="menu" href="https://github.com/DrStefanFriedrich/f2blib/wiki">Wiki</a></li>
-  <li class="menu"><a class="menu" href="https://github.com/DrStefanFriedrich/f2blib/issues">Issues</a></li>
-  <li class="menu"><a class="menu" href="https://github.com/DrStefanFriedrich/f2blib">Code</a></li>
-  <li class="menu"><a class="menu" href="https://travis-ci.org/DrStefanFriedrich/f2blib/">Travis CI</a></li>
-  <li class="menu"><a class="menu" href="https://sonarcloud.io/dashboard?id=DrStefanFriedrich_f2blib">SonarQube</a></li>
-  <li class="menu"><a class="menu" href="https://oss.sonatype.org/">Nexus</a></li>
-</ul>
-
 # F2BLib &mdash; Function to Bytecode Library
 
-![Language Java](https://img.shields.io/static/v1.svg?label=Language&message=Java&color=fbff8a&style=plastic)
-![Build Gradle](https://img.shields.io/static/v1.svg?label=Build&message=Gradle&color=ffe780&style=plastic)
-![Version 1.0.0-SNAPSHOT](https://img.shields.io/static/v1.svg?label=Version&message=1.0.0-SNAPSHOT&color=ffcf85&style=plastic)
-![License EPL v2.0](https://img.shields.io/static/v1.svg?label=License&message=EPL&nbsp;v2.0&color=ffb994&style=plastic)
-
+[![Language Java](https://img.shields.io/static/v1.svg?label=Language&message=Java&color=fbff8a&style=plastic)](https://openjdk.java.net/)
+[![Build Gradle](https://img.shields.io/static/v1.svg?label=Build&message=Gradle&color=ffe780&style=plastic)](https://gradle.org/)
+[![License EPL v2.0](https://img.shields.io/static/v1.svg?label=License&message=EPL&nbsp;v2.0&color=ffcf85&style=plastic)](https://www.eclipse.org/legal/epl-2.0/)
+[![Version 1.0.0-SNAPSHOT](https://img.shields.io/static/v1.svg?label=Nexus&message=1.0.0-SNAPSHOT&color=ffb994&style=plastic)](https://oss.sonatype.org/)
+<br />
+[![Travis CI](https://travis-ci.org/DrStefanFriedrich/f2blib.svg?branch=master)](https://travis-ci.org/DrStefanFriedrich/f2blib)
+[![SonarQube](https://img.shields.io/static/v1.svg?label=SonarQube&message=analyse&color=green&style=plastic)](https://sonarcloud.io/dashboard?id=DrStefanFriedrich_f2blib)
 
 ## TL;TR
 
@@ -327,7 +293,7 @@ Here is a list of Java bytecode generation frameworks. We used the list during e
 ByteBuddy as well as cglib extend ASM. ByteBuddy is optimized for runtime speed. ASM is very small,
 very fast, has no dependencies to other libraries, and is a low-level bytecode generation system.
 Is also has a class called ASMifier which can transform arbitrary .class files to .java files
-containing all the ASM statments needed to reproduce the class. For the last reason we chose ASM.
+containing all the ASM statements needed to reproduce the class. For the last reason we chose ASM.
 
 
 ### Arithmetic Expression Evaluation

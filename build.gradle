@@ -25,6 +25,10 @@ apply plugin: 'java'
 apply plugin: 'antlr'
 apply plugin: 'idea'
 apply plugin: 'jacoco'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+archivesBaseName = rootProject.name
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -66,4 +70,66 @@ sonarqube {
 
 if (System.getenv("F2BLIB_SONAR_CLOUD_TOKEN")) {
     project.tasks["check"].dependsOn "sonarqube"
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'F2BLib - Function to Bytecode Library'
+                packaging 'jar'
+                description 'Parse mathematical function expressions, convert them to Java ' +
+                        'bytecode, and evaluate them very quickly'
+                url 'https://drstefanfriedrich.github.io/f2blib/'
+
+                scm {
+                    connection 'scm:git:git@github.com:DrStefanFriedrich/f2blib.git'
+                    developerConnection 'scm:git:git@github.com:DrStefanFriedrich/f2blib.git'
+                    url 'https://github.com/DrStefanFriedrich/f2blib'
+                }
+
+                licenses {
+                    license {
+                        name 'Eclipse Public License v2.0'
+                        url 'https://www.eclipse.org/legal/epl-2.0/'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'DrStefanFriedrich'
+                        name 'Stefan Friedrich'
+                    }
+                }
+            }
+        }
+    }
 }

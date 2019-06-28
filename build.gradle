@@ -90,7 +90,6 @@ artifacts {
 signing {
     sign configurations.archives
 }
-*/
 
 uploadArchives {
     repositories {
@@ -135,3 +134,4 @@ uploadArchives {
         }
     }
 }
+*/

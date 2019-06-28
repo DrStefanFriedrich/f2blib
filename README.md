@@ -201,7 +201,7 @@ Suppose you want to evaluate a real-valued function with two variables and two p
 Introduce the dependency
 
 ```
-'com.github.drstefanfriedrich.f2blib:f2blib:${f2blibVersion}'
+com.github.drstefanfriedrich.f2blib:f2blib:${f2blibVersion}
 ```
 
 with the correct version of F2BLib you want to use into your Gradle `build.gradle`.

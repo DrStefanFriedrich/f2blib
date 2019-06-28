@@ -82,6 +82,7 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+/*
 artifacts {
     archives javadocJar, sourcesJar
 }
@@ -89,6 +90,7 @@ artifacts {
 signing {
     sign configurations.archives
 }
+*/
 
 uploadArchives {
     repositories {

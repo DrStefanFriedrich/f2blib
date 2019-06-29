@@ -17,7 +17,7 @@ plugins {
 description = "Function to Bytecode Library"
 
 group = 'com.github.drstefanfriedrich.f2blib'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 defaultTasks 'build'
 
@@ -82,56 +82,65 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-/*
-artifacts {
-    archives javadocJar, sourcesJar
-}
+if (System.getenv("F2BLIB_RELEASE_TO_NEXUS")) {
 
-signing {
-    sign configurations.archives
-}
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    /*
+     * Signing works only with GnuPG (gpg) version 1.
+     *
+     * The keys reside in ~/.gnupg/pubring.gpg as well as ~/.gnupg/secring.gpg.
+     * Configuration is stored in ~/.gradle/gradle.properties.
+     * All necessary infos can be found at https://central.sonatype.org/pages/ossrh-guide.html
+     */
+    signing {
+        sign configurations.archives
+    }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'F2BLib - Function to Bytecode Library'
-                packaging 'jar'
-                description 'Parse mathematical function expressions, convert them to Java ' +
-                        'bytecode, and evaluate them very quickly'
-                url 'https://drstefanfriedrich.github.io/f2blib/'
-
-                scm {
-                    connection 'scm:git:git@github.com:DrStefanFriedrich/f2blib.git'
-                    developerConnection 'scm:git:git@github.com:DrStefanFriedrich/f2blib.git'
-                    url 'https://github.com/DrStefanFriedrich/f2blib'
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
 
-                licenses {
-                    license {
-                        name 'Eclipse Public License v2.0'
-                        url 'https://www.eclipse.org/legal/epl-2.0/'
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name 'F2BLib - Function to Bytecode Library'
+                    packaging 'jar'
+                    description 'Parse mathematical function expressions, convert them to Java ' +
+                            'bytecode, and evaluate them very quickly'
+                    url 'https://drstefanfriedrich.github.io/f2blib/'
+
+                    scm {
+                        connection 'scm:git:git@github.com:DrStefanFriedrich/f2blib.git'
+                        developerConnection 'scm:git:git@github.com:DrStefanFriedrich/f2blib.git'
+                        url 'https://github.com/DrStefanFriedrich/f2blib'
                     }
-                }
 
-                developers {
-                    developer {
-                        id 'DrStefanFriedrich'
-                        name 'Stefan Friedrich'
+                    licenses {
+                        license {
+                            name 'Eclipse Public License v2.0'
+                            url 'https://www.eclipse.org/legal/epl-2.0/'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'DrStefanFriedrich'
+                            name 'Stefan Friedrich'
+                        }
                     }
                 }
             }
         }
     }
+
 }
-*/

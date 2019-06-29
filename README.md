@@ -292,7 +292,7 @@ Here is a list of Java bytecode generation frameworks. We used the list during e
 
 ByteBuddy as well as cglib extend ASM. ByteBuddy is optimized for runtime speed. ASM is very small,
 very fast, has no dependencies to other libraries, and is a low-level bytecode generation system.
-Is also has a class called ASMifier which can transform arbitrary .class files to .java files
+It also has a class called ASMifier which can transform arbitrary .class files to .java files
 containing all the ASM statements needed to reproduce the class. For the last reason we chose ASM.
 
 

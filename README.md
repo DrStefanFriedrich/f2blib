@@ -304,6 +304,11 @@ Here is a list of mathematical expression evaluation frameworks similar to this 
 * [exp4j](https://www.objecthunter.net/exp4j/)
 * [mXparser](http://mathparser.org/)
 * [EvalEx](https://github.com/uklimaschewski/EvalEx)
+* [JFormula](http://www.japisoft.com/formula/)
+* [Jep Java](http://www.singularsys.com/jep/)
+* [expr](https://github.com/darius/expr)
+* [java-expr-eval](https://github.com/gianluca-nitti/java-expr-eval)
+* [ExprK](https://github.com/Keelar/ExprK)
 
 
 ### Finance Mathematics

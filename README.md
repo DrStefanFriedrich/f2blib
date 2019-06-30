@@ -15,7 +15,7 @@
 [![Language Java](https://img.shields.io/static/v1.svg?label=Language&message=Java&color=fbff8a&style=plastic)](https://openjdk.java.net/)
 [![Build Gradle](https://img.shields.io/static/v1.svg?label=Build&message=Gradle&color=ffe780&style=plastic)](https://gradle.org/)
 [![License EPL v2.0](https://img.shields.io/static/v1.svg?label=License&message=EPL&nbsp;v2.0&color=ffcf85&style=plastic)](https://www.eclipse.org/legal/epl-2.0/)
-[![Version 1.0.0-SNAPSHOT](https://img.shields.io/static/v1.svg?label=Nexus&message=1.0.0-SNAPSHOT&color=ffb994&style=plastic)](https://oss.sonatype.org/)
+[![Version 1.0.1](https://img.shields.io/static/v1.svg?label=Nexus&message=1.0.1&color=ffb994&style=plastic)](https://repo1.maven.org/maven2/com/github/drstefanfriedrich/f2blib/f2blib/1.0.1/)
 <br />
 [![Travis CI](https://travis-ci.org/DrStefanFriedrich/f2blib.svg?branch=master)](https://travis-ci.org/DrStefanFriedrich/f2blib)
 [![SonarQube](https://img.shields.io/static/v1.svg?label=SonarQube&message=analyse&color=green&style=plastic)](https://sonarcloud.io/dashboard?id=DrStefanFriedrich_f2blib)
@@ -89,9 +89,6 @@ By real-valued mathematical functions we mean mappings of the form
 
 
 ## Getting Started
-
-_Note_: Right now this project is still in its initial phase; there is no library available
-for download on Maven Central. You have to build the project by your own.
 
 Suppose you want to evaluate a real-valued function with two variables and two parameters:
 

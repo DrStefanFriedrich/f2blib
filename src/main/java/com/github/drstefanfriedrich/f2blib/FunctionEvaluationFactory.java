@@ -25,7 +25,7 @@ import static java.lang.String.format;
  * the Java Service Provider Interface, a.k.a. {@link ServiceLoader} to obtain
  * references to implementations.
  */
-class FunctionEvaluationFactory {
+public class FunctionEvaluationFactory {
 
     private final Iterable<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
 

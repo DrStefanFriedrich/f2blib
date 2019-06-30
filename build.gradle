@@ -17,7 +17,7 @@ plugins {
 description = "Function to Bytecode Library"
 
 group = 'com.github.drstefanfriedrich.f2blib'
-version = '1.0.0'
+version = '1.0.1'
 
 defaultTasks 'build'
 

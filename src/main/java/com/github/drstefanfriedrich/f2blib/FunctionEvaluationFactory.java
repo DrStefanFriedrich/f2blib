@@ -36,15 +36,20 @@ public class FunctionEvaluationFactory {
 
     /**
      * Returns the default implementation. This is the one that uses the bytecode generator.
+     *
+     * @return The default provider.
      */
-    FunctionEvaluationProvider get() {
+    public FunctionEvaluationProvider get() {
         return get("f2blib");
     }
 
     /**
      * Returns the first implementation matching the given kernel identifier.
+     *
+     * @param kernelIdentifier Identifier for the kernel.
+     * @return The first implementation with the given kernel identifier.
      */
-    FunctionEvaluationProvider get(String kernelIdentifier) {
+    public FunctionEvaluationProvider get(String kernelIdentifier) {
 
         Iterator<FunctionEvaluationProvider> iter = getIterator();
         while (iter.hasNext()) {

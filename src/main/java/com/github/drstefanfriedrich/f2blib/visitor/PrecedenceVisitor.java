@@ -205,7 +205,7 @@ public class PrecedenceVisitor implements Visitor {
 
     @Override
     public Integer visitNoOp(NoOp noOp) {
-        throw new IllegalStateException("visitNoOp must not be called on the PrecedenceVisitor");
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
 }

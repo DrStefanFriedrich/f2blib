@@ -730,6 +730,231 @@ public class ASTTest {
             assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
+        @Test
+        public void equalsByIdenticalObjectsForSingleValuedExpression() {
+
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+
+            assertThat(fd.equals(fd), is(true));
+        }
+
+        @Test
+        public void unequalToNullForSingleValuedExpression() {
+
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+
+            assertThat(fd.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForSingleValuedExpression() {
+
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(fd1.equals(fd2), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForFunctionBody() {
+
+            FunctionBody fb = new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0))));
+
+            assertThat(fb.equals(fb), is(true));
+        }
+
+        @Test
+        public void unequalToNullForFunctionBody() {
+
+            FunctionBody fb = new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0))));
+
+            assertThat(fb.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForFunctionBody() {
+
+            FunctionBody fb = new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0))));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(fb.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForFunctionDefinition() {
+
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+
+            assertThat(fd.equals(fd), is(true));
+        }
+
+        @Test
+        public void unequalToNullForFunctionDefinition() {
+
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+
+            assertThat(fd.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForFunctionDefinition() {
+
+            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(fd1.equals(fd2), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForFunctionsWrapper() {
+
+            FunctionsWrapper fw = new FunctionsWrapper(new Function(0, new Variable(0)));
+
+            assertThat(fw.equals(fw), is(true));
+        }
+
+        @Test
+        public void unequalToNullForFunctionsWrapper() {
+
+            FunctionsWrapper fw = new FunctionsWrapper(new Function(0, new Variable(0)));
+
+            assertThat(fw.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForFunctionsWrapper() {
+
+            FunctionsWrapper fw = new FunctionsWrapper(new Function(0, new Variable(0)));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(fw.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForFunction() {
+
+            Function f = new Function(0, new Variable(0));
+
+            assertThat(f.equals(f), is(true));
+        }
+
+        @Test
+        public void unequalToNullForFunction() {
+
+            Function f = new Function(0, new Variable(0));
+
+            assertThat(f.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForFunction() {
+
+            Function f = new Function(0, new Variable(0));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(f.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForFaculty() {
+
+            Faculty fac = new Faculty(new Int(3));
+
+            assertThat(fac.equals(fac), is(true));
+        }
+
+        @Test
+        public void unequalToNullForFaculty() {
+
+            Faculty fac = new Faculty(new Int(3));
+
+            assertThat(fac.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForFaculty() {
+
+            Faculty fac = new Faculty(new Int(3));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(fac.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForBinomial() {
+
+            Binomial bin = new Binomial(new Int(5), new Int(3));
+
+            assertThat(bin.equals(bin), is(true));
+        }
+
+        @Test
+        public void unequalToNullForBinomial() {
+
+            Binomial bin = new Binomial(new Int(5), new Int(3));
+
+            assertThat(bin.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForBinomial() {
+
+            Binomial bin = new Binomial(new Int(5), new Int(3));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(bin.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForBinaryExpression() {
+
+            Addition add = new Addition(new Variable(0), new Parameter(0));
+
+            assertThat(add.equals(add), is(true));
+        }
+
+        @Test
+        public void unequalToNullForBinaryExpression() {
+
+            Addition add = new Addition(new Variable(0), new Parameter(0));
+
+            assertThat(add.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForBinaryExpression() {
+
+            Addition add = new Addition(new Variable(0), new Parameter(0));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(add.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForIndexedExpression() {
+
+            Variable var = new Variable(0);
+
+            assertThat(var.equals(var), is(true));
+        }
+
+        @Test
+        public void unequalToNullForIndexedExpression() {
+
+            Variable var = new Variable(0);
+
+            assertThat(var.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForIndexedExpression() {
+
+            Variable var = new Variable(0);
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(var.equals(fd), is(false));
+        }
+
         private static Expression innerExpression1() {
             return new Power(new Sin(new Variable(0)), new Addition(new Exp(new Parameter(0)), new Parameter(1)));
         }

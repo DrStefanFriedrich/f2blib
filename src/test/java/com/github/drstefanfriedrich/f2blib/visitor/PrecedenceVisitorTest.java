@@ -65,4 +65,12 @@ public class PrecedenceVisitorTest {
         new FunctionsWrapper(new Function(0, new Int(0))).accept(underTest);
     }
 
+    @Test
+    public void visitNoOp() {
+
+        assertException();
+
+        NoOp.get().accept(underTest);
+    }
+
 }

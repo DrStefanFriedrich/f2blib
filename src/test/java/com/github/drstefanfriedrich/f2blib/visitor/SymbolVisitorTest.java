@@ -105,4 +105,12 @@ public class SymbolVisitorTest {
         new Doub(1.11).accept(underTest);
     }
 
+    @Test
+    public void visitNoOp() {
+
+        assertException();
+
+        NoOp.get().accept(underTest);
+    }
+
 }

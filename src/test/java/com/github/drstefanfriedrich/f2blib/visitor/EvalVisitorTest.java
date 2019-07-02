@@ -14,7 +14,9 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,9 @@ import static org.junit.Assert.fail;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
 
 public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private EvalVisitor evalVisitor;
 
@@ -106,6 +111,19 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         assertThat(evalVisitor.getResult()[2], closeTo(50.58293575689467));
         assertThat(evalVisitor.getResult()[3], closeTo(-3.7776177920749547));
         assertThat(evalVisitor.getResult()[4], closeTo(0));
+    }
+
+    @Test
+    public void evalNoOp() {
+
+        evalVisitor = new EvalVisitor(null, null, 0);
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition("NoOp", NoOp.get());
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("visitNoOp must not be called on the EvalVisitor");
+
+        fd.accept(evalVisitor);
     }
 
     @Test

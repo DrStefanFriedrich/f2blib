@@ -731,28 +731,28 @@ public class ASTTest {
         }
 
         @Test
-        public void equalsByIdenticalObjectsForSingleValuedExpression() {
+        public void equalsByIdenticalObjectsForUnaryExpression() {
 
-            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+            Sin sin = new Sin(new Variable(0));
 
-            assertThat(fd.equals(fd), is(true));
+            assertThat(sin.equals(sin), is(true));
         }
 
         @Test
-        public void unequalToNullForSingleValuedExpression() {
+        public void unequalToNullForUnaryExpression() {
 
-            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
+            Sin sin = new Sin(new Variable(0));
 
-            assertThat(fd.equals(null), is(false));
+            assertThat(sin.equals(null), is(false));
         }
 
         @Test
-        public void unequalToDifferentTypeForSingleValuedExpression() {
+        public void unequalToDifferentTypeForUnaryExpression() {
 
-            FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
-            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+            Sin sin = new Sin(new Variable(0));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
 
-            assertThat(fd1.equals(fd2), is(false));
+            assertThat(sin.equals(fd), is(false));
         }
 
         @Test
@@ -800,9 +800,9 @@ public class ASTTest {
         public void unequalToDifferentTypeForFunctionDefinition() {
 
             FunctionDefinition fd1 = createFunctionDefinition(FUNCTION_NAME, new Sin(new Variable(0)));
-            FunctionDefinition fd2 = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+            Sin sin = new Sin(new Variable(0));
 
-            assertThat(fd1.equals(fd2), is(false));
+            assertThat(fd1.equals(sin), is(false));
         }
 
         @Test
@@ -953,6 +953,31 @@ public class ASTTest {
             FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
 
             assertThat(var.equals(fd), is(false));
+        }
+
+        @Test
+        public void equalsByIdenticalObjectsForSingleValuedExpression() {
+
+            Int i = new Int(10);
+
+            assertThat(i.equals(i), is(true));
+        }
+
+        @Test
+        public void unequalToNullForSingleValuedExpression() {
+
+            Int i = new Int(10);
+
+            assertThat(i.equals(null), is(false));
+        }
+
+        @Test
+        public void unequalToDifferentTypeForSingleValuedExpression() {
+
+            Int i = new Int(10);
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(i.equals(fd), is(false));
         }
 
         private static Expression innerExpression1() {

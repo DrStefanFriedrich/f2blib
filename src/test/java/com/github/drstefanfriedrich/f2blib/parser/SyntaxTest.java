@@ -222,4 +222,124 @@ public class SyntaxTest extends AbstractParserTest {
                 END);
     }
 
+    @Test
+    public void forLoop() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopWrongVariable() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for k from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + k;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopMissingSemicolon() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3)\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopWithoutRound() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step p_3;\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopWithIntegers() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from 1 to 10 step 2;\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void nestedForLoop() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END +
+                END);
+    }
+
+    @Test
+    public void normalFunctionAndForLoop() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopAndNormalFunctionInSideForLoop() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopAndNormalFunctionOutSideForLoop() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END +
+                END +
+                BEGIN +
+                "    f_1 := pi + i;\n" +
+                END);
+    }
+
 }

@@ -24,4 +24,10 @@ public interface LocalVariables {
 
     Iterator<Map.Entry<Integer, Integer>> variableIndexIterator();
 
+    int getIndexForForLoopStart();
+
+    int getIndexForForLoopEnd();
+
+    int getIndexForForLoopStep();
+
 }

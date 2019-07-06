@@ -488,4 +488,48 @@ public class ParserTest extends AbstractParserTest {
                 END, new Artanh(new Tanh(new Variable(0))));
     }
 
+    @Test
+    public void forLoopAndForVar() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);" +
+                BEGIN +
+                "    f_1 := i;\n" +
+                END +
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new ForVar("i")))))));
+    }
+
+    @Test
+    public void normalFunctionAndForLoop() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := x_1;\n" +
+                END +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);" +
+                BEGIN +
+                "    f_1 := x_1;\n" +
+                END +
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0))))));
+    }
+
+    @Test
+    public void forLoopAndNormalFunctionOutsideForLoop() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);" +
+                BEGIN +
+                "    f_1 := x_1;\n" +
+                END +
+                END +
+                BEGIN +
+                "    f_1 := x_1;\n" +
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new Variable(0)))))));
+    }
+
 }

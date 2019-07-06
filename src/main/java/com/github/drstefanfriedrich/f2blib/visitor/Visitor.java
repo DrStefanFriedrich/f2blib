@@ -90,4 +90,8 @@ public interface Visitor {
 
     <T> T visitNoOp(NoOp noOp);
 
+    <T> T visitForLoop(ForLoop forLoop);
+
+    <T> T visitForVar(ForVar forVar);
+
 }

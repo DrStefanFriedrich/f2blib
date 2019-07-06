@@ -39,6 +39,12 @@ public class LocalVariablesImpl implements LocalVariables {
 
     private final SortedMap<Integer, Integer> variableIndex2LocalVariableIndex = new TreeMap<>();
 
+    private int indexForLoopStart;
+
+    private int indexForLoopEnd;
+
+    private int indexForLoopStep;
+
     void addIndexToParameterIndexes(int index) {
         parameterIndexes.add(index);
     }
@@ -52,7 +58,12 @@ public class LocalVariablesImpl implements LocalVariables {
      */
     @Override
     public int getMaxLocals() {
-        return 4 + 2 * parameterIndexes.size() + 2 * variableIndexes.size();
+        /*
+         * 4: this, x[], y[], p[]
+         * 2*: doubles need two stack frames
+         * 3: for loop: start, end, step
+         */
+        return 4 + 2 * parameterIndexes.size() + 2 * variableIndexes.size() + 3;
     }
 
     /**
@@ -101,6 +112,10 @@ public class LocalVariablesImpl implements LocalVariables {
             localVariableIndex++;
             localVariableIndex++;
         }
+
+        indexForLoopStart = localVariableIndex++;
+        indexForLoopEnd = localVariableIndex++;
+        indexForLoopStep = localVariableIndex++;
     }
 
     @Override
@@ -111,6 +126,21 @@ public class LocalVariablesImpl implements LocalVariables {
     @Override
     public Iterator<Map.Entry<Integer, Integer>> variableIndexIterator() {
         return variableIndex2LocalVariableIndex.entrySet().iterator();
+    }
+
+    @Override
+    public int getIndexForForLoopStart() {
+        return indexForLoopStart;
+    }
+
+    @Override
+    public int getIndexForForLoopEnd() {
+        return indexForLoopEnd;
+    }
+
+    @Override
+    public int getIndexForForLoopStep() {
+        return indexForLoopStep;
     }
 
 }

@@ -113,4 +113,21 @@ public class SymbolVisitorTest {
         NoOp.get().accept(underTest);
     }
 
+    @Test
+    public void visitForLoop() {
+
+        assertException();
+
+        new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new Variable(0)))).accept(underTest);
+    }
+
+    @Test
+    public void visitForVar() {
+
+        assertException();
+
+        new ForVar("k").accept(underTest);
+    }
+
 }

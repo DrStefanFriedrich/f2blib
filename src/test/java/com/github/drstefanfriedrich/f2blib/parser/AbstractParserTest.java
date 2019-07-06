@@ -12,6 +12,7 @@
 
 package com.github.drstefanfriedrich.f2blib.parser;
 
+import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import com.github.drstefanfriedrich.f2blib.ast.Expression;
 import org.junit.Rule;
@@ -29,7 +30,7 @@ public abstract class AbstractParserTest {
 
     protected static final String BEGIN = "begin\n";
 
-    protected static final String END = "end";
+    protected static final String END = "end\n";
 
     public static final String NO_FUNCTION_SPECIFIED = "No function specified";
 
@@ -73,6 +74,13 @@ public abstract class AbstractParserTest {
                 .getFunctionsWrapper().getFunctions().stream()
                 .findFirst().orElseThrow(() -> new IllegalStateException(NO_FUNCTION_SPECIFIED))
                 .getExpression();
+    }
+
+    protected void assertAST(String functionDefinition, FunctionDefinition functionDefinitionToCheck) {
+
+        FunctionDefinition fd = parser.parse(functionDefinition);
+
+        assertThat(fd, is(functionDefinitionToCheck));
     }
 
 }

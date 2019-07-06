@@ -14,6 +14,8 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class StackDepthVisitorImpl implements StackDepthVisitor {
@@ -33,7 +35,11 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
 
     @Override
     public Integer visitFunctionBody(FunctionBody functionBody) {
-        return functionBody.getFunctionsWrapper().accept(this);
+        if (functionBody.isForLoop()) {
+            return functionBody.getForLoop().accept(this);
+        } else {
+            return functionBody.getFunctionsWrapper().accept(this);
+        }
     }
 
     @Override
@@ -212,6 +218,18 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
     @Override
     public Integer visitNoOp(NoOp noOp) {
         return 0;
+    }
+
+    @Override
+    public Integer visitForLoop(ForLoop forLoop) {
+        return 2 + (Integer) forLoop.acceptFunctionsWrapper(this) +
+                Collections.max(Arrays.asList(new Integer[]{forLoop.acceptStart(this),
+                        forLoop.acceptEnd(this), forLoop.acceptStep(this)}));
+    }
+
+    @Override
+    public Integer visitForVar(ForVar forVar) {
+        return 2;
     }
 
 }

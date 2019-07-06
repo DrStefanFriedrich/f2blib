@@ -88,4 +88,15 @@ public class StackDepthVisitorImplTest {
         assertThat(underTest.getMaxStackDepth(), is(10));
     }
 
+    @Test
+    public void functionWithForLoop() {
+
+        FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new ForVar("k"))))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getMaxStackDepth(), is(8));
+    }
+
 }

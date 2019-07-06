@@ -12,6 +12,7 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
+import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 import org.apache.commons.math3.analysis.function.Acosh;
 import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;
@@ -27,6 +28,8 @@ import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
  */
 public class EvalVisitor implements DoubleVisitor {
 
+    private final IntEvalVisitor intEvalVisitor = new IntEvalVisitor(this);
+
     private final double[] x;
 
     private final double[] p;
@@ -38,6 +41,11 @@ public class EvalVisitor implements DoubleVisitor {
     private static final Acosh ARCOSH = new Acosh();
 
     private static final Atanh ARTANH = new Atanh();
+
+    /*
+     * The current value of the for loop variable.
+     */
+    private int forVarValue;
 
     EvalVisitor(double[] x, double[] p, int lengthResultArray) {
         this.x = x;
@@ -134,29 +142,64 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
-    public double visitFunction(Function function) {
-
-        int index = function.getIndex();
-
-        y[index] = function.acceptExpression(this);
-
-        return 0;
+    public double visitFunctionDefinition(FunctionDefinition functionDefinition) {
+        return functionDefinition.getFunctionBody().accept(this);
     }
 
     @Override
     public double visitFunctionBody(FunctionBody functionBody) {
-        return functionBody.getFunctionsWrapper().accept(this);
-    }
 
-    @Override
-    public double visitFunctionDefinition(FunctionDefinition functionDefinition) {
-        return functionDefinition.getFunctionBody().accept(this);
+        if (functionBody.isForLoop()) {
+            return functionBody.getForLoop().accept(this);
+        } else {
+            return functionBody.getFunctionsWrapper().accept(this);
+        }
     }
 
     @Override
     public double visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
 
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
+
+        return 0;
+    }
+
+    @Override
+    public double visitForLoop(ForLoop forLoop) {
+
+        int start = forLoop.acceptStart(intEvalVisitor);
+        int end = forLoop.acceptEnd(intEvalVisitor);
+        int step = forLoop.acceptStep(intEvalVisitor);
+
+        if (step == 0) {
+            if (start != end) {
+                throw new BytecodeGenerationException("step evaluating to 0 not allowed");
+            }
+            forLoop.acceptFunctionsWrapper(this);
+        } else if (step > 0) {
+
+            for (int i = start; i <= end; i += step) {
+                forVarValue = i;
+                forLoop.acceptFunctionsWrapper(this);
+            }
+
+        } else {
+
+            for (int i = start; i >= end; i += step) {
+                forVarValue = i;
+                forLoop.acceptFunctionsWrapper(this);
+            }
+        }
+
+        return 0;
+    }
+
+    @Override
+    public double visitFunction(Function function) {
+
+        int index = function.getIndex();
+
+        y[index] = function.acceptExpression(this);
 
         return 0;
     }
@@ -249,6 +292,11 @@ public class EvalVisitor implements DoubleVisitor {
     @Override
     public double visitPos(Pos pos) {
         return pos.acceptExpression(this);
+    }
+
+    @Override
+    public double visitForVar(ForVar forVar) {
+        return forVarValue;
     }
 
 }

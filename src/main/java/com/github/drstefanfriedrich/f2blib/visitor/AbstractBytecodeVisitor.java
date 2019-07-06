@@ -116,7 +116,9 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
     }
 
     void generateClassHeader() {
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER,
+        // We set the class file version to 50, because we don't need invokedynamic.
+        // So we don't have to calculate stackmap tables.
+        cw.visit(50, ACC_PUBLIC + ACC_SUPER,
                 className.replaceAll("\\.", "/"), null, "java/lang/Object",
                 new String[]{FunctionEvaluation.class.getName().replaceAll("\\.", "/")});
     }

@@ -120,7 +120,13 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitFunctionBody(FunctionBody functionBody) {
-        functionBody.getFunctionsWrapper().accept(this);
+
+        if (functionBody.isForLoop()) {
+            functionBody.getForLoop().accept(this);
+        } else {
+            functionBody.getFunctionsWrapper().accept(this);
+        }
+
         return null;
     }
 
@@ -234,6 +240,25 @@ public abstract class AbstractVisitor implements Visitor {
     @Override
     public <T> T visitSqrt(Sqrt sqrt) {
         sqrt.acceptExpression(this);
+        return null;
+    }
+
+    @Override
+    public <T> T visitForLoop(ForLoop forLoop) {
+        forLoop.acceptStart(this);
+        forLoop.acceptEnd(this);
+        forLoop.acceptStep(this);
+        forLoop.acceptFunctionsWrapper(this);
+        return null;
+    }
+
+    @Override
+    public <T> T visitForVar(ForVar forVar) {
+        return null;
+    }
+
+    @Override
+    public <T> T visitNoOp(NoOp noOp) {
         return null;
     }
 

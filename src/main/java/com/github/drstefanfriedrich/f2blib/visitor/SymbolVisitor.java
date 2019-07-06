@@ -208,4 +208,14 @@ public class SymbolVisitor implements Visitor {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
+    @Override
+    public <T> T visitForLoop(ForLoop forLoop) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
+    @Override
+    public String visitForVar(ForVar forVar) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
 }

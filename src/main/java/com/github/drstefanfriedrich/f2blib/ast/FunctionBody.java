@@ -20,14 +20,22 @@ import java.util.Objects;
 
 /**
  * A {@link FunctionBody} models the actual function definition in form of
- * mathematical expressions or (in the future) for loops and the like.
+ * mathematical expressions or for loops and the like.
  */
 public final class FunctionBody implements ASTElement, DoubleASTElement {
 
     private final FunctionsWrapper functionsWrapper;
 
+    private final ForLoop forLoop;
+
     public FunctionBody(FunctionsWrapper functionsWrapper) {
         this.functionsWrapper = functionsWrapper;
+        this.forLoop = null;
+    }
+
+    public FunctionBody(ForLoop forLoop) {
+        this.forLoop = forLoop;
+        functionsWrapper = null;
     }
 
     /*
@@ -38,10 +46,23 @@ public final class FunctionBody implements ASTElement, DoubleASTElement {
         return functionsWrapper;
     }
 
+    public ForLoop getForLoop() {
+        return forLoop;
+    }
+
+    public boolean isForLoop() {
+        return forLoop != null;
+    }
+
+    public <T> T acceptForLoop(Visitor visitor) {
+        return forLoop.accept(visitor);
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("functionsWrapper", functionsWrapper)
+                .add("forLoop", forLoop)
                 .toString();
     }
 
@@ -54,12 +75,13 @@ public final class FunctionBody implements ASTElement, DoubleASTElement {
             return false;
         }
         FunctionBody that = (FunctionBody) o;
-        return Objects.equals(functionsWrapper, that.functionsWrapper);
+        return Objects.equals(functionsWrapper, that.functionsWrapper) &&
+                Objects.equals(forLoop, that.forLoop);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(functionsWrapper);
+        return Objects.hash(functionsWrapper, forLoop);
     }
 
     @Override

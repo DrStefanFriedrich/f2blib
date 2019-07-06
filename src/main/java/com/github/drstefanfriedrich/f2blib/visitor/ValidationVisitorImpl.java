@@ -29,6 +29,8 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
 
     private final SpecialFunctionsUsageImpl specialFunctionsUsage = new SpecialFunctionsUsageImpl();
 
+    private String forVariableName;
+
     @Override
     public LocalVariables getLocalVariables() {
         return localVariables;
@@ -124,6 +126,29 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
 
     @Override
     public Void visitNoOp(NoOp noOp) {
+        return null;
+    }
+
+    @Override
+    public Void visitForLoop(ForLoop forLoop) {
+
+        forVariableName = forLoop.getVariableName();
+        super.visitForLoop(forLoop);
+        forVariableName = null;
+
+        return null;
+    }
+
+    @Override
+    public Void visitForVar(ForVar forVar) {
+
+        String forVarName = forVar.getVariableName();
+
+        if (!forVarName.equals(forVariableName)) {
+            throw new BytecodeGenerationException(format("For loop variable %s does not match variable used in body: %s",
+                    forVariableName, forVarName));
+        }
+
         return null;
     }
 

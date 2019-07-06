@@ -1,0 +1,118 @@
+/*****************************************************************************
+ *
+ * Copyright (c) 2019 Stefan Friedrich
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ ******************************************************************************/
+
+package com.github.drstefanfriedrich.f2blib.visitor;
+
+import com.github.drstefanfriedrich.f2blib.ast.*;
+import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
+import static org.junit.Assert.assertThat;
+
+/**
+ * Tests for for loops.
+ */
+public class ForLoopEvalVisitorTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    private final FunctionDefinition fd = new FunctionDefinition("ForLoopEvalVisitorTestFunction", new FunctionBody(
+            new ForLoop("i", 0, 1, 2,
+                    new FunctionsWrapper(new Function(0, new ForVar("i"))))));
+
+    private EvalVisitor evalVisitor;
+
+    private double[] x;
+
+    private double[] p;
+
+    @Before
+    public void setup() {
+        x = new double[1];
+        p = new double[3];
+        evalVisitor = new EvalVisitor(x, p, 1);
+    }
+
+    @Test
+    public void forLoopWithZeroStepAndUnequalStartEnd() {
+
+        p[0] = 1;
+        p[1] = 2;
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("step evaluating to 0 not allowed");
+
+        fd.accept(evalVisitor);
+    }
+
+    @Test
+    public void forLoopWithZeroStepAndEqualStartEnd() {
+
+        fd.accept(evalVisitor);
+
+        assertThat(evalVisitor.getResult()[0], closeTo(0));
+    }
+
+    @Test
+    public void forLoopWithPositiveStep() {
+
+        p[0] = 3;
+        p[1] = 10;
+        p[2] = 2;
+
+        fd.accept(evalVisitor);
+
+        assertThat(evalVisitor.getResult()[0], closeTo(9));
+    }
+
+    @Test
+    public void forLoopWithNegativeStep() {
+
+        p[0] = 10;
+        p[1] = -6;
+        p[2] = -2;
+
+        fd.accept(evalVisitor);
+
+        assertThat(evalVisitor.getResult()[0], closeTo(-6));
+    }
+
+    @Test
+    public void forLoopWithPositiveStepAndImmediateReturn() {
+
+        p[0] = 12;
+        p[1] = 10;
+        p[2] = 2;
+
+        fd.accept(evalVisitor);
+
+        assertThat(evalVisitor.getResult()[0], closeTo(0));
+    }
+
+    @Test
+    public void forLoopWithNegativeStepAndImmediateReturn() {
+
+        p[0] = -8;
+        p[1] = -6;
+        p[2] = -2;
+
+        fd.accept(evalVisitor);
+
+        assertThat(evalVisitor.getResult()[0], closeTo(0));
+    }
+
+}

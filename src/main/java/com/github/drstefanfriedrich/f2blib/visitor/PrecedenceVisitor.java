@@ -208,4 +208,14 @@ public class PrecedenceVisitor implements Visitor {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
+    @Override
+    public <T> T visitForLoop(ForLoop forLoop) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
+    @Override
+    public Integer visitForVar(ForVar forVar) {
+        return 0;
+    }
+
 }

@@ -61,7 +61,7 @@ public class ValidationVisitorImplTest {
 
         assertThat(localVariables.parameterIndexIterator().hasNext(), is(false));
         assertThat(localVariables.variableIndexIterator().hasNext(), is(false));
-        assertThat(localVariables.getMaxLocals(), is(4));
+        assertThat(localVariables.getMaxLocals(), is(7));
     }
 
     @Test
@@ -194,7 +194,7 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.getMaxLocals(), is(28));
+        assertThat(localVariables.getMaxLocals(), is(31));
         assertThat(localVariables.getIndexForVariable(new Variable(0)), is(14));
         assertThat(localVariables.getIndexForVariable(new Variable(1)), is(16));
         assertThat(localVariables.getIndexForVariable(new Variable(2)), is(18));
@@ -237,6 +237,29 @@ public class ValidationVisitorImplTest {
         exception.expect(NullPointerException.class);
 
         localVariables.getIndexForVariable(new Variable(10));
+    }
+
+    @Test
+    public void forLoop() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("j", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new ForVar("j"))))));
+
+        fd.accept(underTest);
+
+        assertThat(true, is(true));
+    }
+
+    @Test
+    public void forLoopWithWrongInnerVariable() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new ForVar("l"))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("For loop variable k does not match variable used in body: l");
+
+        fd.accept(underTest);
     }
 
 }

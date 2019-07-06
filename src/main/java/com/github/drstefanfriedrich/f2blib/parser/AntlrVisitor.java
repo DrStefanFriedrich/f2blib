@@ -31,14 +31,22 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
 
         String className = ctx.className.getText();
 
-        return new FunctionDefinition(className, new FunctionBody(
-                new FunctionsWrapper((List<Function>) ctx.function_body().accept(this))));
+        return new FunctionDefinition(className, (FunctionBody) ctx.function_body().accept(this));
     }
 
     @Override
-    public Object visitSingleValuedFunctions(FunctionsParser.SingleValuedFunctionsContext ctx) {
+    public Object visitFunction_body(FunctionsParser.Function_bodyContext ctx) {
 
-        List<FunctionsParser.Single_valued_functionContext> functions = ctx.single_valued_functions().single_valued_function();
+        if (ctx.for_loop() == null) {
+            return new FunctionBody((FunctionsWrapper) ctx.single_valued_functions().accept(this));
+        }
+        return new FunctionBody((ForLoop) ctx.for_loop().accept(this));
+    }
+
+    @Override
+    public Object visitSingle_valued_functions(FunctionsParser.Single_valued_functionsContext ctx) {
+
+        List<FunctionsParser.Single_valued_functionContext> functions = ctx.single_valued_function();
 
         List<Function> result = new ArrayList<>();
 
@@ -46,7 +54,23 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
             result.add((Function) function.accept(this));
         }
 
-        return result;
+        if (result.isEmpty()) {
+            return null;
+        }
+        return new FunctionsWrapper(result);
+    }
+
+    @Override
+    public Object visitFor_loop(FunctionsParser.For_loopContext ctx) {
+
+        String variableName = ctx.forVar.getText();
+        int startParameterIndex = Integer.parseInt(ctx.start.getText().substring(2)) - 1;
+        int endParameterIndex = Integer.parseInt(ctx.end.getText().substring(2)) - 1;
+        int stepParameterIndex = Integer.parseInt(ctx.step.getText().substring(2)) - 1;
+        FunctionsWrapper functionsWrapper = (FunctionsWrapper) ctx.single_valued_functions().accept(this);
+
+        return new ForLoop(variableName, startParameterIndex, endParameterIndex, stepParameterIndex,
+                functionsWrapper);
     }
 
     @Override
@@ -258,6 +282,11 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     public Object visitVar(FunctionsParser.VarContext ctx) {
 
         return new Variable(Integer.parseInt(ctx.var.getText().substring(2)) - 1);
+    }
+
+    @Override
+    public Object visitForVar(FunctionsParser.ForVarContext ctx) {
+        return new ForVar(ctx.variableName.getText());
     }
 
 }

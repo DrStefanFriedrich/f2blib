@@ -14,7 +14,9 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
@@ -24,6 +26,9 @@ import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
  * correctness of the generated Java bytecode.
  */
 public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorImplTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void test1() {
@@ -352,6 +357,72 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
         fe.eval(new double[0], new double[0], y);
 
         assertThat(y[0], closeTo(3));
+    }
+
+    @Test
+    public void test25() {
+
+        FunctionDefinition fd = forLoop();
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{10, 20, 2};
+        double[] x = new double[]{1.1};
+        double[] y = new double[1];
+
+        fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(20));
+    }
+
+    @Test
+    public void test26() {
+
+        FunctionDefinition fd = forLoop();
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{20, 10, -2};
+        double[] x = new double[]{1.1};
+        double[] y = new double[1];
+
+        fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(10));
+    }
+
+    @Test
+    public void test27() {
+
+        FunctionDefinition fd = forLoop();
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{15, 15, 0};
+        double[] x = new double[]{1.1};
+        double[] y = new double[1];
+
+        fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(15));
+    }
+
+    @Test
+    public void test28() {
+
+        FunctionDefinition fd = forLoop();
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{15, 30, 0};
+        double[] x = new double[]{1.1};
+        double[] y = new double[1];
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("step must not be 0");
+
+        fe.eval(p, x, y);
+    }
+
+    private FunctionDefinition forLoop() {
+        return new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new ForVar("k"))))));
     }
 
 }

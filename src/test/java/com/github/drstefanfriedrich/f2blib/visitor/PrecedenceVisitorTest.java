@@ -73,4 +73,13 @@ public class PrecedenceVisitorTest {
         NoOp.get().accept(underTest);
     }
 
+    @Test
+    public void visitForLoop() {
+
+        assertException();
+
+        new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, new ForVar("k")))).accept(underTest);
+    }
+
 }

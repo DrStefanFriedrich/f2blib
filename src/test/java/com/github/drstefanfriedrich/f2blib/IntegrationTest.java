@@ -12,9 +12,10 @@
 
 package com.github.drstefanfriedrich.f2blib;
 
-import com.github.drstefanfriedrich.f2blib.util.TestUtil;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+
+import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Some very simple integration tests for the project.
@@ -29,6 +30,14 @@ public class IntegrationTest {
             "    f_2 := ln(p_2) + exp(x_2);" +
             "end";
 
+    private static final String FOR_LOOP = "function some.packagename.ForLoop;" +
+            "begin" +
+            "    for i from round(p_1) to round(p_2) step round(p_3);" +
+            "    begin" +
+            "        f_1 := x_1 * i;" +
+            "    end\n" +
+            "end";
+
     @Test
     public void functionFromReadme() {
 
@@ -40,8 +49,22 @@ public class IntegrationTest {
 
         kernel.eval("some.packagename.SomeClassName", p, x, y);
 
-        MatcherAssert.assertThat(y[0], TestUtil.closeTo(0.423875168));
-        MatcherAssert.assertThat(y[1], TestUtil.closeTo(5.709274235));
+        assertThat(y[0], closeTo(0.423875168));
+        assertThat(y[1], closeTo(5.709274235));
+    }
+
+    @Test
+    public void simpleForLoop() {
+
+        kernel.load(FOR_LOOP);
+
+        double[] x = new double[]{5.5};
+        double[] p = new double[]{1, 10, 2};
+        double[] y = new double[2];
+
+        kernel.eval("some.packagename.ForLoop", p, x, y);
+
+        assertThat(y[0], closeTo(49.5));
     }
 
 }

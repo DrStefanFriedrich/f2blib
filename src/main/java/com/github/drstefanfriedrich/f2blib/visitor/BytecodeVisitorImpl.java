@@ -13,6 +13,7 @@
 package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
+import org.objectweb.asm.Label;
 
 import static java.lang.String.format;
 import static org.objectweb.asm.Opcodes.*;
@@ -53,7 +54,11 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         prepareParameters();
         prepareVariables();
 
-        functionBody.getFunctionsWrapper().accept(this);
+        if (functionBody.isForLoop()) {
+            functionBody.getForLoop().accept(this);
+        } else {
+            functionBody.getFunctionsWrapper().accept(this);
+        }
 
         evalMethod.visitMaxs(stackDepthVisitor.getMaxStackDepth(), localVariables.getMaxLocals());
         evalMethod.visitInsn(RETURN);
@@ -321,6 +326,86 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitNoOp(NoOp noOp) {
+        return null;
+    }
+
+    @Override
+    public Void visitForLoop(ForLoop forLoop) {
+
+        Label stepNonZero = new Label();
+        Label stepPos = new Label();
+        Label stepNeg = new Label();
+        Label forEnd = new Label();
+        Label throwException = new Label();
+
+        // Calculate the integers on the stack and store them
+        forLoop.acceptStart(this);
+        evalMethod.visitInsn(D2I);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
+        forLoop.acceptEnd(this);
+        evalMethod.visitInsn(D2I);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopEnd());
+        forLoop.acceptStep(this);
+        evalMethod.visitInsn(D2I);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStep());
+
+        // Check: step != 0
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStep());
+        evalMethod.visitJumpInsn(IFNE, stepNonZero);
+
+        // step = 0:
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopEnd());
+        evalMethod.visitJumpInsn(IF_ICMPNE, throwException);
+        forLoop.acceptFunctionsWrapper(this);
+        evalMethod.visitJumpInsn(GOTO, forEnd);
+
+        evalMethod.visitLabel(throwException);
+        evalMethod.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+        evalMethod.visitInsn(DUP);
+        evalMethod.visitLdcInsn("step must not be 0");
+        evalMethod.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V",
+                false);
+        evalMethod.visitInsn(ATHROW);
+
+        // Check: step < 0
+        evalMethod.visitLabel(stepNonZero);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStep());
+        evalMethod.visitJumpInsn(IFLT, stepNeg);
+
+        evalMethod.visitLabel(stepPos);
+        // step > 0:
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopEnd());
+        evalMethod.visitJumpInsn(IF_ICMPGT, forEnd);
+        forLoop.acceptFunctionsWrapper(this);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStep());
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
+        evalMethod.visitJumpInsn(GOTO, stepPos);
+
+        evalMethod.visitLabel(stepNeg);
+        // step < 0:
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopEnd());
+        evalMethod.visitJumpInsn(IF_ICMPLT, forEnd);
+        forLoop.acceptFunctionsWrapper(this);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStep());
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
+        evalMethod.visitJumpInsn(GOTO, stepNeg);
+
+        evalMethod.visitLabel(forEnd);
+
+        return null;
+    }
+
+    @Override
+    public Void visitForVar(ForVar forVar) {
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitInsn(I2D);
         return null;
     }
 

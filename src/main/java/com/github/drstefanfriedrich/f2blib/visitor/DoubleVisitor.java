@@ -90,4 +90,8 @@ public interface DoubleVisitor {
 
     double visitNoOp(NoOp noOp);
 
+    double visitForVar(ForVar forVar);
+
+    double visitForLoop(ForLoop forLoop);
+
 }

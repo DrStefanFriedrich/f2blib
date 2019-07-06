@@ -42,9 +42,9 @@ public class ASTTest {
             FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
-            assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, functionBody=FunctionBody{" +
-                    "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=Sin{expression=" +
-                    "Multiplication{left=PI, right=Variable{index=0}}}}]}}}"));
+            assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, " +
+                    "functionBody=FunctionBody{functionsWrapper=FunctionsWrapper{functions=[Function{index=0, " +
+                    "expression=Sin{expression=Multiplication{left=PI, right=Variable{index=0}}}}]}, forLoop=null}}"));
         }
 
         @Test
@@ -280,6 +280,21 @@ public class ASTTest {
             assertThat(new Tanh(new Int(3)).toString(), is("Tanh{expression=Int{value=3}}"));
             assertThat(new Abs(new Tanh(new Variable(1))).toString(),
                     is("Abs{expression=Tanh{expression=Variable{index=1}}}"));
+        }
+
+        @Test
+        public void forVar() {
+
+            assertThat(new ForVar("k").toString(), is("ForVar{variableName=k}"));
+        }
+
+        @Test
+        public void forLoop() {
+
+            assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1)))).toString(),
+                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1}}, " +
+                            "end=Round{expression=Parameter{index=2}}, step=Round{expression=Parameter{index=3}}, " +
+                            "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=Variable{index=1}}]}}"));
         }
 
     }
@@ -986,6 +1001,36 @@ public class ASTTest {
 
         private static Expression innerExpression2() {
             return new Power(new Sin(new Variable(0)), new Addition(new Exp(new Parameter(0)), new Parameter(0)));
+        }
+
+        @Test
+        public void forVar() {
+
+            ForVar fv1 = new ForVar("k");
+            ForVar fv2 = new ForVar("k");
+            ForVar fv3 = new ForVar("i");
+
+            assertThat(fv1.equals(fv2), is(true));
+            assertThat(fv1.equals(fv3), is(false));
+            assertThat(fv1.equals(null), is(false));
+            assertThat(fv1.equals(fv1), is(true));
+            assertThat(fv1.hashCode(), is(fv2.hashCode()));
+            assertThat(fv1.hashCode(), is(not(fv3.hashCode())));
+        }
+
+        @Test
+        public void forLoop() {
+
+            ForLoop fl1 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl2 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl3 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1))));
+
+            assertThat(fl1.equals(fl2), is(true));
+            assertThat(fl1.equals(fl3), is(false));
+            assertThat(fl1.equals(null), is(false));
+            assertThat(fl1.equals(fl1), is(true));
+            assertThat(fl1.hashCode(), is(fl2.hashCode()));
+            assertThat(fl1.hashCode(), is(not(fl3.hashCode())));
         }
 
     }

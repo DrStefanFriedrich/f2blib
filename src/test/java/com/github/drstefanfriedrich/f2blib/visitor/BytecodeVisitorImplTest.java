@@ -19,8 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
-
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.assumePerformanceTest;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
 import static org.junit.Assert.assertThat;

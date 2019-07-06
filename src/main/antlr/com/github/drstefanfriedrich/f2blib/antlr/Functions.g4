@@ -20,11 +20,21 @@ function_definition:
 ;
 
 function_body:
-    single_valued_functions # singleValuedFunctions
+    (single_valued_functions | for_loop)
 ;
 
 single_valued_functions:
     single_valued_function*
+;
+
+for_loop:
+    FOR forVar = FOR_VAR_NAME
+            FROM ROUND LPAREN start = PARAMETER RPAREN
+            TO ROUND LPAREN end = PARAMETER RPAREN
+            STEP ROUND LPAREN step = PARAMETER RPAREN SEMI
+    BEGIN
+        singleValuedFunctions = single_valued_functions
+    END
 ;
 
 single_valued_function:
@@ -32,6 +42,7 @@ single_valued_function:
 ;
 
 expression:
+    variableName = FOR_VAR_NAME # forVar |
     var = VARIABLE # var |
     param = PARAMETER # param |
     value = constant # const |
@@ -130,6 +141,11 @@ SQRT: 'sqrt';
 PI: 'pi';
 E: 'e';
 BOLTZMANN: 'boltzmann';
+FOR: 'for';
+FOR_VAR_NAME: 'i';
+FROM: 'from';
+TO: 'to';
+STEP: 'step';
 
 IDENTIFIER:
     Letter LetterOrDigit*

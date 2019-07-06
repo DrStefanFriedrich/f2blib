@@ -17,7 +17,7 @@ import org.objectweb.asm.util.ASMifier;
 public class Dumper {
 
     public static void main(String[] args) throws Exception {
-        ASMifier.main(new String[]{/*ExampleVisitor.class.getCanonicalName()*/});
+        ASMifier.main(new String[]{/* Example.class.getCanonicalName() */});
     }
 
 }

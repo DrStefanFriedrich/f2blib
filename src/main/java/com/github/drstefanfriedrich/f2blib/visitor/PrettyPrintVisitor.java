@@ -30,6 +30,11 @@ public class PrettyPrintVisitor implements Visitor {
 
     private final PrecedenceVisitor precedenceVisitor = new PrecedenceVisitor();
 
+    /*
+     * Indentation depth
+     */
+    private int depth;
+
     public String getString() {
         return out.getBuffer().toString();
     }
@@ -263,22 +268,6 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitFunction(Function function) {
-        pw.print("    f_" + (function.getIndex() + 1) + " := ");
-        function.acceptExpression(this);
-        pw.println(";");
-        return null;
-    }
-
-    @Override
-    public Void visitFunctionBody(FunctionBody functionBody) {
-        pw.println("begin");
-        functionBody.getFunctionsWrapper().accept(this);
-        pw.println("end");
-        return null;
-    }
-
-    @Override
     public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
         pw.println("function " + functionDefinition.getName() + ";");
         functionDefinition.getFunctionBody().accept(this);
@@ -286,9 +275,70 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
+    public Void visitFunctionBody(FunctionBody functionBody) {
+        pw.println("begin");
+
+        depth++;
+
+        if (functionBody.isForLoop()) {
+            functionBody.getForLoop().accept(this);
+        } else {
+            functionBody.getFunctionsWrapper().accept(this);
+        }
+
+        depth--;
+
+        pw.println("end");
+        return null;
+    }
+
+    @Override
     public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().stream()
                 .forEach(f -> f.accept(this));
+        return null;
+    }
+
+    @Override
+    public Void visitFunction(Function function) {
+        int spaces = 4 * depth;
+        for (int i = 0; i < spaces; i++) {
+            pw.print(' ');
+        }
+
+        pw.print("f_" + (function.getIndex() + 1) + " := ");
+        function.acceptExpression(this);
+        pw.println(";");
+        return null;
+    }
+
+    @Override
+    public <T> T visitForLoop(ForLoop forLoop) {
+        int numberOfSpaces = 4 * depth;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numberOfSpaces; i++) {
+            sb.append(' ');
+        }
+        String spaces = sb.toString();
+
+        pw.print(spaces + "for " + forLoop.getVariableName());
+        pw.print(" from ");
+        forLoop.acceptStart(this);
+        pw.print(" to ");
+        forLoop.acceptEnd(this);
+        pw.print(" step ");
+        forLoop.acceptStep(this);
+        pw.println(';');
+        pw.println(spaces + "begin");
+
+        depth++;
+
+        forLoop.acceptFunctionsWrapper(this);
+
+        depth--;
+
+        pw.println(spaces + "end");
+
         return null;
     }
 
@@ -379,6 +429,12 @@ public class PrettyPrintVisitor implements Visitor {
     @Override
     public <T> T visitNoOp(NoOp noOp) {
         throw new IllegalStateException("visitNoOp must not be called on the PrettyPrintVisitor");
+    }
+
+    @Override
+    public Void visitForVar(ForVar forVar) {
+        pw.print(forVar.getVariableName());
+        return null;
     }
 
 }

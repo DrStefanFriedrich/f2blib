@@ -60,7 +60,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         String name = instance.getClass().getName();
         cache.put(name, instance);
 
-        LOG.info(format("Function %s loaded into the kernel", name));
+        LOG.info("Function {} loaded into the kernel", name);
     }
 
     /**
@@ -84,8 +84,8 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         functionEvaluation.eval(p, x, y);
         long end = System.nanoTime();
 
-        LOG.trace(format("Evaluation of function %s took %d ns", functionName, (end - start)));
-        LOG.debug(format("Function %s evaluated", functionName));
+        LOG.trace("Evaluation of function {} took {} ns", functionName, (end - start));
+        LOG.debug("Function {} evaluated", functionName);
     }
 
     @Override
@@ -94,10 +94,10 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         FunctionEvaluation functionEvaluation = cache.remove(functionName);
 
         if (functionEvaluation == null) {
-            LOG.debug(format("Function %s not found for removal", functionName));
+            LOG.debug("Function {} not found for removal", functionName);
             return false;
         } else {
-            LOG.debug(format("Function %s removed", functionName));
+            LOG.debug("Function {} removed", functionName);
             return true;
         }
     }
@@ -106,7 +106,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
     public Set<String> list() {
 
         HashSet<String> result = new HashSet<>(cache.keySet());
-        LOG.debug(format("The kernel contains %d entries", result.size()));
+        LOG.debug("The kernel contains {} entries", result.size());
         return result;
     }
 

@@ -25,6 +25,14 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     private static final String MATH_TYPE = "java/lang/Math";
 
+    private static final String COMBINATORICS_UTILS = "org/apache/commons/math3/util/CombinatoricsUtils";
+
+    private static final String ILLEGAL_ARGUMENT_EXCEPTION = "java/lang/IllegalArgumentException";
+
+    private static final String INIT = "<init>";
+
+    private static final String STRING_TYPE = "(Ljava/lang/String;)V";
+
     public BytecodeVisitorImpl(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage,
                                StackDepthVisitor stackDepthVisitor) {
         super(localVariables, specialFunctionsUsage, stackDepthVisitor);
@@ -266,7 +274,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         binomial.acceptK(this);
         evalMethod.visitInsn(D2I);
 
-        evalMethod.visitMethodInsn(INVOKESTATIC, "org/apache/commons/math3/util/CombinatoricsUtils", "binomialCoefficient", "(II)J", false);
+        evalMethod.visitMethodInsn(INVOKESTATIC, COMBINATORICS_UTILS, "binomialCoefficient", "(II)J", false);
         evalMethod.visitInsn(L2D);
 
         return null;
@@ -278,7 +286,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         faculty.acceptIntExpression(this);
         evalMethod.visitInsn(D2I);
 
-        evalMethod.visitMethodInsn(INVOKESTATIC, "org/apache/commons/math3/util/CombinatoricsUtils", "factorial", "(I)J", false);
+        evalMethod.visitMethodInsn(INVOKESTATIC, COMBINATORICS_UTILS, "factorial", "(I)J", false);
         evalMethod.visitInsn(L2D);
 
         return null;
@@ -363,10 +371,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitJumpInsn(GOTO, forEnd);
 
         evalMethod.visitLabel(throwException);
-        evalMethod.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+        evalMethod.visitTypeInsn(NEW, ILLEGAL_ARGUMENT_EXCEPTION);
         evalMethod.visitInsn(DUP);
         evalMethod.visitLdcInsn("step must not be 0");
-        evalMethod.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V",
+        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, STRING_TYPE,
                 false);
         evalMethod.visitInsn(ATHROW);
 
@@ -441,10 +449,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         // Check 'offset < 0'
         evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
         evalMethod.visitJumpInsn(IFGE, offsetGeZero);
-        evalMethod.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+        evalMethod.visitTypeInsn(NEW, ILLEGAL_ARGUMENT_EXCEPTION);
         evalMethod.visitInsn(DUP);
         evalMethod.visitLdcInsn("offset must not be negative");
-        evalMethod.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", false);
+        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, "(Ljava/lang/String;)V", false);
         evalMethod.visitInsn(ATHROW);
 
         // Check 'n - offset < m'
@@ -454,10 +462,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitInsn(ISUB);
         evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftM());
         evalMethod.visitJumpInsn(IF_ICMPGE, nMinusOffsetGeM);
-        evalMethod.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+        evalMethod.visitTypeInsn(NEW, ILLEGAL_ARGUMENT_EXCEPTION);
         evalMethod.visitInsn(DUP);
         evalMethod.visitLdcInsn("x.lenth - offset must be greater or equal than y.length");
-        evalMethod.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", false);
+        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, "(Ljava/lang/String;)V", false);
         evalMethod.visitInsn(ATHROW);
 
         // 'Move to the right'

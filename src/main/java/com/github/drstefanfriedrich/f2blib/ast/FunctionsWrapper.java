@@ -28,7 +28,7 @@ public final class FunctionsWrapper implements Serializable, ASTElement, DoubleA
 
     private final List<Function> functions = new ArrayList<>();
 
-    private final Optional<MarkovShift> markovShift;
+    private final transient Optional<MarkovShift> markovShift;
 
     public FunctionsWrapper(List<Function> functions, MarkovShift markovShift) {
         this.functions.addAll(functions);
@@ -61,10 +61,7 @@ public final class FunctionsWrapper implements Serializable, ASTElement, DoubleA
     }
 
     public double acceptMarkovShift(DoubleVisitor visitor) {
-        if (markovShift.isPresent()) {
-            return markovShift.get().accept(visitor);
-        }
-        return 0;
+        return markovShift.map(ms -> ms.accept(visitor)).orElse(0.0);
     }
 
     @Override

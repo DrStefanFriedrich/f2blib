@@ -65,7 +65,7 @@ public class FunctionEvaluationFactory {
             }
         }
 
-        LOG.error(format("No provider with id %s found", kernelIdentifier));
+        LOG.error("No provider with id {} found", kernelIdentifier);
         throw new IllegalArgumentException(format("Provider not found: %s", kernelIdentifier));
     }
 

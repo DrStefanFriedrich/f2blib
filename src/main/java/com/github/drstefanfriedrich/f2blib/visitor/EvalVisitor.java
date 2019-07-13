@@ -161,6 +161,8 @@ public class EvalVisitor implements DoubleVisitor {
 
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
 
+        functionsWrapper.acceptMarkovShift(this);
+
         return 0;
     }
 
@@ -172,10 +174,13 @@ public class EvalVisitor implements DoubleVisitor {
         int step = forLoop.acceptStep(intEvalVisitor);
 
         if (step == 0) {
+
             if (start != end) {
                 throw new BytecodeGenerationException("step evaluating to 0 not allowed");
             }
+
             forLoop.acceptFunctionsWrapper(this);
+
         } else if (step > 0) {
 
             for (int i = start; i <= end; i += step) {
@@ -298,6 +303,33 @@ public class EvalVisitor implements DoubleVisitor {
     @Override
     public double visitForVar(ForVar forVar) {
         return forVarValue;
+    }
+
+    @Override
+    public double visitMarkovShift(MarkovShift markovShift) {
+
+        int offset = markovShift.getOffset();
+        int m = y.length;
+        int n = x.length;
+
+        if (offset < 0) {
+            throw new IllegalArgumentException("offset must not be negative");
+        }
+        if (n - offset < m) {
+            throw new IllegalArgumentException("x.lenth - offset must be greater or equal than y.length");
+        }
+
+        // Move to the right
+        for (int i = n - 1; i >= offset + m; i--) {
+            x[i] = x[i - m];
+        }
+
+        // Copy f into x
+        for (int i = offset; i <= offset + m - 1; i++) {
+            x[i] = y[i - offset];
+        }
+
+        return 0;
     }
 
 }

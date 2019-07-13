@@ -25,6 +25,7 @@ function_body:
 
 single_valued_functions:
     single_valued_function*
+    (MARKOV_SHIFT LPAREN offset = integer RPAREN SEMI)?
 ;
 
 for_loop:
@@ -146,6 +147,7 @@ FOR_VAR_NAME: 'i';
 FROM: 'from';
 TO: 'to';
 STEP: 'step';
+MARKOV_SHIFT: 'markov_shift';
 
 IDENTIFIER:
     Letter LetterOrDigit*

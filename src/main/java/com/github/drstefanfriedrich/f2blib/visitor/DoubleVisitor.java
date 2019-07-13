@@ -94,4 +94,6 @@ public interface DoubleVisitor {
 
     double visitForLoop(ForLoop forLoop);
 
+    double visitMarkovShift(MarkovShift markovShift);
+
 }

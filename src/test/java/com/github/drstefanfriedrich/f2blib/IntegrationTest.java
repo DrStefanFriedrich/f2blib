@@ -38,6 +38,15 @@ public class IntegrationTest {
             "    end\n" +
             "end";
 
+    private static final String GAUSS_SUM = "function some.packagename.GaußSum;" +
+            "begin" +
+            "    for i from round(p_1) to round(p_2) step round(p_3);" +
+            "    begin" +
+            "        f_1 := x_2 + i;" +
+            "        markov_shift(1);" +
+            "    end\n" +
+            "end";
+
     @Test
     public void functionFromReadme() {
 
@@ -60,11 +69,28 @@ public class IntegrationTest {
 
         double[] x = new double[]{5.5};
         double[] p = new double[]{1, 10, 2};
-        double[] y = new double[2];
+        double[] y = new double[1];
 
         kernel.eval("some.packagename.ForLoop", p, x, y);
 
         assertThat(y[0], closeTo(49.5));
+    }
+
+    /**
+     * An (abused) example for the markov_shift.
+     */
+    @Test
+    public void gaußSum() {
+
+        kernel.load(GAUSS_SUM);
+
+        double[] x = new double[]{0, 0};
+        double[] p = new double[]{1, 100, 1};
+        double[] y = new double[1];
+
+        kernel.eval("some.packagename.GaußSum", p, x, y);
+
+        assertThat(y[0], closeTo(5050));
     }
 
 }

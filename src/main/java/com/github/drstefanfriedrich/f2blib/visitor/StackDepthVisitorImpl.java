@@ -17,6 +17,9 @@ import com.github.drstefanfriedrich.f2blib.ast.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Optional;
+
+import static java.lang.Math.max;
 
 public class StackDepthVisitorImpl implements StackDepthVisitor {
 
@@ -44,10 +47,13 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
 
     @Override
     public Integer visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
-        return functionsWrapper.getFunctions().stream()
-                .map(f -> ((Integer) f.accept(this)))
-                .max(Comparator.naturalOrder())
-                .orElseThrow(() -> new IllegalStateException("Empty function not allowed"));
+        return max(
+                functionsWrapper.getFunctions().stream()
+                        .map(f -> ((Integer) f.accept(this)))
+                        .max(Comparator.naturalOrder())
+                        .orElseThrow(() -> new IllegalStateException("Empty function not allowed")),
+                ((Optional<Integer>) functionsWrapper.acceptMarkovShift(this)).orElse(0)
+        );
     }
 
     @Override
@@ -230,6 +236,11 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
     @Override
     public Integer visitForVar(ForVar forVar) {
         return 2;
+    }
+
+    @Override
+    public Integer visitMarkovShift(MarkovShift markovShift) {
+        return 5;
     }
 
 }

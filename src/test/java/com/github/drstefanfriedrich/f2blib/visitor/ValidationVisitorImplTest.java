@@ -59,9 +59,7 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.parameterIndexIterator().hasNext(), is(false));
-        assertThat(localVariables.variableIndexIterator().hasNext(), is(false));
-        assertThat(localVariables.getMaxLocals(), is(7));
+        assertThat(localVariables.getMaxLocals(), is(12));
     }
 
     @Test
@@ -194,49 +192,15 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.getMaxLocals(), is(31));
-        assertThat(localVariables.getIndexForVariable(new Variable(0)), is(14));
-        assertThat(localVariables.getIndexForVariable(new Variable(1)), is(16));
-        assertThat(localVariables.getIndexForVariable(new Variable(2)), is(18));
-        assertThat(localVariables.getIndexForVariable(new Variable(3)), is(20));
-        assertThat(localVariables.getIndexForVariable(new Variable(4)), is(22));
-        assertThat(localVariables.getIndexForVariable(new Variable(5)), is(24));
-        assertThat(localVariables.getIndexForVariable(new Variable(6)), is(26));
-        assertThat(localVariables.getIndexForParameter(new Parameter(0)), is(4));
-        assertThat(localVariables.getIndexForParameter(new Parameter(1)), is(6));
-        assertThat(localVariables.getIndexForParameter(new Parameter(2)), is(8));
-        assertThat(localVariables.getIndexForParameter(new Parameter(3)), is(10));
-        assertThat(localVariables.getIndexForParameter(new Parameter(4)), is(12));
-    }
-
-    @Test
-    public void accessNonExistingParameter() {
-
-        FunctionDefinition fd = createFunctionDefinition(new Function(0, new Parameter(4)),
-                new Function(1, new Variable(6)));
-
-        fd.accept(underTest);
-
-        LocalVariables localVariables = underTest.getLocalVariables();
-
-        exception.expect(NullPointerException.class);
-
-        localVariables.getIndexForParameter(new Parameter(10));
-    }
-
-    @Test
-    public void accessNonExistingVariable() {
-
-        FunctionDefinition fd = createFunctionDefinition(new Function(0, new Parameter(4)),
-                new Function(1, new Variable(6)));
-
-        fd.accept(underTest);
-
-        LocalVariables localVariables = underTest.getLocalVariables();
-
-        exception.expect(NullPointerException.class);
-
-        localVariables.getIndexForVariable(new Variable(10));
+        assertThat(localVariables.getMaxLocals(), is(12));
+        assertThat(localVariables.getIndexForForLoopStart(), is(4));
+        assertThat(localVariables.getIndexForForLoopEnd(), is(5));
+        assertThat(localVariables.getIndexForForLoopStep(), is(6));
+        assertThat(localVariables.getMarkovShiftOffset(), is(7));
+        assertThat(localVariables.getMarkovShiftM(), is(8));
+        assertThat(localVariables.getMarkovShiftN(), is(9));
+        assertThat(localVariables.getMarkovShiftStart(), is(10));
+        assertThat(localVariables.getMarkovShiftEnd(), is(11));
     }
 
     @Test

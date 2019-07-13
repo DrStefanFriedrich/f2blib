@@ -95,18 +95,6 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
     }
 
     @Override
-    public Void visitParameter(Parameter parameter) {
-        localVariables.addIndexToParameterIndexes(parameter.getIndex());
-        return null;
-    }
-
-    @Override
-    public Void visitVariable(Variable variable) {
-        localVariables.addIndexToVariableIndexes(variable.getIndex());
-        return null;
-    }
-
-    @Override
     public Void visitArsinh(Arsinh arsinh) {
         specialFunctionsUsage.setArsinhUsed();
         return super.visitArsinh(arsinh);
@@ -122,11 +110,6 @@ public class ValidationVisitorImpl extends AbstractVisitor implements Validation
     public Void visitArtanh(Artanh artanh) {
         specialFunctionsUsage.setArtanhUsed();
         return super.visitArtanh(artanh);
-    }
-
-    @Override
-    public Void visitNoOp(NoOp noOp) {
-        return null;
     }
 
     @Override

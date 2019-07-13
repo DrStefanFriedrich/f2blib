@@ -99,4 +99,15 @@ public class StackDepthVisitorImplTest {
         assertThat(underTest.getMaxStackDepth(), is(8));
     }
 
+    @Test
+    public void functionWithForLoopAndMarkovShift() {
+
+        FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new MarkovShift(0), new Function(0, new ForVar("k"))))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getMaxStackDepth(), is(9));
+    }
+
 }

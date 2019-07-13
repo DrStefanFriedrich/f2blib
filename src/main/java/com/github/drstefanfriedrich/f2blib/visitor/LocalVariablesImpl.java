@@ -12,13 +12,7 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.Parameter;
-import com.github.drstefanfriedrich.f2blib.ast.Variable;
 import org.objectweb.asm.MethodVisitor;
-
-import java.util.*;
-
-import static java.util.stream.IntStream.range;
 
 /**
  * Implementation note on the array of local variables:<p>
@@ -26,18 +20,16 @@ import static java.util.stream.IntStream.range;
  * <code>1: p[]</code><p>
  * <code>2: x[]</code><p>
  * <code>3: y[]</code><p>
- * <code>4..n: p_i</code><p>
- * <code>(n+1)..m: x_i</code>
+ * <code>4: for loop start</code><p>
+ * <code>5: for loop end</code><p>
+ * <code>6: for loop step</code><p>
+ * <code>7: Markov shift offset</code><p>
+ * <code>8: Markov shift M</code><p>
+ * <code>9: Markov shift N</code><p>
+ * <code>10: Markov shift start</code><p>
+ * <code>11: Markov shift end</code><p>
  */
 public class LocalVariablesImpl implements LocalVariables {
-
-    private final SortedSet<Integer> parameterIndexes = new TreeSet<>();
-
-    private final SortedSet<Integer> variableIndexes = new TreeSet<>();
-
-    private final SortedMap<Integer, Integer> parameterIndex2LocalVariableIndex = new TreeMap<>();
-
-    private final SortedMap<Integer, Integer> variableIndex2LocalVariableIndex = new TreeMap<>();
 
     private int indexForLoopStart;
 
@@ -45,13 +37,15 @@ public class LocalVariablesImpl implements LocalVariables {
 
     private int indexForLoopStep;
 
-    void addIndexToParameterIndexes(int index) {
-        parameterIndexes.add(index);
-    }
+    private int markovShiftOffset;
 
-    void addIndexToVariableIndexes(int index) {
-        variableIndexes.add(index);
-    }
+    private int markovShiftM;
+
+    private int markovShiftN;
+
+    private int markovShiftStart;
+
+    private int markovShiftEnd;
 
     /**
      * The maximum number of local variables as needed by {@link MethodVisitor}.visitMaxs.
@@ -60,28 +54,10 @@ public class LocalVariablesImpl implements LocalVariables {
     public int getMaxLocals() {
         /*
          * 4: this, x[], y[], p[]
-         * 2*: doubles need two stack frames
          * 3: for loop: start, end, step
+         * 5: Markov shift
          */
-        return 4 + 2 * parameterIndexes.size() + 2 * variableIndexes.size() + 3;
-    }
-
-    /**
-     * The index in the array of local variables as needed by JVM opcodes for the given
-     * variable.
-     */
-    @Override
-    public int getIndexForVariable(Variable variable) {
-        return variableIndex2LocalVariableIndex.get(variable.getIndex());
-    }
-
-    /**
-     * The index in the array of local variables as needed by JVM opcodes for the given
-     * parameter.
-     */
-    @Override
-    public int getIndexForParameter(Parameter parameter) {
-        return parameterIndex2LocalVariableIndex.get(parameter.getIndex());
+        return 4 + 3 + 5;
     }
 
     /**
@@ -91,41 +67,17 @@ public class LocalVariablesImpl implements LocalVariables {
      */
     void finalizeLocalVariables() {
 
-        if (!parameterIndexes.isEmpty()) {
-            range(0, parameterIndexes.last() + 1).forEach(parameterIndexes::add);
-        }
-
-        if (!variableIndexes.isEmpty()) {
-            range(0, variableIndexes.last() + 1).forEach(variableIndexes::add);
-        }
-
         int localVariableIndex = 4;
-
-        for (Integer i : parameterIndexes) {
-            parameterIndex2LocalVariableIndex.put(i, localVariableIndex);
-            localVariableIndex++;
-            localVariableIndex++;
-        }
-
-        for (Integer i : variableIndexes) {
-            variableIndex2LocalVariableIndex.put(i, localVariableIndex);
-            localVariableIndex++;
-            localVariableIndex++;
-        }
 
         indexForLoopStart = localVariableIndex++;
         indexForLoopEnd = localVariableIndex++;
-        indexForLoopStep = localVariableIndex; // add ++ if you want to continue here
-    }
+        indexForLoopStep = localVariableIndex++;
 
-    @Override
-    public Iterator<Map.Entry<Integer, Integer>> parameterIndexIterator() {
-        return parameterIndex2LocalVariableIndex.entrySet().iterator();
-    }
-
-    @Override
-    public Iterator<Map.Entry<Integer, Integer>> variableIndexIterator() {
-        return variableIndex2LocalVariableIndex.entrySet().iterator();
+        markovShiftOffset = localVariableIndex++;
+        markovShiftM = localVariableIndex++;
+        markovShiftN = localVariableIndex++;
+        markovShiftStart = localVariableIndex++;
+        markovShiftEnd = localVariableIndex; // add ++ if you want to continue here
     }
 
     @Override
@@ -141,6 +93,31 @@ public class LocalVariablesImpl implements LocalVariables {
     @Override
     public int getIndexForForLoopStep() {
         return indexForLoopStep;
+    }
+
+    @Override
+    public int getMarkovShiftOffset() {
+        return markovShiftOffset;
+    }
+
+    @Override
+    public int getMarkovShiftM() {
+        return markovShiftM;
+    }
+
+    @Override
+    public int getMarkovShiftN() {
+        return markovShiftN;
+    }
+
+    @Override
+    public int getMarkovShiftStart() {
+        return markovShiftStart;
+    }
+
+    @Override
+    public int getMarkovShiftEnd() {
+        return markovShiftEnd;
     }
 
 }

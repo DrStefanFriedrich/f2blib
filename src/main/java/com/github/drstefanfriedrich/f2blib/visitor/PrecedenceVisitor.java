@@ -218,4 +218,9 @@ public class PrecedenceVisitor implements Visitor {
         return 0;
     }
 
+    @Override
+    public <T> T visitMarkovShift(MarkovShift markovShift) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
 }

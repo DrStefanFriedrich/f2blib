@@ -174,4 +174,19 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         assertThat(y, closeTo(yValue));
     }
 
+    @Test
+    public void tooLessVariables() {
+
+        double[] xArray = new double[]{1};
+        double[] pArray = new double[]{1};
+        evalVisitor = new EvalVisitor(xArray, pArray, 1);
+
+        FunctionDefinition fd = new FunctionDefinition("TooLessVariables", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(10)))));
+
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+        exception.expectMessage("");
+
+        fd.accept(evalVisitor);
+    }
+
 }

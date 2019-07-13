@@ -218,4 +218,9 @@ public class SymbolVisitor implements Visitor {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
+    @Override
+    public String visitMarkovShift(MarkovShift markovShift) {
+        return "markov_shift";
+    }
+
 }

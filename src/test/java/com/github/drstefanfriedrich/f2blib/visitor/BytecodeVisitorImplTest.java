@@ -229,4 +229,58 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
         return result;
     }
 
+    private FunctionDefinition createFunctionDefinition(Function... functions) {
+        return new FunctionDefinition("ValidationVisitorFunctionTest", new FunctionBody(new FunctionsWrapper(functions)));
+    }
+
+    @Test
+    public void accessNonExistingParameter() throws IllegalAccessException, InstantiationException {
+
+        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7};
+        double[] p = new double[]{0, 2};
+        double[] y = new double[5];
+
+        FunctionDefinition fd = createFunctionDefinition(new Function(0, new Parameter(4)),
+                new Function(1, new Variable(6)));
+
+        fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
+
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
+        fd.accept(bytecodeVisitor);
+
+        FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+        exception.expectMessage("");
+
+        functionEvaluation.eval(p, x, y);
+    }
+
+    @Test
+    public void accessNonExistingVariable() throws IllegalAccessException, InstantiationException {
+
+        double[] x = new double[]{1, 2, 3, 4, 5, 6, 7};
+        double[] p = new double[]{0, 2};
+        double[] y = new double[5];
+
+        FunctionDefinition fd = createFunctionDefinition(new Function(0, new Parameter(0)),
+                new Function(1, new Variable(10)));
+
+        fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
+
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
+        fd.accept(bytecodeVisitor);
+
+        FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+        exception.expectMessage("");
+
+        functionEvaluation.eval(p, x, y);
+    }
+
 }

@@ -186,32 +186,6 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
         mv.visitEnd();
     }
 
-    void prepareParameters() {
-
-        localVariables.parameterIndexIterator().forEachRemaining(entry -> {
-            Integer parameterIndex = entry.getKey();
-            Integer indexLocalVariables = entry.getValue();
-
-            evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
-            evalMethod.visitIntInsn(BIPUSH, parameterIndex);
-            evalMethod.visitInsn(DALOAD);
-            evalMethod.visitVarInsn(DSTORE, indexLocalVariables);
-        });
-    }
-
-    void prepareVariables() {
-
-        localVariables.variableIndexIterator().forEachRemaining(entry -> {
-            Integer variableIndex = entry.getKey();
-            Integer indexLocalVariables = entry.getValue();
-
-            evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
-            evalMethod.visitIntInsn(BIPUSH, variableIndex);
-            evalMethod.visitInsn(DALOAD);
-            evalMethod.visitVarInsn(DSTORE, indexLocalVariables);
-        });
-    }
-
     void visitUnaryExpression(UnaryExpression element, String binaryClassName, String methodName) {
 
         // Visiting the expression pushes the result (of type double) on the stack

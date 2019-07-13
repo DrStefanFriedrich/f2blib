@@ -625,4 +625,21 @@ public class PrettyPrintVisitorTest {
         fd.accept(underTest);
     }
 
+    @Test
+    public void markovShift() {
+
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", 0, 1, 2,
+                new FunctionsWrapper(new MarkovShift(1), new Function(0, new ForVar("i"))))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function a.b.c.Test;\nbegin\n" +
+                "    for i from round p_1 to round p_2 step round p_3;\n" +
+                "    begin\n" +
+                "        f_1 := i;\n" +
+                "        markov_shift(1);\n" +
+                "    end\n" +
+                "end\n"));
+    }
+
 }

@@ -42,9 +42,10 @@ public class ASTTest {
             FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
-            assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, " +
-                    "functionBody=FunctionBody{functionsWrapper=FunctionsWrapper{functions=[Function{index=0, " +
-                    "expression=Sin{expression=Multiplication{left=PI, right=Variable{index=0}}}}]}, forLoop=null}}"));
+            assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, functionBody=" +
+                    "FunctionBody{functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=" +
+                    "Sin{expression=Multiplication{left=PI, right=Variable{index=0}}}}], markovShift=Optional.empty}, " +
+                    "forLoop=null}}"));
         }
 
         @Test
@@ -294,7 +295,19 @@ public class ASTTest {
             assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1)))).toString(),
                     is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1}}, " +
                             "end=Round{expression=Parameter{index=2}}, step=Round{expression=Parameter{index=3}}, " +
-                            "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=Variable{index=1}}]}}"));
+                            "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=" +
+                            "Variable{index=1}}], markovShift=Optional.empty}}"));
+        }
+
+        @Test
+        public void markovShift() {
+
+            assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(
+                            new MarkovShift(0), new Function(0, new Variable(1)))).toString(),
+                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1}}, " +
+                            "end=Round{expression=Parameter{index=2}}, step=Round{expression=Parameter{index=3}}, " +
+                            "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, " +
+                            "expression=Variable{index=1}}], markovShift=Optional[MarkovShift{offset=0}]}}"));
         }
 
     }
@@ -1039,8 +1052,27 @@ public class ASTTest {
             assertThat(fl1.equals(fl5), is(false));
             assertThat(fl1.equals(fl6), is(false));
             assertThat(fl1.equals(fl7), is(false));
+
             assertThat(fl1.hashCode(), is(fl2.hashCode()));
             assertThat(fl1.hashCode(), is(not(fl3.hashCode())));
+        }
+
+        @Test
+        public void markovShift() {
+
+            MarkovShift ms1 = new MarkovShift(0);
+            MarkovShift ms2 = new MarkovShift(0);
+            MarkovShift ms3 = new MarkovShift(1);
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
+
+            assertThat(ms1.equals(ms2), is(true));
+            assertThat(ms1.equals(ms3), is(false));
+            assertThat(ms1.equals(null), is(false));
+            assertThat(ms1.equals(ms1), is(true));
+            assertThat(ms1.equals(fd), is(false));
+
+            assertThat(ms1.hashCode(), is(ms2.hashCode()));
+            assertThat(ms1.hashCode(), is(not(ms3.hashCode())));
         }
 
     }

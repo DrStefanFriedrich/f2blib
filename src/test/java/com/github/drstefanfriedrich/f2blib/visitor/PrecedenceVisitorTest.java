@@ -82,4 +82,12 @@ public class PrecedenceVisitorTest {
                 new FunctionsWrapper(new Function(0, new ForVar("k")))).accept(underTest);
     }
 
+    @Test
+    public void markovShift() {
+
+        assertException();
+
+        new MarkovShift(0).accept(underTest);
+    }
+
 }

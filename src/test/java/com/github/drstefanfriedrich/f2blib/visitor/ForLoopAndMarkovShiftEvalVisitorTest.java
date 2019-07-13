@@ -23,9 +23,9 @@ import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
 import static org.junit.Assert.assertThat;
 
 /**
- * Tests for for loops.
+ * Tests for for loops and the Markov shift.
  */
-public class ForLoopEvalVisitorTest {
+public class ForLoopAndMarkovShiftEvalVisitorTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -33,6 +33,21 @@ public class ForLoopEvalVisitorTest {
     private final FunctionDefinition fd = new FunctionDefinition("ForLoopEvalVisitorTestFunction", new FunctionBody(
             new ForLoop("i", 0, 1, 2,
                     new FunctionsWrapper(new Function(0, new ForVar("i"))))));
+
+    private final FunctionDefinition gaußSum = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
+            new ForLoop("i", 0, 1, 2,
+                    new FunctionsWrapper(new MarkovShift(1), new Function(0, new Addition(new Variable(1),
+                            new ForVar("i")))))));
+
+    private final FunctionDefinition markovShiftWithNegativeOffset = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
+            new ForLoop("i", 0, 1, 2,
+                    new FunctionsWrapper(new MarkovShift(-1), new Function(0, new Addition(new Variable(1),
+                            new ForVar("i")))))));
+
+    private final FunctionDefinition markovShiftWithHugeOffset = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
+            new ForLoop("i", 0, 1, 2,
+                    new FunctionsWrapper(new MarkovShift(10), new Function(0, new Addition(new Variable(1),
+                            new ForVar("i")))))));
 
     private EvalVisitor evalVisitor;
 
@@ -113,6 +128,44 @@ public class ForLoopEvalVisitorTest {
         fd.accept(evalVisitor);
 
         assertThat(evalVisitor.getResult()[0], closeTo(0));
+    }
+
+    @Test
+    public void gaußSum() {
+
+        x = new double[]{0, 0};
+        p = new double[]{1, 100, 1};
+        evalVisitor = new EvalVisitor(x, p, 1);
+
+        gaußSum.accept(evalVisitor);
+
+        assertThat(evalVisitor.getResult()[0], closeTo(5050));
+    }
+
+    @Test
+    public void markovShiftWithNegativeOffset() {
+
+        x = new double[]{0, 0};
+        p = new double[]{1, 100, 1};
+        evalVisitor = new EvalVisitor(x, p, 1);
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("offset must not be negative");
+
+        markovShiftWithNegativeOffset.accept(evalVisitor);
+    }
+
+    @Test
+    public void markovShiftWithHugeOffset() {
+
+        x = new double[]{0, 0};
+        p = new double[]{1, 100, 1};
+        evalVisitor = new EvalVisitor(x, p, 1);
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("x.lenth - offset must be greater or equal than y.length");
+
+        markovShiftWithHugeOffset.accept(evalVisitor);
     }
 
 }

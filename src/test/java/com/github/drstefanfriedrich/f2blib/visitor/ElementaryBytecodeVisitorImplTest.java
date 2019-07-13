@@ -436,4 +436,79 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
         generateClass(fd);
     }
 
+    @Test
+    public void test30() {
+
+        FunctionDefinition fd = new FunctionDefinition("ForLoopGauß", new FunctionBody(
+                new ForLoop("i", 0, 1, 2,
+                        new FunctionsWrapper(new MarkovShift(1), new Function(0, new Addition(new Variable(1),
+                                new ForVar("i")))))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{1, 100, 1};
+        double[] x = new double[]{0, 0};
+        double[] y = new double[1];
+
+        fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(5050));
+    }
+
+    @Test
+    public void test31() {
+
+        FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new MarkovShift(-1), new Function(0, new Addition(new Variable(1), new ForVar("k")))))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{1, 100, 1};
+        double[] x = new double[]{0, 0};
+        double[] y = new double[1];
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("offset must not be negative");
+
+        fe.eval(p, x, y);
+    }
+
+    @Test
+    public void test32() {
+
+        FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", 0, 1, 2,
+                new FunctionsWrapper(new MarkovShift(0),
+                        new Function(0, new Addition(new Variable(1), new ForVar("k"))),
+                        new Function(1, new Addition(new Variable(1), new ForVar("k"))),
+                        new Function(2, new Addition(new Variable(1), new ForVar("k")))))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{1, 100, 1};
+        double[] x = new double[]{0, 0};
+        double[] y = new double[3];
+
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("x.lenth - offset must be greater or equal than y.length");
+
+        fe.eval(p, x, y);
+    }
+
+    @Test
+    public void test33() {
+
+        FunctionDefinition fd = new FunctionDefinition("TooLessVariables", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(10)))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{};
+        double[] x = new double[]{0};
+        double[] y = new double[1];
+
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+        exception.expectMessage("");
+
+        fe.eval(p, x, y);
+    }
+
 }

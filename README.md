@@ -19,6 +19,7 @@
 <br />
 [![Travis CI](https://travis-ci.org/DrStefanFriedrich/f2blib.svg?branch=master)](https://travis-ci.org/DrStefanFriedrich/f2blib)
 [![SonarQube](https://img.shields.io/static/v1.svg?label=SonarQube&message=analyse&color=green&style=plastic)](https://sonarcloud.io/dashboard?id=DrStefanFriedrich_f2blib)
+[![Javadocs](https://www.javadoc.io/badge/com.github.drstefanfriedrich.f2blib/f2blib.svg)](https://www.javadoc.io/doc/com.github.drstefanfriedrich.f2blib/f2blib)
 
 ## TL;TR
 

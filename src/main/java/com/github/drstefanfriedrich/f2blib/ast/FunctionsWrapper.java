@@ -17,10 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * {@link FunctionsWrapper} model a set of mathematical expressions. Example:<p>
@@ -31,12 +28,24 @@ public final class FunctionsWrapper implements Serializable, ASTElement, DoubleA
 
     private final List<Function> functions = new ArrayList<>();
 
+    private final Optional<MarkovShift> markovShift;
+
+    public FunctionsWrapper(List<Function> functions, MarkovShift markovShift) {
+        this.functions.addAll(functions);
+        this.markovShift = Optional.of(markovShift);
+    }
+
     public FunctionsWrapper(List<Function> functions) {
         this.functions.addAll(functions);
+        this.markovShift = Optional.empty();
     }
 
     public FunctionsWrapper(Function... functions) {
         this(Arrays.asList(functions));
+    }
+
+    public FunctionsWrapper(MarkovShift markovShift, Function... functions) {
+        this(Arrays.asList(functions), markovShift);
     }
 
     /*
@@ -47,10 +56,22 @@ public final class FunctionsWrapper implements Serializable, ASTElement, DoubleA
         return functions;
     }
 
+    public <T> T acceptMarkovShift(Visitor visitor) {
+        return (T) markovShift.map(ms -> ms.accept(visitor));
+    }
+
+    public double acceptMarkovShift(DoubleVisitor visitor) {
+        if (markovShift.isPresent()) {
+            return markovShift.get().accept(visitor);
+        }
+        return 0;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("functions", functions)
+                .add("markovShift", markovShift)
                 .toString();
     }
 
@@ -62,13 +83,14 @@ public final class FunctionsWrapper implements Serializable, ASTElement, DoubleA
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        FunctionsWrapper functionsWrapper = (FunctionsWrapper) o;
-        return Objects.equals(functions, functionsWrapper.functions);
+        FunctionsWrapper that = (FunctionsWrapper) o;
+        return Objects.equals(functions, that.functions) &&
+                Objects.equals(markovShift, that.markovShift);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(functions);
+        return Objects.hash(functions, markovShift);
     }
 
     @Override

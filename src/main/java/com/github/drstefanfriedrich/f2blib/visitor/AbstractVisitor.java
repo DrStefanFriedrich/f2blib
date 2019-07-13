@@ -139,6 +139,7 @@ public abstract class AbstractVisitor implements Visitor {
     @Override
     public <T> T visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
+        functionsWrapper.acceptMarkovShift(this);
         return null;
     }
 
@@ -259,6 +260,11 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visitNoOp(NoOp noOp) {
+        return null;
+    }
+
+    @Override
+    public <T> T visitMarkovShift(MarkovShift markovShift) {
         return null;
     }
 

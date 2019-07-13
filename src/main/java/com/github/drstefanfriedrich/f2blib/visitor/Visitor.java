@@ -94,4 +94,6 @@ public interface Visitor {
 
     <T> T visitForVar(ForVar forVar);
 
+    <T> T visitMarkovShift(MarkovShift markovShift);
+
 }

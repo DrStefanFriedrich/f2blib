@@ -296,17 +296,24 @@ public class PrettyPrintVisitor implements Visitor {
     public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().stream()
                 .forEach(f -> f.accept(this));
+        functionsWrapper.acceptMarkovShift(this);
         return null;
+    }
+
+    private String spaces() {
+        int numberOfSpaces = 4 * depth;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numberOfSpaces; i++) {
+            sb.append(' ');
+        }
+        return sb.toString();
     }
 
     @Override
     public Void visitFunction(Function function) {
-        int spaces = 4 * depth;
-        for (int i = 0; i < spaces; i++) {
-            pw.print(' ');
-        }
+        String spaces = spaces();
 
-        pw.print("f_" + (function.getIndex() + 1) + " := ");
+        pw.print(spaces + "f_" + (function.getIndex() + 1) + " := ");
         function.acceptExpression(this);
         pw.println(";");
         return null;
@@ -314,12 +321,7 @@ public class PrettyPrintVisitor implements Visitor {
 
     @Override
     public <T> T visitForLoop(ForLoop forLoop) {
-        int numberOfSpaces = 4 * depth;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < numberOfSpaces; i++) {
-            sb.append(' ');
-        }
-        String spaces = sb.toString();
+        String spaces = spaces();
 
         pw.print(spaces + "for " + forLoop.getVariableName());
         pw.print(" from ");
@@ -434,6 +436,18 @@ public class PrettyPrintVisitor implements Visitor {
     @Override
     public Void visitForVar(ForVar forVar) {
         pw.print(forVar.getVariableName());
+        return null;
+    }
+
+    @Override
+    public Void visitMarkovShift(MarkovShift markovShift) {
+        String spaces = spaces();
+
+        String symbol = markovShift.accept(symbolVisitor);
+        pw.print(spaces + symbol + "(");
+        pw.print(markovShift.getOffset());
+        pw.println(");");
+
         return null;
     }
 

@@ -15,6 +15,7 @@ package com.github.drstefanfriedrich.f2blib.util;
 import org.hamcrest.Matcher;
 import org.hamcrest.number.IsCloseTo;
 
+import static java.lang.Math.abs;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
@@ -24,7 +25,7 @@ public final class TestUtil {
     }
 
     public static Matcher<Double> closeTo(double operand) {
-        return IsCloseTo.closeTo(operand, 1e-8);
+        return IsCloseTo.closeTo(operand, abs(operand) * 1e-8);
     }
 
     public static void assumeNotRunFromGradle() {

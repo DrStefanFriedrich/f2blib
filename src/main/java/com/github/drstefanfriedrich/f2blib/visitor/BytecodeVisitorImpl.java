@@ -51,9 +51,6 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         evalMethod.visitCode();
 
-        prepareParameters();
-        prepareVariables();
-
         if (functionBody.isForLoop()) {
             functionBody.getForLoop().accept(this);
         } else {
@@ -103,13 +100,17 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitParameter(Parameter parameter) {
-        evalMethod.visitVarInsn(DLOAD, localVariables.getIndexForParameter(parameter));
+        evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
+        evalMethod.visitIntInsn(BIPUSH, parameter.getIndex());
+        evalMethod.visitInsn(DALOAD);
         return null;
     }
 
     @Override
     public Void visitVariable(Variable variable) {
-        evalMethod.visitVarInsn(DLOAD, localVariables.getIndexForVariable(variable));
+        evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+        evalMethod.visitIntInsn(BIPUSH, variable.getIndex());
+        evalMethod.visitInsn(DALOAD);
         return null;
     }
 
@@ -315,6 +316,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
+        functionsWrapper.acceptMarkovShift(this);
         return null;
     }
 
@@ -406,6 +408,127 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     public Void visitForVar(ForVar forVar) {
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
         evalMethod.visitInsn(I2D);
+        return null;
+    }
+
+    /*
+     * For a better understanding we refer to EvalVisitor.visitMarkovShift.
+     */
+    @Override
+    public Void visitMarkovShift(MarkovShift markovShift) {
+
+        Label offsetGeZero = new Label();
+        Label nMinusOffsetGeM = new Label();
+        Label forLoopMove = new Label();
+        Label forLoopMoveEnd = new Label();
+        Label forLoopCopy = new Label();
+        Label forLoopCopyEnd = new Label();
+
+        // Calculate 'offset' and store it into a local variable
+        evalMethod.visitLdcInsn(markovShift.getOffset());
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftOffset());
+
+        // Calculate 'm' and store it into a local variable
+        evalMethod.visitVarInsn(ALOAD, 3); // push y[] on the operand stack
+        evalMethod.visitInsn(ARRAYLENGTH);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftM());
+
+        // Calculate 'n' and store it into a local variable
+        evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+        evalMethod.visitInsn(ARRAYLENGTH);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftN());
+
+        // Check 'offset < 0'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
+        evalMethod.visitJumpInsn(IFGE, offsetGeZero);
+        evalMethod.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+        evalMethod.visitInsn(DUP);
+        evalMethod.visitLdcInsn("offset must not be negative");
+        evalMethod.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", false);
+        evalMethod.visitInsn(ATHROW);
+
+        // Check 'n - offset < m'
+        evalMethod.visitLabel(offsetGeZero);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftN());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
+        evalMethod.visitInsn(ISUB);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftM());
+        evalMethod.visitJumpInsn(IF_ICMPGE, nMinusOffsetGeM);
+        evalMethod.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
+        evalMethod.visitInsn(DUP);
+        evalMethod.visitLdcInsn("x.lenth - offset must be greater or equal than y.length");
+        evalMethod.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", false);
+        evalMethod.visitInsn(ATHROW);
+
+        // 'Move to the right'
+        evalMethod.visitLabel(nMinusOffsetGeM);
+        // Calculate 'start = n - 1'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftN());
+        evalMethod.visitInsn(ICONST_1);
+        evalMethod.visitInsn(ISUB);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftStart());
+        // Calculate 'end = offset + m'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftM());
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftEnd());
+        // for ...
+        evalMethod.visitLabel(forLoopMove);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftEnd());
+        evalMethod.visitJumpInsn(IF_ICMPLT, forLoopMoveEnd);
+        // x[start] = x[start - m]
+        evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftM());
+        evalMethod.visitInsn(ISUB);
+        evalMethod.visitInsn(DALOAD);
+        evalMethod.visitInsn(DASTORE);
+        // Calculate 'start = start - 1'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitInsn(ICONST_1);
+        evalMethod.visitInsn(ISUB);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftStart());
+        evalMethod.visitJumpInsn(GOTO, forLoopMove);
+
+        evalMethod.visitLabel(forLoopMoveEnd);
+
+        // Copy f into x
+        // Calculate 'start = offset'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftStart());
+        // Calculate 'end = offset + m - 1'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftM());
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitInsn(ICONST_1);
+        evalMethod.visitInsn(ISUB);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftEnd());
+        // for ...
+        evalMethod.visitLabel(forLoopCopy);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftEnd());
+        evalMethod.visitJumpInsn(IF_ICMPGT, forLoopCopyEnd);
+        // x[start] = y[start - offset]
+        evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitVarInsn(ALOAD, 3); // push y[] on the operand stack
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftOffset());
+        evalMethod.visitInsn(ISUB);
+        evalMethod.visitInsn(DALOAD);
+        evalMethod.visitInsn(DASTORE);
+        // Calculate 'start = start + 1'
+        evalMethod.visitVarInsn(ILOAD, localVariables.getMarkovShiftStart());
+        evalMethod.visitInsn(ICONST_1);
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftStart());
+        evalMethod.visitJumpInsn(GOTO, forLoopCopy);
+
+        evalMethod.visitLabel(forLoopCopyEnd);
+
         return null;
     }
 

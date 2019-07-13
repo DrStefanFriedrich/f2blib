@@ -57,6 +57,11 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
         if (result.isEmpty()) {
             return null;
         }
+
+        if (ctx.offset != null) {
+            return new FunctionsWrapper(result, new MarkovShift(Integer.parseInt(ctx.offset.getText())));
+        }
+
         return new FunctionsWrapper(result);
     }
 

@@ -532,4 +532,49 @@ public class ParserTest extends AbstractParserTest {
                 new FunctionsWrapper(new Function(0, new Variable(0)))))));
     }
 
+    @Test
+    public void markovShift() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := artanh(tanh(x_1));\n" +
+                "    markov_shift(0);\n" +
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new FunctionsWrapper(
+                new MarkovShift(0), new Function(0, new Artanh(new Tanh(new Variable(0))))))));
+    }
+
+    @Test
+    public void markovShiftBeforeFunctionDefinition() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    markov_shift(0);\n" +
+                "    f_1 := artanh(tanh(x_1));\n" +
+                END);
+    }
+
+    @Test
+    public void markovShiftNonInteger() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := artanh(tanh(x_1));\n" +
+                "    markov_shift(round(p_1));\n" +
+                END);
+    }
+
+    @Test
+    public void forLoopAndMarkovShift() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);" +
+                BEGIN +
+                "    f_1 := i;\n" +
+                "    markov_shift(1);\n" +
+                END +
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
+                new FunctionsWrapper(new MarkovShift(1), new Function(0, new ForVar("i")))))));
+    }
+
 }

@@ -12,18 +12,22 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.google.common.base.MoreObjects;
 import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
+import com.google.common.base.MoreObjects;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * {@link FunctionsWrapper} model a set of mathematical expressions. Example:<p>
  * <code>f_1 := x_1^2</code><p>
  * <code>f_2 := 3-x_2</code>
  */
-public final class FunctionsWrapper implements ASTElement, DoubleASTElement {
+public final class FunctionsWrapper implements Serializable, ASTElement, DoubleASTElement {
 
     private final List<Function> functions = new ArrayList<>();
 

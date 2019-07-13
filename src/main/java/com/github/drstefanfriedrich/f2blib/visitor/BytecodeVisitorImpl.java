@@ -23,7 +23,7 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
-    public static final String MATH_TYPE = "java/lang/Math";
+    private static final String MATH_TYPE = "java/lang/Math";
 
     public BytecodeVisitorImpl(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage,
                                StackDepthVisitor stackDepthVisitor) {
@@ -326,7 +326,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitNoOp(NoOp noOp) {
-        return null;
+        throw new IllegalStateException("NoOp must not be used");
     }
 
     @Override

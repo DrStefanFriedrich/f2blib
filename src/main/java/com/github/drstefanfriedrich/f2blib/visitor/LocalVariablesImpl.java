@@ -115,7 +115,7 @@ public class LocalVariablesImpl implements LocalVariables {
 
         indexForLoopStart = localVariableIndex++;
         indexForLoopEnd = localVariableIndex++;
-        indexForLoopStep = localVariableIndex++;
+        indexForLoopStep = localVariableIndex; // add ++ if you want to continue here
     }
 
     @Override

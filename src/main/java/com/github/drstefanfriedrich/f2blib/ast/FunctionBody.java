@@ -12,17 +12,18 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.google.common.base.MoreObjects;
 import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
+import com.google.common.base.MoreObjects;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A {@link FunctionBody} models the actual function definition in form of
  * mathematical expressions or for loops and the like.
  */
-public final class FunctionBody implements ASTElement, DoubleASTElement {
+public final class FunctionBody implements Serializable, ASTElement, DoubleASTElement {
 
     private final FunctionsWrapper functionsWrapper;
 

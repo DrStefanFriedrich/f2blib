@@ -12,18 +12,19 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.MoreObjects;
 import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.MoreObjects;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A {@link Function} models a single-valued mathematical function. A function
  * consists of an index n and and expression: f_n := 'expression'.
  */
-public final class Function implements ASTElement, DoubleASTElement {
+public final class Function implements Serializable, ASTElement, DoubleASTElement {
 
     /*
      * The index is the subscript, e.g. f_1. Please not we start counting by 1

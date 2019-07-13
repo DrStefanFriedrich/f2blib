@@ -223,8 +223,8 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
     @Override
     public Integer visitForLoop(ForLoop forLoop) {
         return 2 + (Integer) forLoop.acceptFunctionsWrapper(this) +
-                Collections.max(Arrays.asList(new Integer[]{forLoop.acceptStart(this),
-                        forLoop.acceptEnd(this), forLoop.acceptStep(this)}));
+                Collections.max(Arrays.<Integer>asList(forLoop.acceptStart(this),
+                        forLoop.acceptEnd(this), forLoop.acceptStep(this)));
     }
 
     @Override

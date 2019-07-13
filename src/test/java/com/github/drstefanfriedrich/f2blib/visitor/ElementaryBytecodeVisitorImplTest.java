@@ -18,8 +18,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Some very elementary tests of the {@link BytecodeVisitorImpl}, mainly to show
@@ -423,6 +423,17 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     private FunctionDefinition forLoop() {
         return new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
                 new FunctionsWrapper(new Function(0, new ForVar("k"))))));
+    }
+
+    @Test
+    public void test29() {
+
+        FunctionDefinition fd = createFunctionDefinition("Test1", new Function(0, NoOp.get()));
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("NoOp must not be used");
+
+        generateClass(fd);
     }
 
 }

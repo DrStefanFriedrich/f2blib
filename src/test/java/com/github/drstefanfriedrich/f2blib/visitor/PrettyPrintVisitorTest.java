@@ -2,15 +2,22 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PrettyPrintVisitorTest {
 
-    public static final String FUNCTION_NAME = "MyFunc";
-    public static final String SIMPLE_FUNCTION_DEFINITION = "function MyFunc;\nbegin\n    f_1 := x_1;\nend\n";
+    private static final String FUNCTION_NAME = "MyFunc";
+
+    private static final String SIMPLE_FUNCTION_DEFINITION = "function MyFunc;\nbegin\n    f_1 := x_1;\nend\n";
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     private PrettyPrintVisitor underTest;
 
     @Before
@@ -604,6 +611,18 @@ public class PrettyPrintVisitorTest {
         fd.accept(underTest);
 
         assertThat(underTest.getString(), is("function a.b.c.Test;\nbegin\n    for i from round p_1 to round p_2 step round p_3;\n    begin\n        f_1 := i;\n    end\nend\n"));
+    }
+
+    @Test
+    public void noOp() {
+
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", 0, 1, 2,
+                new FunctionsWrapper(new Function(0, NoOp.get())))));
+
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("visitNoOp must not be called on the PrettyPrintVisitor");
+
+        fd.accept(underTest);
     }
 
 }

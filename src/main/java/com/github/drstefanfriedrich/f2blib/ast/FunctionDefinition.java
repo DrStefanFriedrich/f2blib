@@ -12,17 +12,18 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.google.common.base.MoreObjects;
 import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
+import com.google.common.base.MoreObjects;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * A {@link FunctionDefinition} is the top-level element in the abstract syntax
  * tree, and thus the main entry point for all function evaluation logic.
  */
-public final class FunctionDefinition implements ASTElement, DoubleASTElement {
+public final class FunctionDefinition implements Serializable, ASTElement, DoubleASTElement {
 
     private final String name;
 

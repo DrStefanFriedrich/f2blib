@@ -1023,12 +1023,22 @@ public class ASTTest {
 
             ForLoop fl1 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
             ForLoop fl2 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
-            ForLoop fl3 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1))));
+            ForLoop fl3 = new ForLoop("j", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1))));
+            ForLoop fl4 = new ForLoop("i", 2, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl5 = new ForLoop("i", 1, 3, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl6 = new ForLoop("i", 1, 2, 4, new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl7 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(1, new Variable(0))));
+            FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
 
             assertThat(fl1.equals(fl2), is(true));
             assertThat(fl1.equals(fl3), is(false));
             assertThat(fl1.equals(null), is(false));
             assertThat(fl1.equals(fl1), is(true));
+            assertThat(fl1.equals(fd), is(false));
+            assertThat(fl1.equals(fl4), is(false));
+            assertThat(fl1.equals(fl5), is(false));
+            assertThat(fl1.equals(fl6), is(false));
+            assertThat(fl1.equals(fl7), is(false));
             assertThat(fl1.hashCode(), is(fl2.hashCode()));
             assertThat(fl1.hashCode(), is(not(fl3.hashCode())));
         }

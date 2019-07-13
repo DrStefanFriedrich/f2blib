@@ -12,11 +12,11 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
+import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 import org.apache.commons.math3.analysis.function.Acosh;
 import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;
-import com.github.drstefanfriedrich.f2blib.ast.*;
 
 import static java.lang.String.format;
 import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficient;
@@ -185,7 +185,8 @@ public class EvalVisitor implements DoubleVisitor {
 
         } else {
 
-            for (int i = start; i >= end; i += step) {
+            step = -step;
+            for (int i = start; i >= end; i -= step) {
                 forVarValue = i;
                 forLoop.acceptFunctionsWrapper(this);
             }

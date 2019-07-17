@@ -13,6 +13,8 @@
 package com.github.drstefanfriedrich.f2blib;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -26,6 +28,8 @@ import static java.lang.String.format;
  * references to implementations.
  */
 public class FunctionEvaluationFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FunctionEvaluationFactory.class);
 
     private final Iterable<FunctionEvaluationProvider> serviceLoader = ServiceLoader.load(FunctionEvaluationProvider.class);
 
@@ -61,11 +65,13 @@ public class FunctionEvaluationFactory {
             }
         }
 
+        LOG.error(format("No provider with id %s found", kernelIdentifier));
         throw new IllegalArgumentException(format("Provider not found: %s", kernelIdentifier));
     }
 
     private Iterator<FunctionEvaluationProvider> getIterator() {
         if (!getServiceLoader().iterator().hasNext()) {
+            LOG.error("No providers at all found");
             throw new IllegalStateException("No provider at all found for type FunctionEvaluationProvider");
         }
 

@@ -41,7 +41,7 @@ public class AntlrFunctionParser implements FunctionParser {
             }
         });
 
-        return (FunctionDefinition) new AntlrVisitor().visitFunction_definition(parser.function_definition());
+        return (FunctionDefinition) parser.function_definition().accept(new AntlrVisitor());
     }
 
 }

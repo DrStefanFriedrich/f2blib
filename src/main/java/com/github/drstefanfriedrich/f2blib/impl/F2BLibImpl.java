@@ -16,6 +16,8 @@ import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
 import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGenerator;
 import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +28,8 @@ import static java.lang.String.format;
  * F2BLib implementation of a {@link FunctionEvaluationKernel}.
  */
 public class F2BLibImpl implements FunctionEvaluationKernel {
+
+    private static final Logger LOG = LoggerFactory.getLogger(F2BLibImpl.class);
 
     private final Map<String, FunctionEvaluation> cache = new ConcurrentHashMap<>();
 
@@ -50,8 +54,10 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
         FunctionEvaluation instance = generator.generateAndInstantiate(fd);
 
-        cache.put(instance.getClass().getName(), instance);
+        String name = instance.getClass().getName();
+        cache.put(name, instance);
 
+        LOG.info(format("Function %s loaded into the kernel", name));
     }
 
     /**
@@ -71,7 +77,12 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
             throw new IllegalArgumentException(format("Unknown function name: %s", functionName));
         }
 
+        long start = System.nanoTime();
         functionEvaluation.eval(p, x, y);
+        long end = System.nanoTime();
+
+        LOG.trace(format("Evaluation of function %s took %d ns", functionName, (end - start)));
+        LOG.debug(format("Function %s evaluated", functionName));
     }
 
 }

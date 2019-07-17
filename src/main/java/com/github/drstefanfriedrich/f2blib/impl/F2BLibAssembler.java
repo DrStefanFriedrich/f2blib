@@ -17,11 +17,15 @@ import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
 import com.github.drstefanfriedrich.f2blib.FunctionEvaluationProvider;
 import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGeneratorImpl;
 import com.github.drstefanfriedrich.f2blib.parser.AntlrFunctionParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Separate construction of a system from using it.
  */
 public class F2BLibAssembler implements FunctionEvaluationProvider {
+
+    private static final Logger LOG = LoggerFactory.getLogger(F2BLibAssembler.class);
 
     @Override
     public FunctionEvaluationKernel create() {
@@ -45,7 +49,9 @@ public class F2BLibAssembler implements FunctionEvaluationProvider {
 
 
     private FunctionEvaluationKernel constructF2BLibImpl() {
-        return new F2BLibImpl(new AntlrFunctionParser(), new FunctionEvaluationBytecodeGeneratorImpl());
+        F2BLibImpl f2BLib = new F2BLibImpl(new AntlrFunctionParser(), new FunctionEvaluationBytecodeGeneratorImpl());
+        LOG.info("F2BLib started successfully");
+        return f2BLib;
     }
 
     @Override

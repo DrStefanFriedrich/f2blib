@@ -17,6 +17,8 @@ import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Test;
 
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -86,6 +88,36 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         fek.eval("Func", new double[0], new double[]{1.63}, y);
 
         assertThat(y[0], closeTo(106.52));
+    }
+
+    @Test
+    public void removeAndRemoveTwice() {
+
+        FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
+        double[] y = new double[1];
+
+        when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+
+        underTest.load("someFakeDefinition");
+
+        assertThat(underTest.remove(FunctionEvaluationAsset.class.getName()), is(true));
+        assertThat(underTest.remove(FunctionEvaluationAsset.class.getName()), is(false));
+    }
+
+    @Test
+    public void list() {
+
+        FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
+        double[] y = new double[1];
+
+        when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+
+        underTest.load("someFakeDefinition");
+
+        assertThat(underTest.list().size(), is(1));
+        assertThat(underTest.list(), hasItem(FunctionEvaluationAsset.class.getName()));
     }
 
 }

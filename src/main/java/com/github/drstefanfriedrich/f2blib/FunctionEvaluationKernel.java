@@ -12,6 +12,8 @@
 
 package com.github.drstefanfriedrich.f2blib;
 
+import java.util.Set;
+
 /**
  * Handles mathematical functions. This interface defines a kernel (i.e. a
  * library interface) for the evaluation of mathematical functions. The functions
@@ -41,5 +43,21 @@ public interface FunctionEvaluationKernel {
      * @param y            The result of the function evaluation. y in IR^m
      */
     void eval(String functionName, double[] p, double[] x, double[] y);
+
+    /**
+     * Remove a function from the kernel.
+     *
+     * @param functionName The name of the function to remove.
+     * @return true, if the function was removed, and false, if the function
+     * could not be found.
+     */
+    boolean remove(String functionName);
+
+    /**
+     * List all currently managed functions by this kernel.
+     *
+     * @return The function names of all managed functions.
+     */
+    Set<String> list();
 
 }

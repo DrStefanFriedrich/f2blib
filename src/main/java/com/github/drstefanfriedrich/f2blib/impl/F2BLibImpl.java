@@ -19,13 +19,16 @@ import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
 
 /**
- * F2BLib implementation of a {@link FunctionEvaluationKernel}.
+ * F2BLib implementation of a {@link FunctionEvaluationKernel}. Generates Java
+ * bytecode from the supplied functions.
  */
 public class F2BLibImpl implements FunctionEvaluationKernel {
 
@@ -83,6 +86,28 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
         LOG.trace(format("Evaluation of function %s took %d ns", functionName, (end - start)));
         LOG.debug(format("Function %s evaluated", functionName));
+    }
+
+    @Override
+    public boolean remove(String functionName) {
+
+        FunctionEvaluation functionEvaluation = cache.remove(functionName);
+
+        if (functionEvaluation == null) {
+            LOG.debug(format("Function %s not found for removal", functionName));
+            return false;
+        } else {
+            LOG.debug(format("Function %s removed", functionName));
+            return true;
+        }
+    }
+
+    @Override
+    public Set<String> list() {
+
+        HashSet<String> result = new HashSet<>(cache.keySet());
+        LOG.debug(format("The kernel contains %d entries", result.size()));
+        return result;
     }
 
 }

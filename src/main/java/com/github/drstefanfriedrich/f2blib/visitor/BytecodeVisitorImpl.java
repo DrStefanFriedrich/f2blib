@@ -452,7 +452,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitTypeInsn(NEW, ILLEGAL_ARGUMENT_EXCEPTION);
         evalMethod.visitInsn(DUP);
         evalMethod.visitLdcInsn("offset must not be negative");
-        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, "(Ljava/lang/String;)V", false);
+        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, STRING_TYPE, false);
         evalMethod.visitInsn(ATHROW);
 
         // Check 'n - offset < m'
@@ -465,7 +465,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitTypeInsn(NEW, ILLEGAL_ARGUMENT_EXCEPTION);
         evalMethod.visitInsn(DUP);
         evalMethod.visitLdcInsn("x.lenth - offset must be greater or equal than y.length");
-        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, "(Ljava/lang/String;)V", false);
+        evalMethod.visitMethodInsn(INVOKESPECIAL, ILLEGAL_ARGUMENT_EXCEPTION, INIT, STRING_TYPE, false);
         evalMethod.visitInsn(ATHROW);
 
         // 'Move to the right'

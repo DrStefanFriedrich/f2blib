@@ -298,7 +298,6 @@ containing all the ASM statements needed to reproduce the class. For the last re
 
 Here is a list of mathematical expression evaluation frameworks similar to this one:
 
-* [matheval](http://matheval.sourceforge.net/)
 * [exp4j](https://www.objecthunter.net/exp4j/)
 * [mXparser](http://mathparser.org/)
 * [EvalEx](https://github.com/uklimaschewski/EvalEx)

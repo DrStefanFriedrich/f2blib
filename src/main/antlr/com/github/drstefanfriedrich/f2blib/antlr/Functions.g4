@@ -25,7 +25,7 @@ function_body:
 
 single_valued_functions:
     single_valued_function*
-    (MARKOV_SHIFT LPAREN offset = integer RPAREN SEMI)?
+    (MARKOV_SHIFT LPAREN offset = intExpression RPAREN SEMI)?
 ;
 
 for_loop:
@@ -42,18 +42,32 @@ single_valued_function:
     FUNC DEFINE inner = expression SEMI
 ;
 
+intExpression:
+    variableName = FOR_VAR_NAME # iforVar |
+    value = integer # iint |
+    left = intExpression POWER right = intExpression # ipower |
+    inner = intExpression FACULTY # ifaculty |
+    LPAREN inner = intExpression RPAREN # iparenthesis |
+    ROUND LPAREN inner = expression RPAREN # round |
+    BINOMIAL LPAREN n = intExpression ',' k = intExpression RPAREN # ibinomial |
+    PLUS inner = intExpression # ipos |
+    MINUS inner = intExpression # ineg |
+    left = intExpression TIMES right = intExpression # imultiplication |
+    left = intExpression DIVIDE right = intExpression # idivision |
+    left = intExpression PLUS right = intExpression # iaddition |
+    left = intExpression MINUS right = intExpression # isubtraction
+;
+
 expression:
     variableName = FOR_VAR_NAME # forVar |
-    var = VARIABLE # var |
-    param = PARAMETER # param |
-    value = constant # const |
     value = integer # int |
+    var = variable # var |
+    param = parameter # param |
+    value = constant # const |
     value = floatingPoint # doub |
     left = expression POWER right = expression # power |
-    inner = integer FACULTY # faculty |
     LPAREN inner = expression RPAREN # parenthesis |
     ABS LPAREN inner = expression RPAREN # abs |
-    ROUND LPAREN inner = expression RPAREN # round |
     EXP LPAREN inner = expression RPAREN # exp |
     LN LPAREN inner = expression RPAREN # ln |
     SQRT LPAREN inner = expression RPAREN # sqrt |
@@ -71,23 +85,33 @@ expression:
     ARTANH LPAREN inner = expression RPAREN # artanh |
     PLUS inner = expression # pos |
     MINUS inner = expression # neg |
-    BINOMIAL LPAREN n = integer ',' k = integer RPAREN # binomial |
     left = expression TIMES right = expression # multiplication |
     left = expression DIVIDE right = expression # division |
     left = expression PLUS right = expression # addition |
-    left = expression MINUS right = expression # subtraction
+    left = expression MINUS right = expression # subtraction |
+    iexpr = intExpression # intExpr
+;
+
+variable:
+    VARIABLE |
+    VAR LBRACE intExpression RBRACE
+;
+
+parameter:
+    PARAMETER |
+    PARAM LBRACE intExpression RBRACE
 ;
 
 VARIABLE:
-    'x_' [1-9][0-9]*
+    VAR INDEX
 ;
 
 PARAMETER:
-    'p_' [1-9][0-9]*
+    PARAM INDEX
 ;
 
 FUNC:
-    'f_' [1-9][0-9]*
+    F INDEX
 ;
 
 constant:
@@ -111,9 +135,12 @@ BEGIN: 'begin';
 END: 'end';
 PARAM: 'p_';
 VAR: 'x_';
+F: 'f_';
 SEMI: ';';
 LPAREN: '(';
 RPAREN: ')';
+LBRACE: '{';
+RBRACE: '}';
 DEFINE: ':=';
 PLUS: '+';
 MINUS: '-';

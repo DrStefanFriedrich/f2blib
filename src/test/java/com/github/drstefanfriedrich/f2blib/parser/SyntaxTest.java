@@ -342,4 +342,88 @@ public class SyntaxTest extends AbstractParserTest {
                 END);
     }
 
+    @Test
+    public void parametersWithSimpleIntExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := p_{3};\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void parametersWithComplexIntExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := p_{binomial(3!,i!)+4};\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void parametersWithWrongIntExpression() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := p_{sin(3)};\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void variablesWithSimpleIntExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := x_{3};\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void variablesWithComplexIntExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := x_{binomial(3!,i!)+4};\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void variablesWithWrongIntExpression() {
+        assertWrongGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := x_{sin(3)};\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void variablesWithRoundIntExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for i from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := x_{round(sin(3))};\n" +
+                END +
+                END);
+    }
+
 }

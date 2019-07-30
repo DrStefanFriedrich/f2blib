@@ -42,10 +42,10 @@ public class ASTTest {
             FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
-            assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, functionBody=" +
-                    "FunctionBody{functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=" +
-                    "Sin{expression=Multiplication{left=PI, right=Variable{index=0}}}}], markovShift=Optional.empty}, " +
-                    "forLoop=null}}"));
+            assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, functionBody=FunctionBody{" +
+                    "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=Sin{expression=" +
+                    "Multiplication{left=PI, right=Variable{index=0, indexExpression=null}}}}], markovShift=" +
+                    "Optional.empty}, forLoop=null}}"));
         }
 
         @Test
@@ -53,16 +53,17 @@ public class ASTTest {
 
             assertThat(new Abs(new Int(3)).toString(), is("Abs{expression=Int{value=3}}"));
             assertThat(new Abs(new Sin(new Variable(1))).toString(),
-                    is("Abs{expression=Sin{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Sin{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void addition() {
 
             assertThat(new Addition(new Int(3), new Variable(0)).toString(),
-                    is("Addition{left=Int{value=3}, right=Variable{index=0}}"));
+                    is("Addition{left=Int{value=3}, right=Variable{index=0, indexExpression=null}}"));
             assertThat(new Addition(new Addition(new Int(3), new Parameter(3)), Constant.E).toString(),
-                    is("Addition{left=Addition{left=Int{value=3}, right=Parameter{index=3}}, right=E}"));
+                    is("Addition{left=Addition{left=Int{value=3}, right=Parameter{index=3, " +
+                            "indexExpression=null}}, right=E}"));
         }
 
         @Test
@@ -70,14 +71,15 @@ public class ASTTest {
 
             assertThat(new Arccos(new Int(3)).toString(), is("Arccos{expression=Int{value=3}}"));
             assertThat(new Arccos(new Cos(new Variable(1))).toString(),
-                    is("Arccos{expression=Cos{expression=Variable{index=1}}}"));
+                    is("Arccos{expression=Cos{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void arcosh() {
 
             assertThat(new Arcosh(new Multiplication(new Variable(0), new Variable(0))).toString(),
-                    is("Arcosh{expression=Multiplication{left=Variable{index=0}, right=Variable{index=0}}}"));
+                    is("Arcosh{expression=Multiplication{left=Variable{index=0, indexExpression=null}, " +
+                            "right=Variable{index=0, indexExpression=null}}}"));
             assertThat(new Arcosh(new Sin(Constant.PI)).toString(), is("Arcosh{expression=Sin{expression=PI}}"));
         }
 
@@ -87,14 +89,16 @@ public class ASTTest {
             assertThat(new Arcsin(new Arcsin(new Doub(3.99))).toString(),
                     is("Arcsin{expression=Arcsin{expression=Doub{value=3.99}}}"));
             assertThat(new Division(new Int(1), new Arcsin(new Variable(1))).toString(),
-                    is("Division{left=Int{value=1}, right=Arcsin{expression=Variable{index=1}}}"));
+                    is("Division{left=Int{value=1}, right=Arcsin{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void arctan() {
 
-            assertThat(new Arctan(new Variable(0)).toString(), is("Arctan{expression=Variable{index=0}}"));
-            assertThat(new Arctan(new Variable(1)).toString(), is("Arctan{expression=Variable{index=1}}"));
+            assertThat(new Arctan(new Variable(0)).toString(), is("Arctan{expression=Variable{index=0, " +
+                    "indexExpression=null}}"));
+            assertThat(new Arctan(new Variable(1)).toString(), is("Arctan{expression=Variable{index=1, " +
+                    "indexExpression=null}}"));
         }
 
         @Test
@@ -103,7 +107,7 @@ public class ASTTest {
             assertThat(new Arsinh(new Exp(new Int(3))).toString(),
                     is("Arsinh{expression=Exp{expression=Int{value=3}}}"));
             assertThat(new Arsinh(new Tan(new Variable(1))).toString(),
-                    is("Arsinh{expression=Tan{expression=Variable{index=1}}}"));
+                    is("Arsinh{expression=Tan{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -111,7 +115,7 @@ public class ASTTest {
 
             assertThat(new Artanh(new Doub(4.88)).toString(), is("Artanh{expression=Doub{value=4.88}}"));
             assertThat(new Sin(new Artanh(new Sin(new Variable(1)))).toString(),
-                    is("Sin{expression=Artanh{expression=Sin{expression=Variable{index=1}}}}"));
+                    is("Sin{expression=Artanh{expression=Sin{expression=Variable{index=1, indexExpression=null}}}}"));
         }
 
         @Test
@@ -135,7 +139,7 @@ public class ASTTest {
 
             assertThat(new Cos(new Int(3)).toString(), is("Cos{expression=Int{value=3}}"));
             assertThat(new Cos(new Sin(new Variable(1))).toString(),
-                    is("Cos{expression=Sin{expression=Variable{index=1}}}"));
+                    is("Cos{expression=Sin{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -143,16 +147,16 @@ public class ASTTest {
 
             assertThat(new Cosh(new Int(3)).toString(), is("Cosh{expression=Int{value=3}}"));
             assertThat(new Abs(new Cosh(new Variable(1))).toString(),
-                    is("Abs{expression=Cosh{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Cosh{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void division() {
 
             assertThat(new Division(new Parameter(0), new Parameter(1)).toString(),
-                    is("Division{left=Parameter{index=0}, right=Parameter{index=1}}"));
+                    is("Division{left=Parameter{index=0, indexExpression=null}, right=Parameter{index=1, indexExpression=null}}"));
             assertThat(new Round(new Division(new Variable(0), Constant.PI)).toString(),
-                    is("Round{expression=Division{left=Variable{index=0}, right=PI}}"));
+                    is("Round{expression=Division{left=Variable{index=0, indexExpression=null}, right=PI}}"));
         }
 
         @Test
@@ -167,14 +171,14 @@ public class ASTTest {
 
             assertThat(new Exp(new Int(3)).toString(), is("Exp{expression=Int{value=3}}"));
             assertThat(new Abs(new Exp(new Variable(1))).toString(),
-                    is("Abs{expression=Exp{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Exp{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void faculty() {
 
             assertThat(new Faculty(new Round(new Pos(new Parameter(0)))).toString(),
-                    is("Faculty{intExpression=Round{expression=Pos{expression=Parameter{index=0}}}}"));
+                    is("Faculty{intExpression=Round{expression=Pos{expression=Parameter{index=0, indexExpression=null}}}}"));
             assertThat(new Abs(new Faculty(new Int(1))).toString(),
                     is("Abs{expression=Faculty{intExpression=Int{value=1}}}"));
         }
@@ -184,7 +188,7 @@ public class ASTTest {
 
             assertThat(new Ln(new Int(3)).toString(), is("Ln{expression=Int{value=3}}"));
             assertThat(new Ln(new Ln(new Variable(1))).toString(),
-                    is("Ln{expression=Ln{expression=Variable{index=1}}}"));
+                    is("Ln{expression=Ln{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -192,10 +196,18 @@ public class ASTTest {
 
             assertThat(new Multiplication(new Multiplication(new Variable(0), new Parameter(0)),
                             new Multiplication(new Variable(1), new Parameter(1))).toString(),
-                    is("Multiplication{left=Multiplication{left=Variable{index=0}, right=Parameter{index=0}}, " +
-                            "right=Multiplication{left=Variable{index=1}, right=Parameter{index=1}}}"));
+                    is("Multiplication{left=Multiplication{left=Variable{index=0, indexExpression=null}, " +
+                            "right=Parameter{index=0, indexExpression=null}}, right=Multiplication{left=" +
+                            "Variable{index=1, indexExpression=null}, right=Parameter{index=1, indexExpression=null}}}"));
             assertThat(new Tanh(new Multiplication(new Variable(1), Constant.E)).toString(),
-                    is("Tanh{expression=Multiplication{left=Variable{index=1}, right=E}}"));
+                    is("Tanh{expression=Multiplication{left=Variable{index=1, indexExpression=null}, right=E}}"));
+        }
+
+        @Test
+        public void multiplicationWithIntExpressions() {
+
+            assertThat(new Multiplication(new Int(3), new Faculty(new Int(4))).toString(),
+                    is("Multiplication{left=Int{value=3}, right=Faculty{intExpression=Int{value=4}}}"));
         }
 
         @Test
@@ -204,7 +216,7 @@ public class ASTTest {
             assertThat(new Abs(new Neg(new Int(-3))).toString(),
                     is("Abs{expression=Neg{expression=Int{value=-3}}}"));
             assertThat(new Neg(new Sin(new Variable(1))).toString(),
-                    is("Neg{expression=Sin{expression=Variable{index=1}}}"));
+                    is("Neg{expression=Sin{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -222,16 +234,18 @@ public class ASTTest {
             assertThat(new Parenthesis(new Parenthesis(new Int(3))).toString(),
                     is("Parenthesis{expression=Parenthesis{expression=Int{value=3}}}"));
             assertThat(new Abs(new Parenthesis(new Variable(1))).toString(),
-                    is("Abs{expression=Parenthesis{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Parenthesis{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void power() {
 
             assertThat(new Power(new Variable(0), new Parameter(0)).toString(),
-                    is("Power{left=Variable{index=0}, right=Parameter{index=0}}"));
+                    is("Power{left=Variable{index=0, indexExpression=null}, right=Parameter{index=0, " +
+                            "indexExpression=null}}"));
             assertThat(new Abs(new Power(new Variable(0), new Parameter(0))).toString(),
-                    is("Abs{expression=Power{left=Variable{index=0}, right=Parameter{index=0}}}"));
+                    is("Abs{expression=Power{left=Variable{index=0, indexExpression=null}, right=" +
+                            "Parameter{index=0, indexExpression=null}}}"));
         }
 
         @Test
@@ -239,7 +253,7 @@ public class ASTTest {
 
             assertThat(new Round(new Int(3)).toString(), is("Round{expression=Int{value=3}}"));
             assertThat(new Round(new Round(new Variable(1))).toString(),
-                    is("Round{expression=Round{expression=Variable{index=1}}}"));
+                    is("Round{expression=Round{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -247,7 +261,7 @@ public class ASTTest {
 
             assertThat(new Sinh(new Int(3)).toString(), is("Sinh{expression=Int{value=3}}"));
             assertThat(new Abs(new Sinh(new Variable(1))).toString(),
-                    is("Abs{expression=Sinh{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Sinh{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -255,16 +269,17 @@ public class ASTTest {
 
             assertThat(new Sqrt(new Int(3)).toString(), is("Sqrt{expression=Int{value=3}}"));
             assertThat(new Sqrt(new Abs(new Variable(1))).toString(),
-                    is("Sqrt{expression=Abs{expression=Variable{index=1}}}"));
+                    is("Sqrt{expression=Abs{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
         public void subtraction() {
 
             assertThat(new Subtraction(new Variable(0), new Variable(0)).toString(),
-                    is("Subtraction{left=Variable{index=0}, right=Variable{index=0}}"));
+                    is("Subtraction{left=Variable{index=0, indexExpression=null}, " +
+                            "right=Variable{index=0, indexExpression=null}}"));
             assertThat(new Abs(new Subtraction(new Variable(1), Constant.BOLTZMANN)).toString(),
-                    is("Abs{expression=Subtraction{left=Variable{index=1}, right=BOLTZMANN}}"));
+                    is("Abs{expression=Subtraction{left=Variable{index=1, indexExpression=null}, right=BOLTZMANN}}"));
         }
 
         @Test
@@ -272,7 +287,7 @@ public class ASTTest {
 
             assertThat(new Tan(new Int(3)).toString(), is("Tan{expression=Int{value=3}}"));
             assertThat(new Abs(new Tan(new Variable(1))).toString(),
-                    is("Abs{expression=Tan{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Tan{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -280,7 +295,7 @@ public class ASTTest {
 
             assertThat(new Tanh(new Int(3)).toString(), is("Tanh{expression=Int{value=3}}"));
             assertThat(new Abs(new Tanh(new Variable(1))).toString(),
-                    is("Abs{expression=Tanh{expression=Variable{index=1}}}"));
+                    is("Abs{expression=Tanh{expression=Variable{index=1, indexExpression=null}}}"));
         }
 
         @Test
@@ -293,21 +308,50 @@ public class ASTTest {
         public void forLoop() {
 
             assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1)))).toString(),
-                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1}}, " +
-                            "end=Round{expression=Parameter{index=2}}, step=Round{expression=Parameter{index=3}}, " +
-                            "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=" +
-                            "Variable{index=1}}], markovShift=Optional.empty}}"));
+                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1, indexExpression=null}}, " +
+                            "end=Round{expression=Parameter{index=2, indexExpression=null}}, step=Round{expression=" +
+                            "Parameter{index=3, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=[" +
+                            "Function{index=0, expression=Variable{index=1, indexExpression=null}}], " +
+                            "markovShift=Optional.empty}}"));
         }
 
         @Test
         public void markovShift() {
 
             assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(
-                            new MarkovShift(0), new Function(0, new Variable(1)))).toString(),
-                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1}}, " +
-                            "end=Round{expression=Parameter{index=2}}, step=Round{expression=Parameter{index=3}}, " +
-                            "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, " +
-                            "expression=Variable{index=1}}], markovShift=Optional[MarkovShift{offset=0}]}}"));
+                            new MarkovShift(new Int(0)), new Function(0, new Variable(1)))).toString(),
+                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1, indexExpression=null}}, " +
+                            "end=Round{expression=Parameter{index=2, indexExpression=null}}, step=Round{expression=" +
+                            "Parameter{index=3, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=" +
+                            "[Function{index=0, expression=Variable{index=1, indexExpression=null}}], markovShift=" +
+                            "Optional[MarkovShift{offset=Int{value=0}}]}}"));
+        }
+
+        @Test
+        public void variableWithIntExpression() {
+
+            assertThat(new Variable(new Binomial(new ForVar("i"), new Int(10))).toString(),
+                    is("Variable{index=-1, indexExpression=Binomial{n=ForVar{variableName=i}, k=Int{value=10}}}"));
+            assertThat(new Variable(new Faculty(new Addition(new ForVar("i"), new Int(1)))).toString(),
+                    is("Variable{index=-1, indexExpression=Faculty{intExpression=Addition{left=" +
+                            "ForVar{variableName=i}, right=Int{value=1}}}}"));
+        }
+
+        @Test
+        public void parameterWithIntExpression() {
+
+            assertThat(new Parameter(new Binomial(new ForVar("i"), new Int(10))).toString(),
+                    is("Parameter{index=-1, indexExpression=Binomial{n=ForVar{variableName=i}, k=Int{value=10}}}"));
+            assertThat(new Parameter(new Faculty(new Addition(new ForVar("i"), new Int(1)))).toString(),
+                    is("Parameter{index=-1, indexExpression=Faculty{intExpression=Addition{left=" +
+                            "ForVar{variableName=i}, right=Int{value=1}}}}"));
+        }
+
+        @Test
+        public void markovShiftWithIntExpression() {
+
+            assertThat(new MarkovShift(new Faculty(new ForVar("i"))).toString(),
+                    is("MarkovShift{offset=Faculty{intExpression=ForVar{variableName=i}}}"));
         }
 
     }
@@ -1060,9 +1104,9 @@ public class ASTTest {
         @Test
         public void markovShift() {
 
-            MarkovShift ms1 = new MarkovShift(0);
-            MarkovShift ms2 = new MarkovShift(0);
-            MarkovShift ms3 = new MarkovShift(1);
+            MarkovShift ms1 = new MarkovShift(new Int(0));
+            MarkovShift ms2 = new MarkovShift(new Int(0));
+            MarkovShift ms3 = new MarkovShift(new Int(1));
             FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
 
             assertThat(ms1.equals(ms2), is(true));
@@ -1073,6 +1117,42 @@ public class ASTTest {
 
             assertThat(ms1.hashCode(), is(ms2.hashCode()));
             assertThat(ms1.hashCode(), is(not(ms3.hashCode())));
+        }
+
+        @Test
+        public void parameterWithIntExpression() {
+
+            Variable v1 = new Variable(new Faculty(new ForVar("i")));
+            Variable v2 = new Variable(new Faculty(new ForVar("i")));
+            Variable v3 = new Variable(new Faculty(new ForVar("j")));
+            Variable v4 = new Variable(10);
+
+            assertThat(v1.equals(v2), is(true));
+            assertThat(v1.equals(v3), is(false));
+            assertThat(v1.equals(v4), is(false));
+            assertThat(v1.equals(null), is(false));
+            assertThat(v1.equals(v1), is(true));
+
+            assertThat(v1.hashCode(), is(v2.hashCode()));
+            assertThat(v1.hashCode(), is(not(v3.hashCode())));
+        }
+
+        @Test
+        public void variableWithIntExpression() {
+
+            Parameter p1 = new Parameter(new Faculty(new ForVar("i")));
+            Parameter p2 = new Parameter(new Faculty(new ForVar("i")));
+            Parameter p3 = new Parameter(new Faculty(new ForVar("j")));
+            Parameter p4 = new Parameter(10);
+
+            assertThat(p1.equals(p2), is(true));
+            assertThat(p1.equals(p3), is(false));
+            assertThat(p1.equals(p4), is(false));
+            assertThat(p1.equals(null), is(false));
+            assertThat(p1.equals(p1), is(true));
+
+            assertThat(p1.hashCode(), is(p2.hashCode()));
+            assertThat(p1.hashCode(), is(not(p3.hashCode())));
         }
 
     }

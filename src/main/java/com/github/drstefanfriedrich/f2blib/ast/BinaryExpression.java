@@ -39,6 +39,14 @@ public abstract class BinaryExpression implements Expression {
         return right.accept(visitor);
     }
 
+    public boolean leftEvaluatesToDouble() {
+        return left.evaluatesToDouble();
+    }
+
+    public boolean rightEvaluatesToDouble() {
+        return right.evaluatesToDouble();
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -63,6 +71,11 @@ public abstract class BinaryExpression implements Expression {
     @Override
     public int hashCode() {
         return Objects.hash(left, right);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return leftEvaluatesToDouble() || rightEvaluatesToDouble();
     }
 
 }

@@ -130,7 +130,7 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
             FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
 
             double[] x = new double[]{xValue};
-            double[] p = new double[]{};
+            double[] p = new double[]{0};
             double[] y = new double[1];
 
             functionEvaluation.eval(p, x, y);

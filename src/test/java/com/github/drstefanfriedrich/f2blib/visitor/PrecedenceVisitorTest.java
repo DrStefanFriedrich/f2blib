@@ -87,7 +87,7 @@ public class PrecedenceVisitorTest {
 
         assertException();
 
-        new MarkovShift(0).accept(underTest);
+        new MarkovShift(new Int(0)).accept(underTest);
     }
 
 }

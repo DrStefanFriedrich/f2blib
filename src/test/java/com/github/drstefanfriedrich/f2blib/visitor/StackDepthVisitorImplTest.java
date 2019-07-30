@@ -103,11 +103,33 @@ public class StackDepthVisitorImplTest {
     public void functionWithForLoopAndMarkovShift() {
 
         FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(0), new Function(0, new ForVar("k"))))));
+                new FunctionsWrapper(new MarkovShift(new Int(0)), new Function(0, new ForVar("k"))))));
 
         fd.accept(underTest);
 
         assertThat(underTest.getMaxStackDepth(), is(9));
+    }
+
+    @Test
+    public void variableWithIntExpression() {
+
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
+                new Sin(new Variable(new Addition(new Int(0), new Int(1)))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getMaxStackDepth(), is(8));
+    }
+
+    @Test
+    public void parameterWithIntExpression() {
+
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
+                new Sin(new Parameter(new Addition(new Int(0), new Int(1)))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getMaxStackDepth(), is(8));
     }
 
 }

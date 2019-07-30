@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public final class Parenthesis extends UnaryExpression {
+public final class Parenthesis extends UnaryExpression implements IntExpression {
 
     public Parenthesis(Expression expression) {
         super(expression);
@@ -26,6 +26,11 @@ public final class Parenthesis extends UnaryExpression {
     @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitParenthesis(this);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return expression.evaluatesToDouble();
     }
 
 }

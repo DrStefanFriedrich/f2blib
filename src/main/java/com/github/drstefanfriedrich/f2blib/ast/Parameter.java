@@ -26,6 +26,10 @@ public final class Parameter extends IndexedExpression {
         super(index);
     }
 
+    public Parameter(IntExpression indexExpression) {
+        super(indexExpression);
+    }
+
     @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitParameter(this);

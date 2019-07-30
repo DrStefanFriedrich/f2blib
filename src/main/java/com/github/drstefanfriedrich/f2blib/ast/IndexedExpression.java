@@ -27,8 +27,20 @@ public abstract class IndexedExpression implements Expression {
      */
     private final int index;
 
+    private final IntExpression indexExpression;
+
     public IndexedExpression(int index) {
         this.index = index;
+        this.indexExpression = null;
+    }
+
+    public IndexedExpression(IntExpression indexExpression) {
+        this.index = -1;
+        this.indexExpression = indexExpression;
+    }
+
+    public IntExpression getIndexExpression() {
+        return indexExpression;
     }
 
     public int getIndex() {
@@ -39,6 +51,7 @@ public abstract class IndexedExpression implements Expression {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("index", index)
+                .add("indexExpression", indexExpression)
                 .toString();
     }
 
@@ -51,12 +64,18 @@ public abstract class IndexedExpression implements Expression {
             return false;
         }
         IndexedExpression that = (IndexedExpression) o;
-        return index == that.index;
+        return index == that.index &&
+                Objects.equals(indexExpression, that.indexExpression);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(index);
+        return Objects.hash(index, indexExpression);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return true;
     }
 
 }

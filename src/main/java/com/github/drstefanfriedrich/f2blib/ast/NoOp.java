@@ -33,4 +33,9 @@ public class NoOp implements Expression {
         return visitor.visitNoOp(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        throw new IllegalStateException("This method must not be called");
+    }
+
 }

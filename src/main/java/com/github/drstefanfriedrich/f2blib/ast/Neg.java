@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * -expression, i.e. the unary negation operator.
  */
-public final class Neg extends UnaryExpression {
+public final class Neg extends UnaryExpression implements IntExpression {
 
     public Neg(Expression expression) {
         super(expression);
@@ -26,6 +26,11 @@ public final class Neg extends UnaryExpression {
     @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitNeg(this);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return expression.evaluatesToDouble();
     }
 
 }

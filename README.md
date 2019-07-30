@@ -262,7 +262,6 @@ $ ./gradlew -Dcom.github.drstefanfriedrich.f2blib.performancetest.enabled=true
 
 * Right now variables must be named x_i, where i is an integer and parameters must be named p_j, where j is
   an integer.
-* The maximum number of parameters and variables is 128, respectively.
 
 
 ## References

@@ -28,4 +28,13 @@ public final class Round extends UnaryExpression implements IntExpression {
         return visitor.visitRound(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return false;
+    }
+
+    public boolean expressionEvaluatesToDouble() {
+        return expression.evaluatesToDouble();
+    }
+
 }

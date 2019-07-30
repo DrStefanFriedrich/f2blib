@@ -28,4 +28,9 @@ public final class Int extends SingleValuedExpression<Integer> implements IntExp
         return visitor.visitInt(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return false;
+    }
+
 }

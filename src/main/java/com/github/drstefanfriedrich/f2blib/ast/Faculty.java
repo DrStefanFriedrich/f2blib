@@ -28,7 +28,7 @@ public final class Faculty implements IntExpression {
         this.intExpression = intExpression;
     }
 
-    public <T> T acceptIntExpression(Visitor visitor) {
+    public <T> T acceptExpression(Visitor visitor) {
         return intExpression.accept(visitor);
     }
 
@@ -60,6 +60,11 @@ public final class Faculty implements IntExpression {
     @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitFaculty(this);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return false;
     }
 
 }

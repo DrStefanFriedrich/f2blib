@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 public abstract class UnaryExpression implements Expression {
 
-    private final Expression expression;
+    protected final Expression expression;
 
     public UnaryExpression(Expression expression) {
         this.expression = expression;
@@ -54,6 +54,15 @@ public abstract class UnaryExpression implements Expression {
     @Override
     public int hashCode() {
         return Objects.hash(expression);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return true;
+    }
+
+    public boolean expressionEvaluatesToDouble() {
+        return expression.evaluatesToDouble();
     }
 
 }

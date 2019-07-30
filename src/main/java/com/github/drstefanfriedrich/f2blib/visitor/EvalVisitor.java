@@ -26,7 +26,7 @@ import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
  * A {@link Visitor} implementation that evaluates a mathematical expression
  * given as abstract syntax tree by recursively walking through the tree.
  */
-public class EvalVisitor extends AbstractVisitor {
+public class EvalVisitor extends BaseVisitor {
 
     private final double[] x;
 
@@ -57,12 +57,12 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitAbs(Abs abs) {
-        return Math.abs((double) abs.acceptExpression(this));
+        return Math.abs((Double) abs.acceptExpression(this));
     }
 
     @Override
     public Double visitAddition(Addition addition) {
-        return ((double) addition.acceptLeft(this)) + ((double) addition.acceptRight(this));
+        return ((Double) addition.acceptLeft(this)) + ((Double) addition.acceptRight(this));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitArcosh(Arcosh arcosh) {
-        return ARCOSH.value((double) arcosh.acceptExpression(this));
+        return ARCOSH.value((Double) arcosh.acceptExpression(this));
     }
 
     @Override
@@ -87,12 +87,12 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitArsinh(Arsinh arsinh) {
-        return ARSINH.value((double) arsinh.acceptExpression(this));
+        return ARSINH.value((Double) arsinh.acceptExpression(this));
     }
 
     @Override
     public Double visitArtanh(Artanh artanh) {
-        return ARTANH.value((double) artanh.acceptExpression(this));
+        return ARTANH.value((Double) artanh.acceptExpression(this));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitFaculty(Faculty faculty) {
-        return (double) factorial(((Double) faculty.acceptIntExpression(this)).intValue());
+        return (double) factorial(((Double) faculty.acceptExpression(this)).intValue());
     }
 
     @Override
@@ -131,7 +131,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitDivision(Division division) {
-        return ((double) division.acceptLeft(this)) / ((double) division.acceptRight(this));
+        return ((Double) division.acceptLeft(this)) / ((Double) division.acceptRight(this));
     }
 
     @Override
@@ -235,12 +235,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitMultiplication(Multiplication multiplication) {
-        return ((double) multiplication.acceptLeft(this)) * ((double) multiplication.acceptRight(this));
-    }
-
-    @Override
-    public Double visitParameter(Parameter parameter) {
-        return p[parameter.getIndex()];
+        return ((Double) multiplication.acceptLeft(this)) * ((Double) multiplication.acceptRight(this));
     }
 
     @Override
@@ -255,7 +250,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitRound(Round round) {
-        return (double) Math.round((double) round.acceptExpression(this));
+        return (double) Math.round((Double) round.acceptExpression(this));
     }
 
     @Override
@@ -270,7 +265,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitSubtraction(Subtraction subtraction) {
-        return ((double) subtraction.acceptLeft(this)) - ((double) subtraction.acceptRight(this));
+        return ((Double) subtraction.acceptLeft(this)) - ((Double) subtraction.acceptRight(this));
     }
 
     @Override
@@ -285,12 +280,25 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public Double visitVariable(Variable variable) {
-        return x[variable.getIndex()];
+        if (variable.getIndexExpression() == null) {
+            return x[variable.getIndex()];
+        } else {
+            return x[((Double) variable.getIndexExpression().accept(this)).intValue() - 1];
+        }
+    }
+
+    @Override
+    public Double visitParameter(Parameter parameter) {
+        if (parameter.getIndexExpression() == null) {
+            return p[parameter.getIndex()];
+        } else {
+            return p[((Double) parameter.getIndexExpression().accept(this)).intValue() - 1];
+        }
     }
 
     @Override
     public Double visitNeg(Neg neg) {
-        return -(double) neg.acceptExpression(this);
+        return -(Double) neg.acceptExpression(this);
     }
 
     @Override
@@ -306,7 +314,7 @@ public class EvalVisitor extends AbstractVisitor {
     @Override
     public Double visitMarkovShift(MarkovShift markovShift) {
 
-        int offset = markovShift.getOffset();
+        int offset = ((Double) markovShift.getOffset().accept(this)).intValue();
         int m = y.length;
         int n = x.length;
 

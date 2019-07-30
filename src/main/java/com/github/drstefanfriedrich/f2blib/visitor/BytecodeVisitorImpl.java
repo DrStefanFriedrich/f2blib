@@ -76,12 +76,15 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     public Void visitFunction(Function function) {
 
         int index = function.getIndex();
-
         evalMethod.visitVarInsn(ALOAD, 3); // push y[] on the operand stack
         evalMethod.visitIntInsn(BIPUSH, index);
 
         // Visiting the function expression pushes the result value on the stack
         function.acceptExpression(this);
+
+        if (!function.evaluatesToDouble()) {
+            evalMethod.visitInsn(I2D);
+        }
 
         evalMethod.visitInsn(DASTORE);
 
@@ -108,17 +111,33 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitParameter(Parameter parameter) {
-        evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
-        evalMethod.visitIntInsn(BIPUSH, parameter.getIndex());
-        evalMethod.visitInsn(DALOAD);
+        if (parameter.getIndexExpression() == null) {
+            evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
+            evalMethod.visitIntInsn(BIPUSH, parameter.getIndex());
+            evalMethod.visitInsn(DALOAD);
+        } else {
+            evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
+            parameter.getIndexExpression().accept(this);
+            evalMethod.visitInsn(ICONST_M1);
+            evalMethod.visitInsn(IADD);
+            evalMethod.visitInsn(DALOAD);
+        }
         return null;
     }
 
     @Override
     public Void visitVariable(Variable variable) {
-        evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
-        evalMethod.visitIntInsn(BIPUSH, variable.getIndex());
-        evalMethod.visitInsn(DALOAD);
+        if (variable.getIndexExpression() == null) {
+            evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+            evalMethod.visitIntInsn(BIPUSH, variable.getIndex());
+            evalMethod.visitInsn(DALOAD);
+        } else {
+            evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
+            variable.getIndexExpression().accept(this);
+            evalMethod.visitInsn(ICONST_M1);
+            evalMethod.visitInsn(IADD);
+            evalMethod.visitInsn(DALOAD);
+        }
         return null;
     }
 
@@ -222,7 +241,12 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     public Void visitNeg(Neg neg) {
 
         neg.acceptExpression(this);
-        evalMethod.visitInsn(DNEG);
+
+        if (neg.evaluatesToDouble()) {
+            evalMethod.visitInsn(DNEG);
+        } else {
+            evalMethod.visitInsn(INEG);
+        }
 
         return null;
     }
@@ -235,33 +259,137 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitAddition(Addition addition) {
-        addition.acceptLeft(this);
-        addition.acceptRight(this);
-        evalMethod.visitInsn(DADD);
+
+        if (addition.leftEvaluatesToDouble() && addition.rightEvaluatesToDouble()) {
+
+            addition.acceptLeft(this);
+            addition.acceptRight(this);
+            evalMethod.visitInsn(DADD);
+
+        } else if (!addition.leftEvaluatesToDouble() && addition.rightEvaluatesToDouble()) {
+
+            addition.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
+            addition.acceptRight(this);
+            evalMethod.visitInsn(DADD);
+
+        } else if (addition.leftEvaluatesToDouble() && !addition.rightEvaluatesToDouble()) {
+
+            addition.acceptLeft(this);
+            addition.acceptRight(this);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitInsn(DADD);
+
+        } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
+
+            addition.acceptLeft(this);
+            addition.acceptRight(this);
+            evalMethod.visitInsn(IADD);
+
+        }
+
         return null;
     }
 
     @Override
     public Void visitSubtraction(Subtraction subtraction) {
-        subtraction.acceptLeft(this);
-        subtraction.acceptRight(this);
-        evalMethod.visitInsn(DSUB);
+
+        if (subtraction.leftEvaluatesToDouble() && subtraction.rightEvaluatesToDouble()) {
+
+            subtraction.acceptLeft(this);
+            subtraction.acceptRight(this);
+            evalMethod.visitInsn(DSUB);
+
+        } else if (!subtraction.leftEvaluatesToDouble() && subtraction.rightEvaluatesToDouble()) {
+
+            subtraction.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
+            subtraction.acceptRight(this);
+            evalMethod.visitInsn(DSUB);
+
+        } else if (subtraction.leftEvaluatesToDouble() && !subtraction.rightEvaluatesToDouble()) {
+
+            subtraction.acceptLeft(this);
+            subtraction.acceptRight(this);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitInsn(DSUB);
+
+        } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
+
+            subtraction.acceptLeft(this);
+            subtraction.acceptRight(this);
+            evalMethod.visitInsn(ISUB);
+
+        }
+
         return null;
     }
 
     @Override
     public Void visitMultiplication(Multiplication multiplication) {
-        multiplication.acceptLeft(this);
-        multiplication.acceptRight(this);
-        evalMethod.visitInsn(DMUL);
+
+        if (multiplication.leftEvaluatesToDouble() && multiplication.rightEvaluatesToDouble()) {
+
+            multiplication.acceptLeft(this);
+            multiplication.acceptRight(this);
+            evalMethod.visitInsn(DMUL);
+
+        } else if (!multiplication.leftEvaluatesToDouble() && multiplication.rightEvaluatesToDouble()) {
+
+            multiplication.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
+            multiplication.acceptRight(this);
+            evalMethod.visitInsn(DMUL);
+
+        } else if (multiplication.leftEvaluatesToDouble() && !multiplication.rightEvaluatesToDouble()) {
+
+            multiplication.acceptLeft(this);
+            multiplication.acceptRight(this);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitInsn(DMUL);
+
+        } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
+
+            multiplication.acceptLeft(this);
+            multiplication.acceptRight(this);
+            evalMethod.visitInsn(IMUL);
+
+        }
+
         return null;
     }
 
     @Override
     public Void visitDivision(Division division) {
-        division.acceptLeft(this);
-        division.acceptRight(this);
-        evalMethod.visitInsn(DDIV);
+
+        if (division.leftEvaluatesToDouble() && division.rightEvaluatesToDouble()) {
+
+            division.acceptLeft(this);
+            division.acceptRight(this);
+            evalMethod.visitInsn(DDIV);
+
+        } else if (!division.leftEvaluatesToDouble() && division.rightEvaluatesToDouble()) {
+
+            division.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
+            division.acceptRight(this);
+            evalMethod.visitInsn(DDIV);
+
+        } else if (division.leftEvaluatesToDouble() && !division.rightEvaluatesToDouble()) {
+
+            division.acceptLeft(this);
+            division.acceptRight(this);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitInsn(DDIV);
+
+        } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
+
+            division.acceptLeft(this);
+            division.acceptRight(this);
+            evalMethod.visitInsn(IDIV);
+
+        }
+
         return null;
     }
 
@@ -269,13 +397,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     public Void visitBinomial(Binomial binomial) {
 
         binomial.acceptN(this);
-        evalMethod.visitInsn(D2I);
-
         binomial.acceptK(this);
-        evalMethod.visitInsn(D2I);
 
         evalMethod.visitMethodInsn(INVOKESTATIC, COMBINATORICS_UTILS, "binomialCoefficient", "(II)J", false);
-        evalMethod.visitInsn(L2D);
+        evalMethod.visitInsn(L2I);
 
         return null;
     }
@@ -283,18 +408,17 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitFaculty(Faculty faculty) {
 
-        faculty.acceptIntExpression(this);
-        evalMethod.visitInsn(D2I);
+        faculty.acceptExpression(this);
 
         evalMethod.visitMethodInsn(INVOKESTATIC, COMBINATORICS_UTILS, "factorial", "(I)J", false);
-        evalMethod.visitInsn(L2D);
+        evalMethod.visitInsn(L2I);
 
         return null;
     }
 
     @Override
     public Void visitInt(Int i) {
-        evalMethod.visitLdcInsn((double) i.getValue());
+        evalMethod.visitLdcInsn(i.getValue());
         return null;
     }
 
@@ -306,18 +430,50 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visitPower(Power power) {
-        power.acceptLeft(this);
-        power.acceptRight(this);
-        evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+
+        if (power.leftEvaluatesToDouble() && power.rightEvaluatesToDouble()) {
+
+            power.acceptLeft(this);
+            power.acceptRight(this);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+
+        } else if (!power.leftEvaluatesToDouble() && power.rightEvaluatesToDouble()) {
+
+            power.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
+            power.acceptRight(this);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+
+        } else if (power.leftEvaluatesToDouble() && !power.rightEvaluatesToDouble()) {
+
+            power.acceptLeft(this);
+            power.acceptRight(this);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+
+        } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
+
+            power.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
+            power.acceptRight(this);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+            evalMethod.visitInsn(D2I);
+
+        }
+
         return null;
     }
 
     @Override
     public Void visitRound(Round round) {
-        // Visiting the expression pushes the result (of type double) on the stack
+        // Visiting the expression pushes the result (of type double or int) on the stack
         round.acceptExpression(this);
+        if (!round.expressionEvaluatesToDouble()) {
+            evalMethod.visitInsn(I2D);
+        }
         evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "round", "(D)J", false);
-        evalMethod.visitInsn(L2D);
+        evalMethod.visitInsn(L2I);
         return null;
     }
 
@@ -350,13 +506,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         // Calculate the integers on the stack and store them
         forLoop.acceptStart(this);
-        evalMethod.visitInsn(D2I);
         evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
         forLoop.acceptEnd(this);
-        evalMethod.visitInsn(D2I);
         evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopEnd());
         forLoop.acceptStep(this);
-        evalMethod.visitInsn(D2I);
         evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStep());
 
         // Check: step != 0
@@ -415,7 +568,6 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visitForVar(ForVar forVar) {
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
-        evalMethod.visitInsn(I2D);
         return null;
     }
 
@@ -433,7 +585,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         Label forLoopCopyEnd = new Label();
 
         // Calculate 'offset' and store it into a local variable
-        evalMethod.visitLdcInsn(markovShift.getOffset());
+        markovShift.getOffset().accept(this);
         evalMethod.visitVarInsn(ISTORE, localVariables.getMarkovShiftOffset());
 
         // Calculate 'm' and store it into a local variable

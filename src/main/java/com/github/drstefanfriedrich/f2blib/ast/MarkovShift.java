@@ -30,9 +30,9 @@ import java.util.Objects;
  */
 public final class MarkovShift implements Serializable, ASTElement {
 
-    private final int offset;
+    private final IntExpression offset;
 
-    public MarkovShift(int offset) {
+    public MarkovShift(IntExpression offset) {
         this.offset = offset;
     }
 
@@ -41,6 +41,10 @@ public final class MarkovShift implements Serializable, ASTElement {
         return MoreObjects.toStringHelper(this)
                 .add("offset", offset)
                 .toString();
+    }
+
+    public IntExpression getOffset() {
+        return offset;
     }
 
     @Override
@@ -52,11 +56,7 @@ public final class MarkovShift implements Serializable, ASTElement {
             return false;
         }
         MarkovShift that = (MarkovShift) o;
-        return offset == that.offset;
-    }
-
-    public int getOffset() {
-        return offset;
+        return Objects.equals(offset, that.offset);
     }
 
     @Override

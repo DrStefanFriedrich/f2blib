@@ -28,4 +28,9 @@ public class Doub extends SingleValuedExpression<Double> {
         return visitor.visitDoub(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return true;
+    }
+
 }

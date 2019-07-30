@@ -38,7 +38,7 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
     @Before
     public void setup() {
         x = new double[1];
-        double[] p = new double[0];
+        double[] p = new double[1];
         evalVisitor = new EvalVisitor(x, p, 1);
     }
 

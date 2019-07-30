@@ -59,7 +59,7 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
         }
 
         if (ctx.offset != null) {
-            return new FunctionsWrapper(result, new MarkovShift(Integer.parseInt(ctx.offset.getText())));
+            return new FunctionsWrapper(result, new MarkovShift((IntExpression) ctx.offset.accept(this)));
         }
 
         return new FunctionsWrapper(result);
@@ -199,12 +199,6 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitBinomial(FunctionsParser.BinomialContext ctx) {
-
-        return new Binomial((IntExpression) ctx.n.accept(this), (IntExpression) ctx.k.accept(this));
-    }
-
-    @Override
     public Object visitDivision(FunctionsParser.DivisionContext ctx) {
 
         return new Division((Expression) ctx.left.accept(this), (Expression) ctx.right.accept(this));
@@ -226,12 +220,6 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     public Object visitAddition(FunctionsParser.AdditionContext ctx) {
 
         return new Addition((Expression) ctx.left.accept(this), (Expression) ctx.right.accept(this));
-    }
-
-    @Override
-    public Object visitFaculty(FunctionsParser.FacultyContext ctx) {
-
-        return new Faculty((IntExpression) ctx.inner.accept(this));
     }
 
     @Override
@@ -259,11 +247,6 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitInteger(FunctionsParser.IntegerContext ctx) {
-        return new Int(Integer.parseInt(ctx.INDEX().getText()));
-    }
-
-    @Override
     public Object visitConst(FunctionsParser.ConstContext ctx) {
 
         if (ctx.value.getText().equals("pi")) {
@@ -278,20 +261,100 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitParam(FunctionsParser.ParamContext ctx) {
-
-        return new Parameter(Integer.parseInt(ctx.param.getText().substring(2)) - 1);
-    }
-
-    @Override
-    public Object visitVar(FunctionsParser.VarContext ctx) {
-
-        return new Variable(Integer.parseInt(ctx.var.getText().substring(2)) - 1);
-    }
-
-    @Override
     public Object visitForVar(FunctionsParser.ForVarContext ctx) {
         return new ForVar(ctx.variableName.getText());
+    }
+
+    @Override
+    public Object visitIaddition(FunctionsParser.IadditionContext ctx) {
+
+        return new Addition((IntExpression) ctx.left.accept(this), (IntExpression) ctx.right.accept(this));
+    }
+
+    @Override
+    public Object visitIsubtraction(FunctionsParser.IsubtractionContext ctx) {
+
+        return new Subtraction((IntExpression) ctx.left.accept(this), (IntExpression) ctx.right.accept(this));
+    }
+
+    @Override
+    public Object visitImultiplication(FunctionsParser.ImultiplicationContext ctx) {
+
+        return new Multiplication((IntExpression) ctx.left.accept(this), (IntExpression) ctx.right.accept(this));
+    }
+
+    @Override
+    public Object visitIdivision(FunctionsParser.IdivisionContext ctx) {
+
+        return new Division((IntExpression) ctx.left.accept(this), (IntExpression) ctx.right.accept(this));
+    }
+
+    @Override
+    public Object visitIneg(FunctionsParser.InegContext ctx) {
+
+        return new Neg((IntExpression) ctx.inner.accept(this));
+    }
+
+    @Override
+    public Object visitIpos(FunctionsParser.IposContext ctx) {
+
+        return new Pos((IntExpression) ctx.inner.accept(this));
+    }
+
+    @Override
+    public Object visitIint(FunctionsParser.IintContext ctx) {
+
+        return new Int(Integer.valueOf(ctx.value.getText()));
+    }
+
+    @Override
+    public Object visitIpower(FunctionsParser.IpowerContext ctx) {
+
+        return new Power((IntExpression) ctx.left.accept(this), (IntExpression) ctx.right.accept(this));
+    }
+
+    @Override
+    public Object visitIforVar(FunctionsParser.IforVarContext ctx) {
+
+        return new ForVar(ctx.variableName.getText());
+    }
+
+    @Override
+    public Object visitIparenthesis(FunctionsParser.IparenthesisContext ctx) {
+
+        return new Parenthesis((IntExpression) ctx.inner.accept(this));
+    }
+
+    @Override
+    public Object visitIfaculty(FunctionsParser.IfacultyContext ctx) {
+
+        return new Faculty((IntExpression) ctx.inner.accept(this));
+    }
+
+    @Override
+    public Object visitIbinomial(FunctionsParser.IbinomialContext ctx) {
+
+        return new Binomial((IntExpression) ctx.n.accept(this), (IntExpression) ctx.k.accept(this));
+    }
+
+    @Override
+    public Object visitVariable(FunctionsParser.VariableContext ctx) {
+
+        if (ctx.intExpression() != null) {
+            return new Variable((IntExpression) ctx.intExpression().accept(this));
+        } else {
+            return new Variable(Integer.parseInt(ctx.VARIABLE().getText().substring(2)) - 1);
+        }
+    }
+
+    @Override
+    public Object visitParameter(FunctionsParser.ParameterContext ctx) {
+
+        if (ctx.intExpression() != null) {
+            return new Parameter((IntExpression) ctx.intExpression().accept(this));
+        } else {
+            return new Parameter(Integer.parseInt(ctx.PARAMETER().getText().substring(2)) - 1);
+        }
     }
 
 }

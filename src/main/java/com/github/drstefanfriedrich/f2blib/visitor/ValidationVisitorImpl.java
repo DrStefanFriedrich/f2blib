@@ -23,7 +23,7 @@ import static java.lang.String.format;
 /**
  * Validates a given abstract syntax tree (AST).
  */
-public class ValidationVisitorImpl extends AbstractVisitor implements ValidationVisitor {
+public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisitor {
 
     private final LocalVariablesImpl localVariables = new LocalVariablesImpl();
 

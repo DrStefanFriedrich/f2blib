@@ -133,7 +133,7 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
 
     @Override
     public Integer visitFaculty(Faculty faculty) {
-        return faculty.acceptIntExpression(this);
+        return faculty.acceptExpression(this);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
 
     @Override
     public Integer visitParameter(Parameter parameter) {
-        return 2;
+        return 2 + (parameter.getIndexExpression() == null ? 0 : (Integer) parameter.getIndexExpression().accept(this));
     }
 
     @Override
@@ -198,7 +198,7 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
 
     @Override
     public Integer visitVariable(Variable variable) {
-        return 2;
+        return 2 + (variable.getIndexExpression() == null ? 0 : (Integer) variable.getIndexExpression().accept(this));
     }
 
     @Override

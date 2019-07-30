@@ -62,4 +62,9 @@ public final class ForVar implements IntExpression, Serializable {
         return visitor.visitForVar(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return false;
+    }
+
 }

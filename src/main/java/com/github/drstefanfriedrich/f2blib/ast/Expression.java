@@ -19,4 +19,7 @@ import java.io.Serializable;
  * differentiated, pretty printed, or converted to JVM bytecode.
  */
 public interface Expression extends Serializable, ASTElement {
+
+    boolean evaluatesToDouble();
+
 }

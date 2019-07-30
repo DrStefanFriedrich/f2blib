@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public final class Subtraction extends BinaryExpression {
+public final class Subtraction extends BinaryExpression implements IntExpression {
 
     public Subtraction(Expression left, Expression right) {
         super(left, right);

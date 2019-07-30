@@ -47,6 +47,14 @@ public class IntegrationTest {
             "    end\n" +
             "end";
 
+    private static final String INDEXED_PARAMS_AND_VARS = "function some.packagename.IndexedParameter;" +
+            "begin" +
+            "    for i from round(p_1) to round(p_2) step round(p_3);" +
+            "    begin" +
+            "        f_1 := p_{i + 1 + round(sin(x_{i * i + 1}))};" +
+            "    end\n" +
+            "end";
+
     @Test
     public void functionFromReadme() {
 
@@ -91,6 +99,20 @@ public class IntegrationTest {
         kernel.eval("some.packagename.GaußSum", p, x, y);
 
         assertThat(y[0], closeTo(5050));
+    }
+
+    @Test
+    public void indexedParamsAndVars() {
+
+        kernel.load(INDEXED_PARAMS_AND_VARS);
+
+        double[] x = new double[]{0, 0};
+        double[] p = new double[]{0, 1, 1, 1};
+        double[] y = new double[1];
+
+        kernel.eval("some.packagename.IndexedParameter", p, x, y);
+
+        assertThat(y[0], closeTo(1));
     }
 
 }

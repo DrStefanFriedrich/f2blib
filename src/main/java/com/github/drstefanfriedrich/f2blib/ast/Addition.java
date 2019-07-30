@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public final class Addition extends BinaryExpression {
+public final class Addition extends BinaryExpression implements IntExpression {
 
     public Addition(Expression left, Expression right) {
         super(left, right);

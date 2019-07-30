@@ -38,6 +38,10 @@ public final class Function implements Serializable, ASTElement {
         this.expression = expression;
     }
 
+    public boolean evaluatesToDouble() {
+        return expression.evaluatesToDouble();
+    }
+
     public int getIndex() {
         return index;
     }

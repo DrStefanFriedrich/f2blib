@@ -142,7 +142,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := binomial(5,sin(1.2));\n" +
-                END, "line: 3, column: 22, message: mismatched input 'sin' expecting {'0', INDEX}");
+                END, "line: 3, column: 22, message: extraneous input 'sin' expecting");
     }
 
     @Test
@@ -246,12 +246,11 @@ public class ParserTest extends AbstractParserTest {
 
     @Test
     public void facultyAndPower() {
-        /* Does not compile: new Faculty(new Faculty(new Power(new Faculty(new Int(3)),new Int(4)))) */
-        assertWrongAST("" +
+        assertAST("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := 3!^4!!;\n" +
-                END, "line: 3, column: 16, message: extraneous input '!' expecting ';'");
+                END, new Faculty(new Faculty(new Power(new Faculty(new Int(3)), new Int(4)))));
     }
 
     @Test
@@ -341,7 +340,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := +p_0;\n" +
-                END, "line: 3, column: 12, message: mismatched input 'p_0' expecting");
+                END, "line: 3, column: 12, message: no viable alternative at input '+p_0', offendingSymbol");
     }
 
     @Test
@@ -350,7 +349,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := p_-1;\n" +
-                END, "line: 3, column: 11, message: extraneous input 'p_' expecting");
+                END, "line: 3, column: 13, message: missing '{' at '-', offendingSymbol");
     }
 
     @Test
@@ -540,7 +539,7 @@ public class ParserTest extends AbstractParserTest {
                 "    f_1 := artanh(tanh(x_1));\n" +
                 "    markov_shift(0);\n" +
                 END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new FunctionsWrapper(
-                new MarkovShift(0), new Function(0, new Artanh(new Tanh(new Variable(0))))))));
+                new MarkovShift(new Int(0)), new Function(0, new Artanh(new Tanh(new Variable(0))))))));
     }
 
     @Test
@@ -555,7 +554,7 @@ public class ParserTest extends AbstractParserTest {
 
     @Test
     public void markovShiftNonInteger() {
-        assertWrongGrammar("" +
+        assertGrammar("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := artanh(tanh(x_1));\n" +
@@ -574,7 +573,79 @@ public class ParserTest extends AbstractParserTest {
                 "    markov_shift(1);\n" +
                 END +
                 END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(1), new Function(0, new ForVar("i")))))));
+                new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new ForVar("i")))))));
+    }
+
+    @Test
+    public void parameterWithIntExpression() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := p_{i!};\n" +
+                END, new Parameter(new Faculty(new ForVar("i"))));
+    }
+
+    @Test
+    public void variableWithIntExpression() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := x_{i!};\n" +
+                END, new Variable(new Faculty(new ForVar("i"))));
+    }
+
+    @Test
+    public void mixedIntAndDouble1() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := 3 * 4 + sin(x_1);\n" +
+                END, new Addition(new Multiplication(new Int(3), new Int(4)), new Sin(new Variable(0))));
+    }
+
+    @Test
+    public void mixedIntAndDouble2() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := sin(x_1) + 3 * 4;\n" +
+                END, new Addition(new Sin(new Variable(0)), new Multiplication(new Int(3), new Int(4))));
+    }
+
+    @Test
+    public void facultyAndMultiplication() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := 3 * 3 ! * 3;\n" +
+                END, new Multiplication(new Int(3), new Multiplication(new Faculty(new Int(3)), new Int(3))));
+    }
+
+    @Test
+    public void powerWithIntExpressions() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := 3!^4!!;\n" +
+                END, new Faculty(new Faculty(new Power(new Faculty(new Int(3)), new Int(4)))));
+    }
+
+    @Test
+    public void powerWithDoubleExpressions() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := sin(x_1)^cos(x_2);\n" +
+                END, new Power(new Sin(new Variable(0)), new Cos(new Variable(1))));
+    }
+
+    @Test
+    public void powerWithDoubleAndIntExpressions() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := 3 + 4^sin(x_1) + 5;\n" +
+                END, new Addition(new Addition(new Int(3), new Power(new Int(4), new Sin(new Variable(0)))), new Int(5)));
     }
 
 }

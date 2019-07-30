@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public final class Division extends BinaryExpression {
+public final class Division extends BinaryExpression implements IntExpression {
 
     public Division(Expression left, Expression right) {
         super(left, right);

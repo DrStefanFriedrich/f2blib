@@ -12,10 +12,7 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
-import com.github.drstefanfriedrich.f2blib.ast.Arcosh;
-import com.github.drstefanfriedrich.f2blib.ast.Arsinh;
-import com.github.drstefanfriedrich.f2blib.ast.Artanh;
-import com.github.drstefanfriedrich.f2blib.ast.UnaryExpression;
+import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 import com.github.drstefanfriedrich.f2blib.impl.FunctionEvaluation;
 import org.objectweb.asm.ClassWriter;
@@ -191,6 +188,10 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
         // Visiting the expression pushes the result (of type double) on the stack
         element.acceptExpression(this);
 
+        if (!element.expressionEvaluatesToDouble()) {
+            evalMethod.visitInsn(I2D);
+        }
+
         evalMethod.visitMethodInsn(INVOKESTATIC, binaryClassName, methodName, "(D)D", false);
     }
 
@@ -201,6 +202,9 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
             evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARSINH, ARSINH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
             element.acceptExpression(this);
+            if (!element.expressionEvaluatesToDouble()) {
+                evalMethod.visitInsn(I2D);
+            }
             evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARSINH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else if (element.getClass() == Arcosh.class) {
@@ -208,6 +212,9 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
             evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARCOSH, ARCOSH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
             element.acceptExpression(this);
+            if (!element.expressionEvaluatesToDouble()) {
+                evalMethod.visitInsn(I2D);
+            }
             evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARCOSH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else if (element.getClass() == Artanh.class) {
@@ -215,6 +222,9 @@ public abstract class AbstractBytecodeVisitor implements BytecodeVisitor {
             evalMethod.visitFieldInsn(GETSTATIC, className.replaceAll("\\.", "/"), ARTANH, ARTANH_TYPE);
             // Visiting the expression pushes the result (of type double) on the stack
             element.acceptExpression(this);
+            if (!element.expressionEvaluatesToDouble()) {
+                evalMethod.visitInsn(I2D);
+            }
             evalMethod.visitMethodInsn(INVOKEVIRTUAL, ARTANH_BIN_CLASS, VALUE_METHOD_NAME, "(D)D", false);
 
         } else {

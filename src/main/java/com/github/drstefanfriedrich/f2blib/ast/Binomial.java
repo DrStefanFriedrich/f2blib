@@ -71,4 +71,9 @@ public final class Binomial implements IntExpression {
         return visitor.visitBinomial(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return false;
+    }
+
 }

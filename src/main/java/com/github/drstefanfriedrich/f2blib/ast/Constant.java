@@ -26,4 +26,9 @@ public enum Constant implements Expression {
         return visitor.visitConstant(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return true;
+    }
+
 }

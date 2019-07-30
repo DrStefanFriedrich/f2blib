@@ -36,17 +36,17 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
 
     private final FunctionDefinition gaußSum = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
             new ForLoop("i", 0, 1, 2,
-                    new FunctionsWrapper(new MarkovShift(1), new Function(0, new Addition(new Variable(1),
+                    new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new Addition(new Variable(1),
                             new ForVar("i")))))));
 
     private final FunctionDefinition markovShiftWithNegativeOffset = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
             new ForLoop("i", 0, 1, 2,
-                    new FunctionsWrapper(new MarkovShift(-1), new Function(0, new Addition(new Variable(1),
+                    new FunctionsWrapper(new MarkovShift(new Int(-1)), new Function(0, new Addition(new Variable(1),
                             new ForVar("i")))))));
 
     private final FunctionDefinition markovShiftWithHugeOffset = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
             new ForLoop("i", 0, 1, 2,
-                    new FunctionsWrapper(new MarkovShift(10), new Function(0, new Addition(new Variable(1),
+                    new FunctionsWrapper(new MarkovShift(new Int(10)), new Function(0, new Addition(new Variable(1),
                             new ForVar("i")))))));
 
     private EvalVisitor evalVisitor;

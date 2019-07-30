@@ -629,7 +629,7 @@ public class PrettyPrintVisitorTest {
     public void markovShift() {
 
         FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(1), new Function(0, new ForVar("i"))))));
+                new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new ForVar("i"))))));
 
         fd.accept(underTest);
 
@@ -640,6 +640,45 @@ public class PrettyPrintVisitorTest {
                 "        markov_shift(1);\n" +
                 "    end\n" +
                 "end\n"));
+    }
+
+    @Test
+    public void variableWithSimpleIntExpression() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Variable(new Int(4)));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := x_{4};\nend\n"));
+    }
+
+    @Test
+    public void variableWithComplexIntExpression() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Variable(new Faculty(new ForVar("k"))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := x_{k!};\nend\n"));
+    }
+
+    @Test
+    public void parameterWithSimpleIntExpression() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Parameter(new Int(4)));
+
+        fd.accept(underTest);
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := p_{4};\nend\n"));
+    }
+
+    @Test
+    public void parameterWithComplexIntExpression() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Parameter(new Faculty(new ForVar("k"))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := p_{k!};\nend\n"));
     }
 
 }

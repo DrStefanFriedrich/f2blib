@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * a^b.
  */
-public final class Power extends BinaryExpression {
+public final class Power extends BinaryExpression implements IntExpression {
 
     public Power(Expression left, Expression right) {
         super(left, right);

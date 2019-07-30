@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * +expression, i.e. the unary plus sign.
  */
-public final class Pos extends UnaryExpression {
+public final class Pos extends UnaryExpression implements IntExpression {
 
     public Pos(Expression expression) {
         super(expression);
@@ -26,6 +26,11 @@ public final class Pos extends UnaryExpression {
     @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitPos(this);
+    }
+
+    @Override
+    public boolean evaluatesToDouble() {
+        return expression.evaluatesToDouble();
     }
 
 }

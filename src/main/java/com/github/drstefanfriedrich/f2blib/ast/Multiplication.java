@@ -17,7 +17,7 @@ import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 /**
  * Nomen est omen.
  */
-public final class Multiplication extends BinaryExpression {
+public final class Multiplication extends BinaryExpression implements IntExpression {
 
     public Multiplication(Expression left, Expression right) {
         super(left, right);

@@ -24,6 +24,10 @@ public final class Variable extends IndexedExpression {
         super(index);
     }
 
+    public Variable(IntExpression indexExpression) {
+        super(indexExpression);
+    }
+
     @Override
     public <T> T accept(Visitor visitor) {
         return visitor.visitVariable(this);

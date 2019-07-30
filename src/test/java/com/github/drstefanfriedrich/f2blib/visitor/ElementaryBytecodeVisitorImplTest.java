@@ -441,7 +441,7 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
 
         FunctionDefinition fd = new FunctionDefinition("ForLoopGauß", new FunctionBody(
                 new ForLoop("i", 0, 1, 2,
-                        new FunctionsWrapper(new MarkovShift(1), new Function(0, new Addition(new Variable(1),
+                        new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new Addition(new Variable(1),
                                 new ForVar("i")))))));
 
         FunctionEvaluation fe = generateClass(fd);
@@ -459,7 +459,7 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     public void test31() {
 
         FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(-1), new Function(0, new Addition(new Variable(1), new ForVar("k")))))));
+                new FunctionsWrapper(new MarkovShift(new Int(-1)), new Function(0, new Addition(new Variable(1), new ForVar("k")))))));
 
         FunctionEvaluation fe = generateClass(fd);
 
@@ -477,7 +477,7 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     public void test32() {
 
         FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(0),
+                new FunctionsWrapper(new MarkovShift(new Int(0)),
                         new Function(0, new Addition(new Variable(1), new ForVar("k"))),
                         new Function(1, new Addition(new Variable(1), new ForVar("k"))),
                         new Function(2, new Addition(new Variable(1), new ForVar("k")))))));
@@ -507,6 +507,23 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
 
         exception.expect(ArrayIndexOutOfBoundsException.class);
         exception.expectMessage("");
+
+        fe.eval(p, x, y);
+    }
+
+    @Test
+    public void test34() {
+
+        FunctionDefinition fd = new FunctionDefinition("VarAndParamWithIntExpression",
+                new FunctionBody(new FunctionsWrapper(new Function(0, new Addition(
+                        new Parameter(new Subtraction(new Int(5), new Int(4))),
+                        new Variable(new Subtraction(new Int(5), new Int(4))))))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{0};
+        double[] x = new double[]{0};
+        double[] y = new double[1];
 
         fe.eval(p, x, y);
     }

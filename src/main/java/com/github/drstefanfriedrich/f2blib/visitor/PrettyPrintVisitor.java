@@ -144,17 +144,17 @@ public class PrettyPrintVisitor implements Visitor {
 
         String symbol = faculty.accept(symbolVisitor);
         int precedenceThis = faculty.accept(precedenceVisitor);
-        int precedenceInner = faculty.acceptIntExpression(precedenceVisitor);
+        int precedenceInner = faculty.acceptExpression(precedenceVisitor);
 
         if (precedenceThis < precedenceInner) {
 
             pw.print("(");
-            faculty.acceptIntExpression(this);
+            faculty.acceptExpression(this);
             pw.print(")" + symbol);
 
         } else {
 
-            faculty.acceptIntExpression(this);
+            faculty.acceptExpression(this);
             pw.print(symbol);
         }
         return null;
@@ -369,12 +369,6 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitParameter(Parameter parameter) {
-        pw.print("p_" + (parameter.getIndex() + 1));
-        return null;
-    }
-
-    @Override
     public Void visitPower(Power power) {
         printBinaryExpression(power);
         return null;
@@ -418,7 +412,25 @@ public class PrettyPrintVisitor implements Visitor {
 
     @Override
     public Void visitVariable(Variable variable) {
-        pw.print("x_" + (variable.getIndex() + 1));
+        if (variable.getIndexExpression() == null) {
+            pw.print("x_" + (variable.getIndex() + 1));
+        } else {
+            pw.print("x_{");
+            variable.getIndexExpression().accept(this);
+            pw.print("}");
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitParameter(Parameter parameter) {
+        if (parameter.getIndexExpression() == null) {
+            pw.print("p_" + (parameter.getIndex() + 1));
+        } else {
+            pw.print("p_{");
+            parameter.getIndexExpression().accept(this);
+            pw.print("}");
+        }
         return null;
     }
 
@@ -445,7 +457,7 @@ public class PrettyPrintVisitor implements Visitor {
 
         String symbol = markovShift.accept(symbolVisitor);
         pw.print(spaces + symbol + "(");
-        pw.print(markovShift.getOffset());
+        markovShift.getOffset().accept(this);
         pw.println(");");
 
         return null;

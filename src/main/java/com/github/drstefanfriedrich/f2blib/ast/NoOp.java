@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 
 /**
@@ -31,11 +30,6 @@ public class NoOp implements Expression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitNoOp(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitNoOp(this);
     }
 

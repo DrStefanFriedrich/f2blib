@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 
 /**
@@ -26,11 +25,6 @@ public final class Addition extends BinaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitAddition(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitAddition(this);
     }
 

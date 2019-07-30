@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 
 import java.util.Objects;
@@ -37,14 +36,6 @@ public final class Binomial implements IntExpression {
     }
 
     public <T> T acceptK(Visitor visitor) {
-        return k.accept(visitor);
-    }
-
-    public double acceptN(DoubleVisitor visitor) {
-        return n.accept(visitor);
-    }
-
-    public double acceptK(DoubleVisitor visitor) {
         return k.accept(visitor);
     }
 
@@ -77,11 +68,6 @@ public final class Binomial implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitBinomial(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitBinomial(this);
     }
 

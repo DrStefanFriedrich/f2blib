@@ -13,7 +13,6 @@
 package com.github.drstefanfriedrich.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 
 import java.util.Objects;
@@ -30,10 +29,6 @@ public final class Faculty implements IntExpression {
     }
 
     public <T> T acceptIntExpression(Visitor visitor) {
-        return intExpression.accept(visitor);
-    }
-
-    public double acceptIntExpression(DoubleVisitor visitor) {
         return intExpression.accept(visitor);
     }
 
@@ -64,11 +59,6 @@ public final class Faculty implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFaculty(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitFaculty(this);
     }
 

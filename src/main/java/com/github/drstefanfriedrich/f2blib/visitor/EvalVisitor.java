@@ -26,9 +26,7 @@ import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
  * A {@link Visitor} implementation that evaluates a mathematical expression
  * given as abstract syntax tree by recursively walking through the tree.
  */
-public class EvalVisitor implements DoubleVisitor {
-
-    private final IntEvalVisitor intEvalVisitor = new IntEvalVisitor(this);
+public class EvalVisitor extends AbstractVisitor {
 
     private final double[] x;
 
@@ -58,57 +56,57 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
-    public double visitAbs(Abs abs) {
-        return Math.abs(abs.acceptExpression(this));
+    public Double visitAbs(Abs abs) {
+        return Math.abs((double) abs.acceptExpression(this));
     }
 
     @Override
-    public double visitAddition(Addition addition) {
-        return addition.acceptLeft(this) + addition.acceptRight(this);
+    public Double visitAddition(Addition addition) {
+        return ((double) addition.acceptLeft(this)) + ((double) addition.acceptRight(this));
     }
 
     @Override
-    public double visitArccos(Arccos arccos) {
+    public Double visitArccos(Arccos arccos) {
         return Math.acos(arccos.acceptExpression(this));
     }
 
     @Override
-    public double visitArcosh(Arcosh arcosh) {
-        return ARCOSH.value(arcosh.acceptExpression(this));
+    public Double visitArcosh(Arcosh arcosh) {
+        return ARCOSH.value((double) arcosh.acceptExpression(this));
     }
 
     @Override
-    public double visitArcsin(Arcsin arcsin) {
+    public Double visitArcsin(Arcsin arcsin) {
         return Math.asin(arcsin.acceptExpression(this));
     }
 
     @Override
-    public double visitArctan(Arctan arctan) {
+    public Double visitArctan(Arctan arctan) {
         return Math.atan(arctan.acceptExpression(this));
     }
 
     @Override
-    public double visitArsinh(Arsinh arsinh) {
-        return ARSINH.value(arsinh.acceptExpression(this));
+    public Double visitArsinh(Arsinh arsinh) {
+        return ARSINH.value((double) arsinh.acceptExpression(this));
     }
 
     @Override
-    public double visitArtanh(Artanh artanh) {
-        return ARTANH.value(artanh.acceptExpression(this));
+    public Double visitArtanh(Artanh artanh) {
+        return ARTANH.value((double) artanh.acceptExpression(this));
     }
 
     @Override
-    public double visitBinomial(Binomial binomial) {
-        return binomialCoefficient((int) binomial.acceptN(this), (int) binomial.acceptK(this));
+    public Double visitBinomial(Binomial binomial) {
+        return (double) binomialCoefficient(((Double) binomial.acceptN(this)).intValue(), ((Double) binomial.acceptK(this)).intValue());
     }
 
     @Override
-    public double visitFaculty(Faculty faculty) {
-        return factorial((int) faculty.acceptIntExpression(this));
+    public Double visitFaculty(Faculty faculty) {
+        return (double) factorial(((Double) faculty.acceptIntExpression(this)).intValue());
     }
 
     @Override
-    public double visitConstant(Constant constant) {
+    public Double visitConstant(Constant constant) {
         switch (constant) {
             case PI:
                 return Math.PI;
@@ -122,32 +120,32 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
-    public double visitCos(Cos cos) {
+    public Double visitCos(Cos cos) {
         return Math.cos(cos.acceptExpression(this));
     }
 
     @Override
-    public double visitCosh(Cosh cosh) {
+    public Double visitCosh(Cosh cosh) {
         return Math.cosh(cosh.acceptExpression(this));
     }
 
     @Override
-    public double visitDivision(Division division) {
-        return division.acceptLeft(this) / division.acceptRight(this);
+    public Double visitDivision(Division division) {
+        return ((double) division.acceptLeft(this)) / ((double) division.acceptRight(this));
     }
 
     @Override
-    public double visitExp(Exp exp) {
+    public Double visitExp(Exp exp) {
         return Math.exp(exp.acceptExpression(this));
     }
 
     @Override
-    public double visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Double visitFunctionDefinition(FunctionDefinition functionDefinition) {
         return functionDefinition.getFunctionBody().accept(this);
     }
 
     @Override
-    public double visitFunctionBody(FunctionBody functionBody) {
+    public Double visitFunctionBody(FunctionBody functionBody) {
 
         if (functionBody.isForLoop()) {
             return functionBody.getForLoop().accept(this);
@@ -157,21 +155,21 @@ public class EvalVisitor implements DoubleVisitor {
     }
 
     @Override
-    public double visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public Double visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
 
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
 
         functionsWrapper.acceptMarkovShift(this);
 
-        return 0;
+        return 0d;
     }
 
     @Override
-    public double visitForLoop(ForLoop forLoop) {
+    public Double visitForLoop(ForLoop forLoop) {
 
-        int start = forLoop.acceptStart(intEvalVisitor);
-        int end = forLoop.acceptEnd(intEvalVisitor);
-        int step = forLoop.acceptStep(intEvalVisitor);
+        int start = ((Double) forLoop.acceptStart(this)).intValue();
+        int end = ((Double) forLoop.acceptEnd(this)).intValue();
+        int step = ((Double) forLoop.acceptStep(this)).intValue();
 
         if (step == 0) {
 
@@ -197,116 +195,116 @@ public class EvalVisitor implements DoubleVisitor {
             }
         }
 
-        return 0;
+        return 0d;
     }
 
     @Override
-    public double visitFunction(Function function) {
+    public Double visitFunction(Function function) {
 
         int index = function.getIndex();
 
         y[index] = function.acceptExpression(this);
 
-        return 0;
+        return 0d;
     }
 
     @Override
-    public double visitInt(Int i) {
-        return i.getValue();
+    public Double visitInt(Int i) {
+        return (double) i.getValue();
     }
 
     @Override
-    public double visitDoub(Doub doub) {
+    public Double visitDoub(Doub doub) {
         return doub.getValue();
     }
 
     @Override
-    public double visitSqrt(Sqrt sqrt) {
+    public Double visitSqrt(Sqrt sqrt) {
         return Math.sqrt(sqrt.acceptExpression(this));
     }
 
     @Override
-    public double visitNoOp(NoOp noOp) {
+    public Double visitNoOp(NoOp noOp) {
         throw new IllegalStateException("visitNoOp must not be called on the EvalVisitor");
     }
 
     @Override
-    public double visitLn(Ln ln) {
+    public Double visitLn(Ln ln) {
         return Math.log(ln.acceptExpression(this));
     }
 
     @Override
-    public double visitMultiplication(Multiplication multiplication) {
-        return multiplication.acceptLeft(this) * multiplication.acceptRight(this);
+    public Double visitMultiplication(Multiplication multiplication) {
+        return ((double) multiplication.acceptLeft(this)) * ((double) multiplication.acceptRight(this));
     }
 
     @Override
-    public double visitParameter(Parameter parameter) {
+    public Double visitParameter(Parameter parameter) {
         return p[parameter.getIndex()];
     }
 
     @Override
-    public double visitParenthesis(Parenthesis parenthesis) {
+    public Double visitParenthesis(Parenthesis parenthesis) {
         return parenthesis.acceptExpression(this);
     }
 
     @Override
-    public double visitPower(Power power) {
+    public Double visitPower(Power power) {
         return Math.pow(power.acceptLeft(this), power.acceptRight(this));
     }
 
     @Override
-    public double visitRound(Round round) {
-        return Math.round(round.acceptExpression(this));
+    public Double visitRound(Round round) {
+        return (double) Math.round((double) round.acceptExpression(this));
     }
 
     @Override
-    public double visitSin(Sin sin) {
+    public Double visitSin(Sin sin) {
         return Math.sin(sin.acceptExpression(this));
     }
 
     @Override
-    public double visitSinh(Sinh sinh) {
+    public Double visitSinh(Sinh sinh) {
         return Math.sinh(sinh.acceptExpression(this));
     }
 
     @Override
-    public double visitSubtraction(Subtraction subtraction) {
-        return subtraction.acceptLeft(this) - subtraction.acceptRight(this);
+    public Double visitSubtraction(Subtraction subtraction) {
+        return ((double) subtraction.acceptLeft(this)) - ((double) subtraction.acceptRight(this));
     }
 
     @Override
-    public double visitTan(Tan tan) {
+    public Double visitTan(Tan tan) {
         return Math.tan(tan.acceptExpression(this));
     }
 
     @Override
-    public double visitTanh(Tanh tanh) {
+    public Double visitTanh(Tanh tanh) {
         return Math.tanh(tanh.acceptExpression(this));
     }
 
     @Override
-    public double visitVariable(Variable variable) {
+    public Double visitVariable(Variable variable) {
         return x[variable.getIndex()];
     }
 
     @Override
-    public double visitNeg(Neg neg) {
-        return -neg.acceptExpression(this);
+    public Double visitNeg(Neg neg) {
+        return -(double) neg.acceptExpression(this);
     }
 
     @Override
-    public double visitPos(Pos pos) {
+    public Double visitPos(Pos pos) {
         return pos.acceptExpression(this);
     }
 
     @Override
-    public double visitForVar(ForVar forVar) {
-        return forVarValue;
+    public Double visitForVar(ForVar forVar) {
+        return (double) forVarValue;
     }
 
     @Override
-    public double visitMarkovShift(MarkovShift markovShift) {
+    public Double visitMarkovShift(MarkovShift markovShift) {
 
         int offset = markovShift.getOffset();
         int m = y.length;
@@ -329,7 +327,7 @@ public class EvalVisitor implements DoubleVisitor {
             x[i] = y[i - offset];
         }
 
-        return 0;
+        return 0d;
     }
 
 }

@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
@@ -23,7 +22,7 @@ import java.util.Objects;
  * A {@link FunctionDefinition} is the top-level element in the abstract syntax
  * tree, and thus the main entry point for all function evaluation logic.
  */
-public final class FunctionDefinition implements Serializable, ASTElement, DoubleASTElement {
+public final class FunctionDefinition implements Serializable, ASTElement {
 
     private final String name;
 
@@ -74,11 +73,6 @@ public final class FunctionDefinition implements Serializable, ASTElement, Doubl
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunctionDefinition(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitFunctionDefinition(this);
     }
 

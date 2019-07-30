@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.MoreObjects;
@@ -24,7 +23,7 @@ import java.util.Objects;
  * A {@link Function} models a single-valued mathematical function. A function
  * consists of an index n and and expression: f_n := 'expression'.
  */
-public final class Function implements Serializable, ASTElement, DoubleASTElement {
+public final class Function implements Serializable, ASTElement {
 
     /*
      * The index is the subscript, e.g. f_1. Please not we start counting by 1
@@ -49,10 +48,6 @@ public final class Function implements Serializable, ASTElement, DoubleASTElemen
     }
 
     public <T> T acceptExpression(Visitor visitor) {
-        return expression.accept(visitor);
-    }
-
-    public double acceptExpression(DoubleVisitor visitor) {
         return expression.accept(visitor);
     }
 
@@ -84,11 +79,6 @@ public final class Function implements Serializable, ASTElement, DoubleASTElemen
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunction(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitFunction(this);
     }
 

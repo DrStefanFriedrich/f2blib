@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
@@ -60,11 +59,6 @@ public final class ForVar implements IntExpression, Serializable {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitForVar(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitForVar(this);
     }
 

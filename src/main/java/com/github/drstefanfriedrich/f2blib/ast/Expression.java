@@ -18,5 +18,5 @@ import java.io.Serializable;
  * Models a mathematical expression. For example, an expression can be evaluated,
  * differentiated, pretty printed, or converted to JVM bytecode.
  */
-public interface Expression extends Serializable, ASTElement, DoubleASTElement {
+public interface Expression extends Serializable, ASTElement {
 }

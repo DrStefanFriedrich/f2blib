@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
@@ -23,7 +22,7 @@ import java.util.Objects;
  * A {@link FunctionBody} models the actual function definition in form of
  * mathematical expressions or for loops and the like.
  */
-public final class FunctionBody implements Serializable, ASTElement, DoubleASTElement {
+public final class FunctionBody implements Serializable, ASTElement {
 
     private final FunctionsWrapper functionsWrapper;
 
@@ -87,11 +86,6 @@ public final class FunctionBody implements Serializable, ASTElement, DoubleASTEl
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunctionBody(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitFunctionBody(this);
     }
 

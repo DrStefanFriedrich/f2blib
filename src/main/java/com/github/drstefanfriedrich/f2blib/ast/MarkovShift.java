@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
@@ -29,7 +28,7 @@ import java.util.Objects;
  * <code>(x_(offset+1), ..., x_(offset+m))</code> will be filled with the just
  * calculated <code>f(x)</code>.
  */
-public final class MarkovShift implements Serializable, ASTElement, DoubleASTElement {
+public final class MarkovShift implements Serializable, ASTElement {
 
     private final int offset;
 
@@ -67,11 +66,6 @@ public final class MarkovShift implements Serializable, ASTElement, DoubleASTEle
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitMarkovShift(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitMarkovShift(this);
     }
 

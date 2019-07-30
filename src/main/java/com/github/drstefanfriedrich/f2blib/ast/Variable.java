@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 
 /**
@@ -27,11 +26,6 @@ public final class Variable extends IndexedExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitVariable(this);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
         return visitor.visitVariable(this);
     }
 

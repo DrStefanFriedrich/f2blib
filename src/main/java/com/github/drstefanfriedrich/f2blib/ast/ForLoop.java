@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.ast;
 
-import com.github.drstefanfriedrich.f2blib.visitor.DoubleVisitor;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
@@ -24,7 +23,7 @@ import java.util.Objects;
  * be of the form round(p_i). The same holds true for the end expression and the
  * step expression.
  */
-public final class ForLoop implements Serializable, ASTElement, DoubleASTElement {
+public final class ForLoop implements Serializable, ASTElement {
 
     private final String variableName;
 
@@ -68,15 +67,6 @@ public final class ForLoop implements Serializable, ASTElement, DoubleASTElement
 
     public <T> T acceptFunctionsWrapper(Visitor visitor) {
         return functionsWrapper.accept(visitor);
-    }
-
-    public double acceptFunctionsWrapper(DoubleVisitor visitor) {
-        return functionsWrapper.accept(visitor);
-    }
-
-    @Override
-    public double accept(DoubleVisitor visitor) {
-        return visitor.visitForLoop(this);
     }
 
     @Override

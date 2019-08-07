@@ -59,7 +59,7 @@ public final class Faculty implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFaculty(this);
+        return visitor.visit(this);
     }
 
     @Override

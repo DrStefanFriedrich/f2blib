@@ -25,7 +25,7 @@ public final class Pos extends UnaryExpression implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitPos(this);
+        return visitor.visit(this);
     }
 
     @Override

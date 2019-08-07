@@ -25,13 +25,13 @@ public abstract class AbstractVisitor implements Visitor {
     protected final static String UNSUPPORTED_OPERATION = "Unsupported operation";
 
     @Override
-    public <T> T visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public <T> T visit(FunctionDefinition functionDefinition) {
         functionDefinition.getFunctionBody().accept(this);
         return null;
     }
 
     @Override
-    public <T> T visitFunctionBody(FunctionBody functionBody) {
+    public <T> T visit(FunctionBody functionBody) {
 
         if (functionBody.isForLoop()) {
             functionBody.getForLoop().accept(this);
@@ -43,14 +43,14 @@ public abstract class AbstractVisitor implements Visitor {
     }
 
     @Override
-    public <T> T visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public <T> T visit(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
         functionsWrapper.acceptMarkovShift(this);
         return null;
     }
 
     @Override
-    public <T> T visitFunction(Function function) {
+    public <T> T visit(Function function) {
         function.acceptExpression(this);
         return null;
     }

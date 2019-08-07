@@ -30,7 +30,7 @@ public final class Variable extends IndexedExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitVariable(this);
+        return visitor.visit(this);
     }
 
 }

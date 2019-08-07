@@ -50,7 +50,7 @@ public final class ForLoop implements Serializable, ASTElement {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitForLoop(this);
+        return visitor.visit(this);
     }
 
     public <T> T acceptStart(Visitor visitor) {

@@ -25,7 +25,7 @@ public final class Arccos extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitArccos(this);
+        return visitor.visit(this);
     }
 
 }

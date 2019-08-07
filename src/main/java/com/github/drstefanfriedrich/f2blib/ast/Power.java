@@ -25,7 +25,7 @@ public final class Power extends BinaryExpression implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitPower(this);
+        return visitor.visit(this);
     }
 
 }

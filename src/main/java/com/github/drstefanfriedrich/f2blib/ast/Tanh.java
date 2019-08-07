@@ -24,7 +24,7 @@ public final class Tanh extends UnaryExpression {
     }
 
     public <T> T accept(Visitor visitor) {
-        return visitor.visitTanh(this);
+        return visitor.visit(this);
     }
 
 }

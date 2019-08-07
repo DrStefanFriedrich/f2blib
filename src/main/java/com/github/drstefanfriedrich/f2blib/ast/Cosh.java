@@ -25,7 +25,7 @@ public final class Cosh extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitCosh(this);
+        return visitor.visit(this);
     }
 
 }

@@ -59,7 +59,7 @@ public final class ForVar implements IntExpression, Serializable {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitForVar(this);
+        return visitor.visit(this);
     }
 
     @Override

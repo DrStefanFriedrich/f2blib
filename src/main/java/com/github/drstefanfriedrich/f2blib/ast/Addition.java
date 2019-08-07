@@ -25,7 +25,7 @@ public final class Addition extends BinaryExpression implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitAddition(this);
+        return visitor.visit(this);
     }
 
 }

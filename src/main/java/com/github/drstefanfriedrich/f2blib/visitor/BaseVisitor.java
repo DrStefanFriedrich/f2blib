@@ -21,122 +21,122 @@ import com.github.drstefanfriedrich.f2blib.ast.*;
 public class BaseVisitor extends AbstractVisitor {
 
     @Override
-    public <T> T visitAbs(Abs abs) {
+    public <T> T visit(Abs abs) {
         abs.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitAddition(Addition addition) {
+    public <T> T visit(Addition addition) {
         addition.acceptLeft(this);
         addition.acceptRight(this);
         return null;
     }
 
     @Override
-    public <T> T visitArccos(Arccos arccos) {
+    public <T> T visit(Arccos arccos) {
         arccos.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitArcosh(Arcosh arcosh) {
+    public <T> T visit(Arcosh arcosh) {
         arcosh.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitArcsin(Arcsin arcsin) {
+    public <T> T visit(Arcsin arcsin) {
         arcsin.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitArctan(Arctan arctan) {
+    public <T> T visit(Arctan arctan) {
         arctan.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitArsinh(Arsinh arsinh) {
+    public <T> T visit(Arsinh arsinh) {
         arsinh.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitArtanh(Artanh artanh) {
+    public <T> T visit(Artanh artanh) {
         artanh.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitBinomial(Binomial binomial) {
+    public <T> T visit(Binomial binomial) {
         binomial.acceptN(this);
         binomial.acceptK(this);
         return null;
     }
 
     @Override
-    public <T> T visitConstant(Constant constant) {
+    public <T> T visit(Constant constant) {
         return null;
     }
 
     @Override
-    public <T> T visitCos(Cos cos) {
+    public <T> T visit(Cos cos) {
         cos.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitCosh(Cosh cosh) {
+    public <T> T visit(Cosh cosh) {
         cosh.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitDivision(Division division) {
+    public <T> T visit(Division division) {
         division.acceptLeft(this);
         division.acceptRight(this);
         return null;
     }
 
     @Override
-    public <T> T visitExp(Exp exp) {
+    public <T> T visit(Exp exp) {
         exp.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitFaculty(Faculty faculty) {
+    public <T> T visit(Faculty faculty) {
         faculty.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitInt(Int i) {
+    public <T> T visit(Int i) {
         return null;
     }
 
     @Override
-    public <T> T visitDoub(Doub doub) {
+    public <T> T visit(Doub doub) {
         return null;
     }
 
     @Override
-    public <T> T visitLn(Ln ln) {
+    public <T> T visit(Ln ln) {
         ln.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitMultiplication(Multiplication multiplication) {
+    public <T> T visit(Multiplication multiplication) {
         multiplication.acceptLeft(this);
         multiplication.acceptRight(this);
         return null;
     }
 
     @Override
-    public <T> T visitParameter(Parameter parameter) {
+    public <T> T visit(Parameter parameter) {
         IntExpression indexExpression = parameter.getIndexExpression();
         if (indexExpression != null) {
             indexExpression.accept(this);
@@ -145,57 +145,57 @@ public class BaseVisitor extends AbstractVisitor {
     }
 
     @Override
-    public <T> T visitParenthesis(Parenthesis parenthesis) {
+    public <T> T visit(Parenthesis parenthesis) {
         parenthesis.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitPower(Power power) {
+    public <T> T visit(Power power) {
         power.acceptLeft(this);
         power.acceptRight(this);
         return null;
     }
 
     @Override
-    public <T> T visitRound(Round round) {
+    public <T> T visit(Round round) {
         round.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitSin(Sin sin) {
+    public <T> T visit(Sin sin) {
         sin.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitSinh(Sinh sinh) {
+    public <T> T visit(Sinh sinh) {
         sinh.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitSubtraction(Subtraction subtraction) {
+    public <T> T visit(Subtraction subtraction) {
         subtraction.acceptLeft(this);
         subtraction.acceptRight(this);
         return null;
     }
 
     @Override
-    public <T> T visitTan(Tan tan) {
+    public <T> T visit(Tan tan) {
         tan.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitTanh(Tanh tanh) {
+    public <T> T visit(Tanh tanh) {
         tanh.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitVariable(Variable variable) {
+    public <T> T visit(Variable variable) {
         IntExpression indexExpression = variable.getIndexExpression();
         if (indexExpression != null) {
             indexExpression.accept(this);
@@ -204,25 +204,25 @@ public class BaseVisitor extends AbstractVisitor {
     }
 
     @Override
-    public <T> T visitNeg(Neg neg) {
+    public <T> T visit(Neg neg) {
         neg.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitPos(Pos pos) {
+    public <T> T visit(Pos pos) {
         pos.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitSqrt(Sqrt sqrt) {
+    public <T> T visit(Sqrt sqrt) {
         sqrt.acceptExpression(this);
         return null;
     }
 
     @Override
-    public <T> T visitForLoop(ForLoop forLoop) {
+    public <T> T visit(ForLoop forLoop) {
         forLoop.acceptStart(this);
         forLoop.acceptEnd(this);
         forLoop.acceptStep(this);
@@ -231,17 +231,17 @@ public class BaseVisitor extends AbstractVisitor {
     }
 
     @Override
-    public <T> T visitForVar(ForVar forVar) {
+    public <T> T visit(ForVar forVar) {
         return null;
     }
 
     @Override
-    public <T> T visitNoOp(NoOp noOp) {
+    public <T> T visit(NoOp noOp) {
         return null;
     }
 
     @Override
-    public <T> T visitMarkovShift(MarkovShift markovShift) {
+    public <T> T visit(MarkovShift markovShift) {
         markovShift.getOffset().accept(this);
         return null;
     }

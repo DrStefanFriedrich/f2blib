@@ -42,19 +42,19 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     }
 
     @Override
-    public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Void visit(FunctionDefinition functionDefinition) {
 
-        super.visitFunctionDefinition(functionDefinition);
+        super.visit(functionDefinition);
         localVariables.finalizeLocalVariables();
         return null;
     }
 
     @Override
-    public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public Void visit(FunctionsWrapper functionsWrapper) {
 
         checkFunctionsAndCalcArrayLength(functionsWrapper.getFunctions());
 
-        super.visitFunctionsWrapper(functionsWrapper);
+        super.visit(functionsWrapper);
 
         return null;
     }
@@ -95,35 +95,35 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     }
 
     @Override
-    public Void visitArsinh(Arsinh arsinh) {
+    public Void visit(Arsinh arsinh) {
         specialFunctionsUsage.setArsinhUsed();
-        return super.visitArsinh(arsinh);
+        return super.visit(arsinh);
     }
 
     @Override
-    public Void visitArcosh(Arcosh arcosh) {
+    public Void visit(Arcosh arcosh) {
         specialFunctionsUsage.setArcoshUsed();
-        return super.visitArcosh(arcosh);
+        return super.visit(arcosh);
     }
 
     @Override
-    public Void visitArtanh(Artanh artanh) {
+    public Void visit(Artanh artanh) {
         specialFunctionsUsage.setArtanhUsed();
-        return super.visitArtanh(artanh);
+        return super.visit(artanh);
     }
 
     @Override
-    public Void visitForLoop(ForLoop forLoop) {
+    public Void visit(ForLoop forLoop) {
 
         forVariableName = forLoop.getVariableName();
-        super.visitForLoop(forLoop);
+        super.visit(forLoop);
         forVariableName = null;
 
         return null;
     }
 
     @Override
-    public Void visitForVar(ForVar forVar) {
+    public Void visit(ForVar forVar) {
 
         String forVarName = forVar.getVariableName();
 

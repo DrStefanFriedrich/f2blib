@@ -25,7 +25,7 @@ public final class Int extends SingleValuedExpression<Integer> implements IntExp
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitInt(this);
+        return visitor.visit(this);
     }
 
     @Override

@@ -25,7 +25,7 @@ public final class Round extends UnaryExpression implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitRound(this);
+        return visitor.visit(this);
     }
 
     @Override

@@ -68,7 +68,7 @@ public final class Binomial implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitBinomial(this);
+        return visitor.visit(this);
     }
 
     @Override

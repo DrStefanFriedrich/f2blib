@@ -86,7 +86,7 @@ public final class FunctionBody implements Serializable, ASTElement {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunctionBody(this);
+        return visitor.visit(this);
     }
 
 }

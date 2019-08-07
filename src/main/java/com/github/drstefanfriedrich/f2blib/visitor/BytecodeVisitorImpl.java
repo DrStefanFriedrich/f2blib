@@ -39,7 +39,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Void visit(FunctionDefinition functionDefinition) {
 
         className = functionDefinition.getName();
 
@@ -55,7 +55,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitFunctionBody(FunctionBody functionBody) {
+    public Void visit(FunctionBody functionBody) {
 
         evalMethod.visitCode();
 
@@ -73,7 +73,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitFunction(Function function) {
+    public Void visit(Function function) {
 
         int index = function.getIndex();
         evalMethod.visitVarInsn(ALOAD, 3); // push y[] on the operand stack
@@ -92,7 +92,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitConstant(Constant constant) {
+    public Void visit(Constant constant) {
         switch (constant) {
             case PI:
                 evalMethod.visitFieldInsn(GETSTATIC, MATH_TYPE, "PI", "D");
@@ -110,7 +110,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitParameter(Parameter parameter) {
+    public Void visit(Parameter parameter) {
         if (parameter.getIndexExpression() == null) {
             evalMethod.visitVarInsn(ALOAD, 1); // push p[] on the operand stack
             evalMethod.visitIntInsn(BIPUSH, parameter.getIndex());
@@ -126,7 +126,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitVariable(Variable variable) {
+    public Void visit(Variable variable) {
         if (variable.getIndexExpression() == null) {
             evalMethod.visitVarInsn(ALOAD, 2); // push x[] on the operand stack
             evalMethod.visitIntInsn(BIPUSH, variable.getIndex());
@@ -142,103 +142,103 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitAbs(Abs abs) {
+    public Void visit(Abs abs) {
         visitUnaryExpression(abs, MATH_TYPE, "abs");
         return null;
     }
 
     @Override
-    public Void visitArccos(Arccos arccos) {
+    public Void visit(Arccos arccos) {
         visitUnaryExpression(arccos, MATH_TYPE, "acos");
         return null;
     }
 
     @Override
-    public Void visitArcsin(Arcsin arcsin) {
+    public Void visit(Arcsin arcsin) {
         visitUnaryExpression(arcsin, MATH_TYPE, "asin");
         return null;
     }
 
     @Override
-    public Void visitArctan(Arctan arctan) {
+    public Void visit(Arctan arctan) {
         visitUnaryExpression(arctan, MATH_TYPE, "atan");
         return null;
     }
 
     @Override
-    public Void visitArsinh(Arsinh arsinh) {
+    public Void visit(Arsinh arsinh) {
         visitSpecialUnaryExpression(arsinh);
         return null;
     }
 
     @Override
-    public Void visitArcosh(Arcosh arcosh) {
+    public Void visit(Arcosh arcosh) {
         visitSpecialUnaryExpression(arcosh);
         return null;
     }
 
     @Override
-    public Void visitArtanh(Artanh artanh) {
+    public Void visit(Artanh artanh) {
         visitSpecialUnaryExpression(artanh);
         return null;
     }
 
     @Override
-    public Void visitCos(Cos cos) {
+    public Void visit(Cos cos) {
         visitUnaryExpression(cos, MATH_TYPE, "cos");
         return null;
     }
 
     @Override
-    public Void visitCosh(Cosh cosh) {
+    public Void visit(Cosh cosh) {
         visitUnaryExpression(cosh, MATH_TYPE, "cosh");
         return null;
     }
 
     @Override
-    public Void visitExp(Exp exp) {
+    public Void visit(Exp exp) {
         visitUnaryExpression(exp, MATH_TYPE, "exp");
         return null;
     }
 
     @Override
-    public Void visitLn(Ln ln) {
+    public Void visit(Ln ln) {
         visitUnaryExpression(ln, MATH_TYPE, "log");
         return null;
     }
 
     @Override
-    public Void visitParenthesis(Parenthesis parenthesis) {
+    public Void visit(Parenthesis parenthesis) {
         parenthesis.acceptExpression(this);
         return null;
     }
 
     @Override
-    public Void visitSin(Sin sin) {
+    public Void visit(Sin sin) {
         visitUnaryExpression(sin, MATH_TYPE, "sin");
         return null;
     }
 
     @Override
-    public Void visitSinh(Sinh sinh) {
+    public Void visit(Sinh sinh) {
         visitUnaryExpression(sinh, MATH_TYPE, "sinh");
         return null;
     }
 
     @Override
-    public Void visitTan(Tan tan) {
+    public Void visit(Tan tan) {
         visitUnaryExpression(tan, MATH_TYPE, "tan");
         return null;
     }
 
     @Override
-    public Void visitTanh(Tanh tanh) {
+    public Void visit(Tanh tanh) {
         visitUnaryExpression(tanh, MATH_TYPE, "tanh");
         return null;
     }
 
     @Override
-    public Void visitNeg(Neg neg) {
+    public Void visit(Neg neg) {
 
         neg.acceptExpression(this);
 
@@ -252,13 +252,13 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitPos(Pos pos) {
+    public Void visit(Pos pos) {
         pos.acceptExpression(this);
         return null;
     }
 
     @Override
-    public Void visitAddition(Addition addition) {
+    public Void visit(Addition addition) {
 
         if (addition.leftEvaluatesToDouble() && addition.rightEvaluatesToDouble()) {
 
@@ -292,7 +292,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitSubtraction(Subtraction subtraction) {
+    public Void visit(Subtraction subtraction) {
 
         if (subtraction.leftEvaluatesToDouble() && subtraction.rightEvaluatesToDouble()) {
 
@@ -326,7 +326,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitMultiplication(Multiplication multiplication) {
+    public Void visit(Multiplication multiplication) {
 
         if (multiplication.leftEvaluatesToDouble() && multiplication.rightEvaluatesToDouble()) {
 
@@ -360,7 +360,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitDivision(Division division) {
+    public Void visit(Division division) {
 
         if (division.leftEvaluatesToDouble() && division.rightEvaluatesToDouble()) {
 
@@ -394,7 +394,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitBinomial(Binomial binomial) {
+    public Void visit(Binomial binomial) {
 
         binomial.acceptN(this);
         binomial.acceptK(this);
@@ -406,7 +406,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitFaculty(Faculty faculty) {
+    public Void visit(Faculty faculty) {
 
         faculty.acceptExpression(this);
 
@@ -417,19 +417,19 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitInt(Int i) {
+    public Void visit(Int i) {
         evalMethod.visitLdcInsn(i.getValue());
         return null;
     }
 
     @Override
-    public Void visitDoub(Doub doub) {
+    public Void visit(Doub doub) {
         evalMethod.visitLdcInsn(doub.getValue());
         return null;
     }
 
     @Override
-    public Void visitPower(Power power) {
+    public Void visit(Power power) {
 
         if (power.leftEvaluatesToDouble() && power.rightEvaluatesToDouble()) {
 
@@ -466,7 +466,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitRound(Round round) {
+    public Void visit(Round round) {
         // Visiting the expression pushes the result (of type double or int) on the stack
         round.acceptExpression(this);
         if (!round.expressionEvaluatesToDouble()) {
@@ -478,25 +478,25 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public Void visit(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
         functionsWrapper.acceptMarkovShift(this);
         return null;
     }
 
     @Override
-    public Void visitSqrt(Sqrt sqrt) {
+    public Void visit(Sqrt sqrt) {
         visitUnaryExpression(sqrt, MATH_TYPE, "sqrt");
         return null;
     }
 
     @Override
-    public Void visitNoOp(NoOp noOp) {
+    public Void visit(NoOp noOp) {
         throw new IllegalStateException("NoOp must not be used");
     }
 
     @Override
-    public Void visitForLoop(ForLoop forLoop) {
+    public Void visit(ForLoop forLoop) {
 
         Label stepNonZero = new Label();
         Label stepPos = new Label();
@@ -566,16 +566,16 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visitForVar(ForVar forVar) {
+    public Void visit(ForVar forVar) {
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
         return null;
     }
 
     /*
-     * For a better understanding we refer to EvalVisitor.visitMarkovShift.
+     * For a better understanding we refer to EvalVisitor.visit.
      */
     @Override
-    public Void visitMarkovShift(MarkovShift markovShift) {
+    public Void visit(MarkovShift markovShift) {
 
         Label offsetGeZero = new Label();
         Label nMinusOffsetGeM = new Label();

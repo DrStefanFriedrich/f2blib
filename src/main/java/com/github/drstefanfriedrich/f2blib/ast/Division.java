@@ -25,7 +25,7 @@ public final class Division extends BinaryExpression implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitDivision(this);
+        return visitor.visit(this);
     }
 
 }

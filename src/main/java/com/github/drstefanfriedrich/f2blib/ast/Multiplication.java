@@ -25,7 +25,7 @@ public final class Multiplication extends BinaryExpression implements IntExpress
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitMultiplication(this);
+        return visitor.visit(this);
     }
 
 }

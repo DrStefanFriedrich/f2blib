@@ -25,7 +25,7 @@ public final class Neg extends UnaryExpression implements IntExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitNeg(this);
+        return visitor.visit(this);
     }
 
     @Override

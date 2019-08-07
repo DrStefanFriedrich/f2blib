@@ -109,7 +109,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitNeg(Neg neg) {
+    public Void visit(Neg neg) {
 
         int precedenceThis = neg.accept(precedenceVisitor);
         int precedenceInner = neg.acceptExpression(precedenceVisitor);
@@ -125,7 +125,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitPos(Pos pos) {
+    public Void visit(Pos pos) {
 
         int precedenceThis = pos.accept(precedenceVisitor);
         int precedenceInner = pos.acceptExpression(precedenceVisitor);
@@ -140,7 +140,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitFaculty(Faculty faculty) {
+    public Void visit(Faculty faculty) {
 
         String symbol = faculty.accept(symbolVisitor);
         int precedenceThis = faculty.accept(precedenceVisitor);
@@ -161,7 +161,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitParenthesis(Parenthesis parenthesis) {
+    public Void visit(Parenthesis parenthesis) {
 
         int precedenceThis = parenthesis.accept(precedenceVisitor);
         int precedenceInner = parenthesis.acceptExpression(precedenceVisitor);
@@ -177,55 +177,55 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitAbs(Abs abs) {
+    public Void visit(Abs abs) {
         printUnaryExpression(abs);
         return null;
     }
 
     @Override
-    public Void visitAddition(Addition addition) {
+    public Void visit(Addition addition) {
         printBinaryExpression(addition);
         return null;
     }
 
     @Override
-    public Void visitArccos(Arccos arccos) {
+    public Void visit(Arccos arccos) {
         printUnaryExpression(arccos);
         return null;
     }
 
     @Override
-    public Void visitArcosh(Arcosh arcosh) {
+    public Void visit(Arcosh arcosh) {
         printUnaryExpression(arcosh);
         return null;
     }
 
     @Override
-    public Void visitArcsin(Arcsin arcsin) {
+    public Void visit(Arcsin arcsin) {
         printUnaryExpression(arcsin);
         return null;
     }
 
     @Override
-    public Void visitArctan(Arctan arctan) {
+    public Void visit(Arctan arctan) {
         printUnaryExpression(arctan);
         return null;
     }
 
     @Override
-    public Void visitArsinh(Arsinh arsinh) {
+    public Void visit(Arsinh arsinh) {
         printUnaryExpression(arsinh);
         return null;
     }
 
     @Override
-    public Void visitArtanh(Artanh artanh) {
+    public Void visit(Artanh artanh) {
         printUnaryExpression(artanh);
         return null;
     }
 
     @Override
-    public Void visitBinomial(Binomial binomial) {
+    public Void visit(Binomial binomial) {
 
         String symbol = binomial.accept(symbolVisitor);
 
@@ -238,44 +238,44 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitConstant(Constant constant) {
+    public Void visit(Constant constant) {
         pw.print(constant);
         return null;
     }
 
     @Override
-    public Void visitCos(Cos cos) {
+    public Void visit(Cos cos) {
         printUnaryExpression(cos);
         return null;
     }
 
     @Override
-    public Void visitCosh(Cosh cosh) {
+    public Void visit(Cosh cosh) {
         printUnaryExpression(cosh);
         return null;
     }
 
     @Override
-    public Void visitDivision(Division division) {
+    public Void visit(Division division) {
         printBinaryExpression(division);
         return null;
     }
 
     @Override
-    public Void visitExp(Exp exp) {
+    public Void visit(Exp exp) {
         printUnaryExpression(exp);
         return null;
     }
 
     @Override
-    public Void visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Void visit(FunctionDefinition functionDefinition) {
         pw.println("function " + functionDefinition.getName() + ";");
         functionDefinition.getFunctionBody().accept(this);
         return null;
     }
 
     @Override
-    public Void visitFunctionBody(FunctionBody functionBody) {
+    public Void visit(FunctionBody functionBody) {
         pw.println("begin");
 
         depth++;
@@ -293,7 +293,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public Void visit(FunctionsWrapper functionsWrapper) {
         functionsWrapper.getFunctions().stream()
                 .forEach(f -> f.accept(this));
         functionsWrapper.acceptMarkovShift(this);
@@ -310,7 +310,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitFunction(Function function) {
+    public Void visit(Function function) {
         String spaces = spaces();
 
         pw.print(spaces + "f_" + (function.getIndex() + 1) + " := ");
@@ -320,7 +320,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public <T> T visitForLoop(ForLoop forLoop) {
+    public <T> T visit(ForLoop forLoop) {
         String spaces = spaces();
 
         pw.print(spaces + "for " + forLoop.getVariableName());
@@ -345,73 +345,73 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitInt(Int i) {
+    public Void visit(Int i) {
         pw.print(i.getValue());
         return null;
     }
 
     @Override
-    public Void visitDoub(Doub doub) {
+    public Void visit(Doub doub) {
         pw.print(doub.getValue());
         return null;
     }
 
     @Override
-    public Void visitLn(Ln ln) {
+    public Void visit(Ln ln) {
         printUnaryExpression(ln);
         return null;
     }
 
     @Override
-    public Void visitMultiplication(Multiplication multiplication) {
+    public Void visit(Multiplication multiplication) {
         printBinaryExpression(multiplication);
         return null;
     }
 
     @Override
-    public Void visitPower(Power power) {
+    public Void visit(Power power) {
         printBinaryExpression(power);
         return null;
     }
 
     @Override
-    public Void visitRound(Round round) {
+    public Void visit(Round round) {
         printUnaryExpression(round);
         return null;
     }
 
     @Override
-    public Void visitSin(Sin sin) {
+    public Void visit(Sin sin) {
         printUnaryExpression(sin);
         return null;
     }
 
     @Override
-    public Void visitSinh(Sinh sinh) {
+    public Void visit(Sinh sinh) {
         printUnaryExpression(sinh);
         return null;
     }
 
     @Override
-    public Void visitSubtraction(Subtraction subtraction) {
+    public Void visit(Subtraction subtraction) {
         printBinaryExpression(subtraction);
         return null;
     }
 
     @Override
-    public Void visitTan(Tan tan) {
+    public Void visit(Tan tan) {
         printUnaryExpression(tan);
         return null;
     }
 
     @Override
-    public Void visitTanh(Tanh tanh) {
+    public Void visit(Tanh tanh) {
         printUnaryExpression(tanh);
         return null;
     }
 
     @Override
-    public Void visitVariable(Variable variable) {
+    public Void visit(Variable variable) {
         if (variable.getIndexExpression() == null) {
             pw.print("x_" + (variable.getIndex() + 1));
         } else {
@@ -423,7 +423,7 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitParameter(Parameter parameter) {
+    public Void visit(Parameter parameter) {
         if (parameter.getIndexExpression() == null) {
             pw.print("p_" + (parameter.getIndex() + 1));
         } else {
@@ -435,24 +435,24 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visitSqrt(Sqrt sqrt) {
+    public Void visit(Sqrt sqrt) {
         printUnaryExpression(sqrt);
         return null;
     }
 
     @Override
-    public <T> T visitNoOp(NoOp noOp) {
-        throw new IllegalStateException("visitNoOp must not be called on the PrettyPrintVisitor");
+    public <T> T visit(NoOp noOp) {
+        throw new IllegalStateException("visit must not be called on the PrettyPrintVisitor");
     }
 
     @Override
-    public Void visitForVar(ForVar forVar) {
+    public Void visit(ForVar forVar) {
         pw.print(forVar.getVariableName());
         return null;
     }
 
     @Override
-    public Void visitMarkovShift(MarkovShift markovShift) {
+    public Void visit(MarkovShift markovShift) {
         String spaces = spaces();
 
         String symbol = markovShift.accept(symbolVisitor);

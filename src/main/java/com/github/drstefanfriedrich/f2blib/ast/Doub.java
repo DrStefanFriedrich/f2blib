@@ -25,7 +25,7 @@ public class Doub extends SingleValuedExpression<Double> {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitDoub(this);
+        return visitor.visit(this);
     }
 
     @Override

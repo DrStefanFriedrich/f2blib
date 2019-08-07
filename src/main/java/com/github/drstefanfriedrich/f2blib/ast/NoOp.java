@@ -30,7 +30,7 @@ public class NoOp implements Expression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitNoOp(this);
+        return visitor.visit(this);
     }
 
     @Override

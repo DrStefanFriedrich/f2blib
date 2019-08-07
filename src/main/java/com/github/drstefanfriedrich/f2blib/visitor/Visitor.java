@@ -16,84 +16,84 @@ import com.github.drstefanfriedrich.f2blib.ast.*;
 
 public interface Visitor {
 
-    <T> T visitAbs(Abs abs);
+    <T> T visit(Abs abs);
 
-    <T> T visitAddition(Addition addition);
+    <T> T visit(Addition addition);
 
-    <T> T visitArccos(Arccos arccos);
+    <T> T visit(Arccos arccos);
 
-    <T> T visitArcosh(Arcosh arcosh);
+    <T> T visit(Arcosh arcosh);
 
-    <T> T visitArcsin(Arcsin arcsin);
+    <T> T visit(Arcsin arcsin);
 
-    <T> T visitArctan(Arctan arctan);
+    <T> T visit(Arctan arctan);
 
-    <T> T visitArsinh(Arsinh arsinh);
+    <T> T visit(Arsinh arsinh);
 
-    <T> T visitArtanh(Artanh artanh);
+    <T> T visit(Artanh artanh);
 
-    <T> T visitBinomial(Binomial binomial);
+    <T> T visit(Binomial binomial);
 
-    <T> T visitConstant(Constant constant);
+    <T> T visit(Constant constant);
 
-    <T> T visitCos(Cos cos);
+    <T> T visit(Cos cos);
 
-    <T> T visitCosh(Cosh cosh);
+    <T> T visit(Cosh cosh);
 
-    <T> T visitDivision(Division division);
+    <T> T visit(Division division);
 
-    <T> T visitExp(Exp exp);
+    <T> T visit(Exp exp);
 
-    <T> T visitFaculty(Faculty faculty);
+    <T> T visit(Faculty faculty);
 
-    <T> T visitFunction(Function function);
+    <T> T visit(Function function);
 
-    <T> T visitFunctionBody(FunctionBody functionBody);
+    <T> T visit(FunctionBody functionBody);
 
-    <T> T visitFunctionDefinition(FunctionDefinition functionDefinition);
+    <T> T visit(FunctionDefinition functionDefinition);
 
-    <T> T visitFunctionsWrapper(FunctionsWrapper functionsWrapper);
+    <T> T visit(FunctionsWrapper functionsWrapper);
 
-    <T> T visitInt(Int i);
+    <T> T visit(Int i);
 
-    <T> T visitLn(Ln ln);
+    <T> T visit(Ln ln);
 
-    <T> T visitMultiplication(Multiplication multiplication);
+    <T> T visit(Multiplication multiplication);
 
-    <T> T visitParameter(Parameter parameter);
+    <T> T visit(Parameter parameter);
 
-    <T> T visitParenthesis(Parenthesis parenthesis);
+    <T> T visit(Parenthesis parenthesis);
 
-    <T> T visitPower(Power power);
+    <T> T visit(Power power);
 
-    <T> T visitRound(Round round);
+    <T> T visit(Round round);
 
-    <T> T visitSin(Sin sin);
+    <T> T visit(Sin sin);
 
-    <T> T visitSinh(Sinh sinh);
+    <T> T visit(Sinh sinh);
 
-    <T> T visitSubtraction(Subtraction subtraction);
+    <T> T visit(Subtraction subtraction);
 
-    <T> T visitTan(Tan tan);
+    <T> T visit(Tan tan);
 
-    <T> T visitTanh(Tanh tanh);
+    <T> T visit(Tanh tanh);
 
-    <T> T visitVariable(Variable variable);
+    <T> T visit(Variable variable);
 
-    <T> T visitNeg(Neg neg);
+    <T> T visit(Neg neg);
 
-    <T> T visitPos(Pos pos);
+    <T> T visit(Pos pos);
 
-    <T> T visitDoub(Doub doub);
+    <T> T visit(Doub doub);
 
-    <T> T visitSqrt(Sqrt sqrt);
+    <T> T visit(Sqrt sqrt);
 
-    <T> T visitNoOp(NoOp noOp);
+    <T> T visit(NoOp noOp);
 
-    <T> T visitForLoop(ForLoop forLoop);
+    <T> T visit(ForLoop forLoop);
 
-    <T> T visitForVar(ForVar forVar);
+    <T> T visit(ForVar forVar);
 
-    <T> T visitMarkovShift(MarkovShift markovShift);
+    <T> T visit(MarkovShift markovShift);
 
 }

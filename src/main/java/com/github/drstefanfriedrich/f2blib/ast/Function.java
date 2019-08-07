@@ -83,7 +83,7 @@ public final class Function implements Serializable, ASTElement {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunction(this);
+        return visitor.visit(this);
     }
 
 }

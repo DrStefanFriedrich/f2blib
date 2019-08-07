@@ -87,7 +87,7 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunctionsWrapper(this);
+        return visitor.visit(this);
     }
 
 }

@@ -23,7 +23,7 @@ public enum Constant implements Expression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitConstant(this);
+        return visitor.visit(this);
     }
 
     @Override

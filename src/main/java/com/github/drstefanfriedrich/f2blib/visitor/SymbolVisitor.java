@@ -24,202 +24,202 @@ public class SymbolVisitor implements Visitor {
     public static final String EXCEPTION_MESSAGE = "This method must not be called on the SymbolVisitor class";
 
     @Override
-    public String visitAbs(Abs abs) {
+    public String visit(Abs abs) {
         return "abs";
     }
 
     @Override
-    public String visitAddition(Addition addition) {
+    public String visit(Addition addition) {
         return "+";
     }
 
     @Override
-    public String visitArccos(Arccos arccos) {
+    public String visit(Arccos arccos) {
         return "arccos";
     }
 
     @Override
-    public String visitArcosh(Arcosh arcosh) {
+    public String visit(Arcosh arcosh) {
         return "arcosh";
     }
 
     @Override
-    public String visitArcsin(Arcsin arcsin) {
+    public String visit(Arcsin arcsin) {
         return "arcsin";
     }
 
     @Override
-    public String visitArctan(Arctan arctan) {
+    public String visit(Arctan arctan) {
         return "arctan";
     }
 
     @Override
-    public String visitArsinh(Arsinh arsinh) {
+    public String visit(Arsinh arsinh) {
         return "arsinh";
     }
 
     @Override
-    public String visitArtanh(Artanh artanh) {
+    public String visit(Artanh artanh) {
         return "artanh";
     }
 
     @Override
-    public String visitBinomial(Binomial binomial) {
+    public String visit(Binomial binomial) {
         return "binomial";
     }
 
     @Override
-    public String visitConstant(Constant constant) {
+    public String visit(Constant constant) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitCos(Cos cos) {
+    public String visit(Cos cos) {
         return "cos";
     }
 
     @Override
-    public String visitCosh(Cosh cosh) {
+    public String visit(Cosh cosh) {
         return "cosh";
     }
 
     @Override
-    public String visitDivision(Division division) {
+    public String visit(Division division) {
         return "/";
     }
 
     @Override
-    public String visitExp(Exp exp) {
+    public String visit(Exp exp) {
         return "exp";
     }
 
     @Override
-    public String visitFaculty(Faculty faculty) {
+    public String visit(Faculty faculty) {
         return "!";
     }
 
     @Override
-    public String visitFunction(Function function) {
+    public String visit(Function function) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitFunctionBody(FunctionBody functionBody) {
+    public String visit(FunctionBody functionBody) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public String visit(FunctionDefinition functionDefinition) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public String visit(FunctionsWrapper functionsWrapper) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitInt(Int i) {
+    public String visit(Int i) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitLn(Ln ln) {
+    public String visit(Ln ln) {
         return "ln";
     }
 
     @Override
-    public String visitMultiplication(Multiplication multiplication) {
+    public String visit(Multiplication multiplication) {
         return "*";
     }
 
     @Override
-    public String visitParameter(Parameter parameter) {
+    public String visit(Parameter parameter) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitParenthesis(Parenthesis parenthesis) {
+    public String visit(Parenthesis parenthesis) {
         return "";
     }
 
     @Override
-    public String visitPower(Power power) {
+    public String visit(Power power) {
         return "^";
     }
 
     @Override
-    public String visitRound(Round round) {
+    public String visit(Round round) {
         return "round";
     }
 
     @Override
-    public String visitSin(Sin sin) {
+    public String visit(Sin sin) {
         return "sin";
     }
 
     @Override
-    public String visitSinh(Sinh sinh) {
+    public String visit(Sinh sinh) {
         return "sinh";
     }
 
     @Override
-    public String visitSubtraction(Subtraction subtraction) {
+    public String visit(Subtraction subtraction) {
         return "-";
     }
 
     @Override
-    public String visitTan(Tan tan) {
+    public String visit(Tan tan) {
         return "tan";
     }
 
     @Override
-    public String visitTanh(Tanh tanh) {
+    public String visit(Tanh tanh) {
         return "tanh";
     }
 
     @Override
-    public String visitVariable(Variable variable) {
+    public String visit(Variable variable) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitNeg(Neg neg) {
+    public String visit(Neg neg) {
         return "-";
     }
 
     @Override
-    public String visitPos(Pos pos) {
+    public String visit(Pos pos) {
         return "+";
     }
 
     @Override
-    public String visitDoub(Doub doub) {
+    public String visit(Doub doub) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitSqrt(Sqrt sqrt) {
+    public String visit(Sqrt sqrt) {
         return "sqrt";
     }
 
     @Override
-    public String visitNoOp(NoOp noOp) {
+    public String visit(NoOp noOp) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public <T> T visitForLoop(ForLoop forLoop) {
+    public <T> T visit(ForLoop forLoop) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitForVar(ForVar forVar) {
+    public String visit(ForVar forVar) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public String visitMarkovShift(MarkovShift markovShift) {
+    public String visit(MarkovShift markovShift) {
         return "markov_shift";
     }
 

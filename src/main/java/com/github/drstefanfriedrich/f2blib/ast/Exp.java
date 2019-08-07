@@ -25,7 +25,7 @@ public final class Exp extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitExp(this);
+        return visitor.visit(this);
     }
 
 }

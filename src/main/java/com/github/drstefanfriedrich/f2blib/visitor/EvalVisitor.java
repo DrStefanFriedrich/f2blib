@@ -56,57 +56,57 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitAbs(Abs abs) {
+    public Double visit(Abs abs) {
         return Math.abs((Double) abs.acceptExpression(this));
     }
 
     @Override
-    public Double visitAddition(Addition addition) {
+    public Double visit(Addition addition) {
         return ((Double) addition.acceptLeft(this)) + ((Double) addition.acceptRight(this));
     }
 
     @Override
-    public Double visitArccos(Arccos arccos) {
+    public Double visit(Arccos arccos) {
         return Math.acos(arccos.acceptExpression(this));
     }
 
     @Override
-    public Double visitArcosh(Arcosh arcosh) {
+    public Double visit(Arcosh arcosh) {
         return ARCOSH.value((Double) arcosh.acceptExpression(this));
     }
 
     @Override
-    public Double visitArcsin(Arcsin arcsin) {
+    public Double visit(Arcsin arcsin) {
         return Math.asin(arcsin.acceptExpression(this));
     }
 
     @Override
-    public Double visitArctan(Arctan arctan) {
+    public Double visit(Arctan arctan) {
         return Math.atan(arctan.acceptExpression(this));
     }
 
     @Override
-    public Double visitArsinh(Arsinh arsinh) {
+    public Double visit(Arsinh arsinh) {
         return ARSINH.value((Double) arsinh.acceptExpression(this));
     }
 
     @Override
-    public Double visitArtanh(Artanh artanh) {
+    public Double visit(Artanh artanh) {
         return ARTANH.value((Double) artanh.acceptExpression(this));
     }
 
     @Override
-    public Double visitBinomial(Binomial binomial) {
+    public Double visit(Binomial binomial) {
         return (double) binomialCoefficient(((Double) binomial.acceptN(this)).intValue(), ((Double) binomial.acceptK(this)).intValue());
     }
 
     @Override
-    public Double visitFaculty(Faculty faculty) {
+    public Double visit(Faculty faculty) {
         return (double) factorial(((Double) faculty.acceptExpression(this)).intValue());
     }
 
     @Override
-    public Double visitConstant(Constant constant) {
+    public Double visit(Constant constant) {
         switch (constant) {
             case PI:
                 return Math.PI;
@@ -120,32 +120,32 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitCos(Cos cos) {
+    public Double visit(Cos cos) {
         return Math.cos(cos.acceptExpression(this));
     }
 
     @Override
-    public Double visitCosh(Cosh cosh) {
+    public Double visit(Cosh cosh) {
         return Math.cosh(cosh.acceptExpression(this));
     }
 
     @Override
-    public Double visitDivision(Division division) {
+    public Double visit(Division division) {
         return ((Double) division.acceptLeft(this)) / ((Double) division.acceptRight(this));
     }
 
     @Override
-    public Double visitExp(Exp exp) {
+    public Double visit(Exp exp) {
         return Math.exp(exp.acceptExpression(this));
     }
 
     @Override
-    public Double visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Double visit(FunctionDefinition functionDefinition) {
         return functionDefinition.getFunctionBody().accept(this);
     }
 
     @Override
-    public Double visitFunctionBody(FunctionBody functionBody) {
+    public Double visit(FunctionBody functionBody) {
 
         if (functionBody.isForLoop()) {
             return functionBody.getForLoop().accept(this);
@@ -155,7 +155,7 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public Double visit(FunctionsWrapper functionsWrapper) {
 
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
 
@@ -165,7 +165,7 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitForLoop(ForLoop forLoop) {
+    public Double visit(ForLoop forLoop) {
 
         int start = ((Double) forLoop.acceptStart(this)).intValue();
         int end = ((Double) forLoop.acceptEnd(this)).intValue();
@@ -199,7 +199,7 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitFunction(Function function) {
+    public Double visit(Function function) {
 
         int index = function.getIndex();
 
@@ -209,77 +209,77 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitInt(Int i) {
+    public Double visit(Int i) {
         return (double) i.getValue();
     }
 
     @Override
-    public Double visitDoub(Doub doub) {
+    public Double visit(Doub doub) {
         return doub.getValue();
     }
 
     @Override
-    public Double visitSqrt(Sqrt sqrt) {
+    public Double visit(Sqrt sqrt) {
         return Math.sqrt(sqrt.acceptExpression(this));
     }
 
     @Override
-    public Double visitNoOp(NoOp noOp) {
-        throw new IllegalStateException("visitNoOp must not be called on the EvalVisitor");
+    public Double visit(NoOp noOp) {
+        throw new IllegalStateException("visit must not be called on the EvalVisitor");
     }
 
     @Override
-    public Double visitLn(Ln ln) {
+    public Double visit(Ln ln) {
         return Math.log(ln.acceptExpression(this));
     }
 
     @Override
-    public Double visitMultiplication(Multiplication multiplication) {
+    public Double visit(Multiplication multiplication) {
         return ((Double) multiplication.acceptLeft(this)) * ((Double) multiplication.acceptRight(this));
     }
 
     @Override
-    public Double visitParenthesis(Parenthesis parenthesis) {
+    public Double visit(Parenthesis parenthesis) {
         return parenthesis.acceptExpression(this);
     }
 
     @Override
-    public Double visitPower(Power power) {
+    public Double visit(Power power) {
         return Math.pow(power.acceptLeft(this), power.acceptRight(this));
     }
 
     @Override
-    public Double visitRound(Round round) {
+    public Double visit(Round round) {
         return (double) Math.round((Double) round.acceptExpression(this));
     }
 
     @Override
-    public Double visitSin(Sin sin) {
+    public Double visit(Sin sin) {
         return Math.sin(sin.acceptExpression(this));
     }
 
     @Override
-    public Double visitSinh(Sinh sinh) {
+    public Double visit(Sinh sinh) {
         return Math.sinh(sinh.acceptExpression(this));
     }
 
     @Override
-    public Double visitSubtraction(Subtraction subtraction) {
+    public Double visit(Subtraction subtraction) {
         return ((Double) subtraction.acceptLeft(this)) - ((Double) subtraction.acceptRight(this));
     }
 
     @Override
-    public Double visitTan(Tan tan) {
+    public Double visit(Tan tan) {
         return Math.tan(tan.acceptExpression(this));
     }
 
     @Override
-    public Double visitTanh(Tanh tanh) {
+    public Double visit(Tanh tanh) {
         return Math.tanh(tanh.acceptExpression(this));
     }
 
     @Override
-    public Double visitVariable(Variable variable) {
+    public Double visit(Variable variable) {
         if (variable.getIndexExpression() == null) {
             return x[variable.getIndex()];
         } else {
@@ -288,7 +288,7 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitParameter(Parameter parameter) {
+    public Double visit(Parameter parameter) {
         if (parameter.getIndexExpression() == null) {
             return p[parameter.getIndex()];
         } else {
@@ -297,22 +297,22 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visitNeg(Neg neg) {
+    public Double visit(Neg neg) {
         return -(Double) neg.acceptExpression(this);
     }
 
     @Override
-    public Double visitPos(Pos pos) {
+    public Double visit(Pos pos) {
         return pos.acceptExpression(this);
     }
 
     @Override
-    public Double visitForVar(ForVar forVar) {
+    public Double visit(ForVar forVar) {
         return (double) forVarValue;
     }
 
     @Override
-    public Double visitMarkovShift(MarkovShift markovShift) {
+    public Double visit(MarkovShift markovShift) {
 
         int offset = ((Double) markovShift.getOffset().accept(this)).intValue();
         int m = y.length;

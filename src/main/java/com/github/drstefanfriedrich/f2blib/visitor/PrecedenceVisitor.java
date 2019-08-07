@@ -24,202 +24,202 @@ public class PrecedenceVisitor implements Visitor {
     public static final String EXCEPTION_MESSAGE = "This method must not be called on the PrecedenceVisitor class";
 
     @Override
-    public Integer visitAbs(Abs abs) {
+    public Integer visit(Abs abs) {
         return 4;
     }
 
     @Override
-    public Integer visitAddition(Addition addition) {
+    public Integer visit(Addition addition) {
         return 6;
     }
 
     @Override
-    public Integer visitArccos(Arccos arccos) {
+    public Integer visit(Arccos arccos) {
         return 4;
     }
 
     @Override
-    public Integer visitArcosh(Arcosh arcosh) {
+    public Integer visit(Arcosh arcosh) {
         return 4;
     }
 
     @Override
-    public Integer visitArcsin(Arcsin arcsin) {
+    public Integer visit(Arcsin arcsin) {
         return 4;
     }
 
     @Override
-    public Integer visitArctan(Arctan arctan) {
+    public Integer visit(Arctan arctan) {
         return 4;
     }
 
     @Override
-    public Integer visitArsinh(Arsinh arsinh) {
+    public Integer visit(Arsinh arsinh) {
         return 4;
     }
 
     @Override
-    public Integer visitArtanh(Artanh artanh) {
+    public Integer visit(Artanh artanh) {
         return 4;
     }
 
     @Override
-    public Integer visitBinomial(Binomial binomial) {
+    public Integer visit(Binomial binomial) {
         return 4;
     }
 
     @Override
-    public Integer visitConstant(Constant constant) {
+    public Integer visit(Constant constant) {
         return 0;
     }
 
     @Override
-    public Integer visitCos(Cos cos) {
+    public Integer visit(Cos cos) {
         return 4;
     }
 
     @Override
-    public Integer visitCosh(Cosh cosh) {
+    public Integer visit(Cosh cosh) {
         return 4;
     }
 
     @Override
-    public Integer visitDivision(Division division) {
+    public Integer visit(Division division) {
         return 5;
     }
 
     @Override
-    public Integer visitExp(Exp exp) {
+    public Integer visit(Exp exp) {
         return 4;
     }
 
     @Override
-    public Integer visitFaculty(Faculty faculty) {
+    public Integer visit(Faculty faculty) {
         return 2;
     }
 
     @Override
-    public Integer visitFunction(Function function) {
+    public Integer visit(Function function) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public Integer visitFunctionBody(FunctionBody functionBody) {
+    public Integer visit(FunctionBody functionBody) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public Integer visitFunctionDefinition(FunctionDefinition functionDefinition) {
+    public Integer visit(FunctionDefinition functionDefinition) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public Integer visitFunctionsWrapper(FunctionsWrapper functionsWrapper) {
+    public Integer visit(FunctionsWrapper functionsWrapper) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public Integer visitInt(Int i) {
+    public Integer visit(Int i) {
         return 0;
     }
 
     @Override
-    public Integer visitLn(Ln ln) {
+    public Integer visit(Ln ln) {
         return 4;
     }
 
     @Override
-    public Integer visitMultiplication(Multiplication multiplication) {
+    public Integer visit(Multiplication multiplication) {
         return 5;
     }
 
     @Override
-    public Integer visitParameter(Parameter parameter) {
+    public Integer visit(Parameter parameter) {
         return 0;
     }
 
     @Override
-    public Integer visitParenthesis(Parenthesis parenthesis) {
+    public Integer visit(Parenthesis parenthesis) {
         return 4;
     }
 
     @Override
-    public Integer visitPower(Power power) {
+    public Integer visit(Power power) {
         return 1;
     }
 
     @Override
-    public Integer visitRound(Round round) {
+    public Integer visit(Round round) {
         return 4;
     }
 
     @Override
-    public Integer visitSin(Sin sin) {
+    public Integer visit(Sin sin) {
         return 4;
     }
 
     @Override
-    public Integer visitSinh(Sinh sinh) {
+    public Integer visit(Sinh sinh) {
         return 4;
     }
 
     @Override
-    public Integer visitSubtraction(Subtraction subtraction) {
+    public Integer visit(Subtraction subtraction) {
         return 6;
     }
 
     @Override
-    public Integer visitTan(Tan tan) {
+    public Integer visit(Tan tan) {
         return 4;
     }
 
     @Override
-    public Integer visitTanh(Tanh tanh) {
+    public Integer visit(Tanh tanh) {
         return 4;
     }
 
     @Override
-    public Integer visitVariable(Variable variable) {
+    public Integer visit(Variable variable) {
         return 0;
     }
 
     @Override
-    public Integer visitNeg(Neg neg) {
+    public Integer visit(Neg neg) {
         return 4;
     }
 
     @Override
-    public Integer visitPos(Pos pos) {
+    public Integer visit(Pos pos) {
         return 4;
     }
 
     @Override
-    public Integer visitDoub(Doub doub) {
+    public Integer visit(Doub doub) {
         return 0;
     }
 
     @Override
-    public Integer visitSqrt(Sqrt sqrt) {
+    public Integer visit(Sqrt sqrt) {
         return 4;
     }
 
     @Override
-    public Integer visitNoOp(NoOp noOp) {
+    public Integer visit(NoOp noOp) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public <T> T visitForLoop(ForLoop forLoop) {
+    public <T> T visit(ForLoop forLoop) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
-    public Integer visitForVar(ForVar forVar) {
+    public Integer visit(ForVar forVar) {
         return 0;
     }
 
     @Override
-    public <T> T visitMarkovShift(MarkovShift markovShift) {
+    public <T> T visit(MarkovShift markovShift) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 

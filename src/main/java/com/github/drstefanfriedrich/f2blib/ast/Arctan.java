@@ -25,7 +25,7 @@ public final class Arctan extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitArctan(this);
+        return visitor.visit(this);
     }
 
 }

@@ -25,7 +25,7 @@ public final class Sin extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitSin(this);
+        return visitor.visit(this);
     }
 
 }

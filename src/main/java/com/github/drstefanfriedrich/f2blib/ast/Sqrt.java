@@ -25,7 +25,7 @@ public class Sqrt extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitSqrt(this);
+        return visitor.visit(this);
     }
 
 }

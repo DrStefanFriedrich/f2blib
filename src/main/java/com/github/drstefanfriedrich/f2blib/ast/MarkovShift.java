@@ -66,7 +66,7 @@ public final class MarkovShift implements Serializable, ASTElement {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitMarkovShift(this);
+        return visitor.visit(this);
     }
 
 }

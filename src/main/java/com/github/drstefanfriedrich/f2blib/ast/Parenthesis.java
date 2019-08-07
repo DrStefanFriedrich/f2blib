@@ -25,7 +25,7 @@ public final class Parenthesis extends UnaryExpression implements IntExpression 
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitParenthesis(this);
+        return visitor.visit(this);
     }
 
     @Override

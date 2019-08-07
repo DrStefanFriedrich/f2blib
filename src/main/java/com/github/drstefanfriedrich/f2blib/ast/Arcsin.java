@@ -25,7 +25,7 @@ public final class Arcsin extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitArcsin(this);
+        return visitor.visit(this);
     }
 
 }

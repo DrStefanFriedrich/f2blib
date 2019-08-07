@@ -620,7 +620,7 @@ public class PrettyPrintVisitorTest {
                 new FunctionsWrapper(new Function(0, NoOp.get())))));
 
         exception.expect(IllegalStateException.class);
-        exception.expectMessage("visitNoOp must not be called on the PrettyPrintVisitor");
+        exception.expectMessage("visit must not be called on the PrettyPrintVisitor");
 
         fd.accept(underTest);
     }

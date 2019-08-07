@@ -32,7 +32,7 @@ public final class Parameter extends IndexedExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitParameter(this);
+        return visitor.visit(this);
     }
 
 }

@@ -73,7 +73,7 @@ public final class FunctionDefinition implements Serializable, ASTElement {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitFunctionDefinition(this);
+        return visitor.visit(this);
     }
 
 }

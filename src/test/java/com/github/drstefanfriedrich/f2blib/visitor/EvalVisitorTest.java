@@ -121,7 +121,7 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         FunctionDefinition fd = ASTTest.createFunctionDefinition("NoOp", NoOp.get());
 
         exception.expect(IllegalStateException.class);
-        exception.expectMessage("visitNoOp must not be called on the EvalVisitor");
+        exception.expectMessage("visit must not be called on the EvalVisitor");
 
         fd.accept(evalVisitor);
     }

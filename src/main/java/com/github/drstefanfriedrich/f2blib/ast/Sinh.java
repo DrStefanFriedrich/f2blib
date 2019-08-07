@@ -25,7 +25,7 @@ public final class Sinh extends UnaryExpression {
 
     @Override
     public <T> T accept(Visitor visitor) {
-        return visitor.visitSinh(this);
+        return visitor.visit(this);
     }
 
 }

@@ -22,7 +22,7 @@ import com.github.drstefanfriedrich.f2blib.ast.FunctionsWrapper;
  */
 public abstract class AbstractVisitor implements Visitor {
 
-    protected final static String UNSUPPORTED_OPERATION = "Unsupported operation";
+    protected static final String UNSUPPORTED_OPERATION = "Unsupported operation";
 
     @Override
     public <T> T visit(FunctionDefinition functionDefinition) {

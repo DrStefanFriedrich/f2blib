@@ -33,6 +33,7 @@ public final class Round extends UnaryExpression implements IntExpression {
         return false;
     }
 
+    @Override
     public boolean expressionEvaluatesToDouble() {
         return expression.evaluatesToDouble();
     }

@@ -526,6 +526,8 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
         double[] y = new double[1];
 
         fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(0));
     }
 
 }

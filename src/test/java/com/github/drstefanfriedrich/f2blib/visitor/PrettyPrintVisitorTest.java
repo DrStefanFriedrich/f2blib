@@ -653,6 +653,26 @@ public class PrettyPrintVisitorTest {
     }
 
     @Test
+    public void faculty() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Faculty(new Addition(new Int(3), new Int(4))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := (3 + 4)!;\nend\n"));
+    }
+
+    @Test
+    public void addition() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Multiplication(new Int(3), new Addition(new Int(2), new Int(10))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := 3 * (2 + 10);\nend\n"));
+    }
+
+    @Test
     public void variableWithComplexIntExpression() {
 
         FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Variable(new Faculty(new ForVar("k"))));

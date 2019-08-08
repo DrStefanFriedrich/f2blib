@@ -79,6 +79,11 @@ public class ExpressionTest {
         assertExpression("2^sin(2)*3", 5.63439195);
         assertWrongExpression("x_{sin(1)}");
         assertExpression("p_{round(sin(x_3)}", -1);
+        assertExpression("10/2", 5);
+        assertExpression("1000 - (-1000)", 2000);
+        assertExpression("-1", -1);
+        assertExpression("+1", 1);
+        assertExpression("round(10)", 10);
     }
 
 }

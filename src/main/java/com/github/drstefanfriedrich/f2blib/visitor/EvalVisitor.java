@@ -97,12 +97,12 @@ public class EvalVisitor extends BaseVisitor {
 
     @Override
     public Double visit(Binomial binomial) {
-        return (double) binomialCoefficient(((Double) binomial.acceptN(this)).intValue(), ((Double) binomial.acceptK(this)).intValue());
+        return (double) binomialCoefficient(((Number) binomial.acceptN(this)).intValue(), ((Number) binomial.acceptK(this)).intValue());
     }
 
     @Override
     public Double visit(Faculty faculty) {
-        return (double) factorial(((Double) faculty.acceptExpression(this)).intValue());
+        return (double) factorial(((Number) faculty.acceptExpression(this)).intValue());
     }
 
     @Override
@@ -167,9 +167,9 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(ForLoop forLoop) {
 
-        int start = ((Double) forLoop.acceptStart(this)).intValue();
-        int end = ((Double) forLoop.acceptEnd(this)).intValue();
-        int step = ((Double) forLoop.acceptStep(this)).intValue();
+        int start = ((Number) forLoop.acceptStart(this)).intValue();
+        int end = ((Number) forLoop.acceptEnd(this)).intValue();
+        int step = ((Number) forLoop.acceptStep(this)).intValue();
 
         if (step == 0) {
 
@@ -283,7 +283,7 @@ public class EvalVisitor extends BaseVisitor {
         if (variable.getIndexExpression() == null) {
             return x[variable.getIndex()];
         } else {
-            return x[((Double) variable.getIndexExpression().accept(this)).intValue() - 1];
+            return x[((Number) variable.getIndexExpression().accept(this)).intValue() - 1];
         }
     }
 
@@ -292,7 +292,7 @@ public class EvalVisitor extends BaseVisitor {
         if (parameter.getIndexExpression() == null) {
             return p[parameter.getIndex()];
         } else {
-            return p[((Double) parameter.getIndexExpression().accept(this)).intValue() - 1];
+            return p[((Number) parameter.getIndexExpression().accept(this)).intValue() - 1];
         }
     }
 
@@ -314,7 +314,7 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(MarkovShift markovShift) {
 
-        int offset = ((Double) markovShift.getOffset().accept(this)).intValue();
+        int offset = ((Number) markovShift.getOffset().accept(this)).intValue();
         int m = y.length;
         int n = x.length;
 
@@ -331,9 +331,7 @@ public class EvalVisitor extends BaseVisitor {
         }
 
         // Copy f into x
-        for (int i = offset; i <= offset + m - 1; i++) {
-            x[i] = y[i - offset];
-        }
+        System.arraycopy(y, 0, x, offset, m);
 
         return 0d;
     }

@@ -33,6 +33,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     private static final String STRING_TYPE = "(Ljava/lang/String;)V";
 
+    private static final String DOUBLE_BIFUNC = "(DD)D";
+
     public BytecodeVisitorImpl(LocalVariables localVariables, SpecialFunctionsUsage specialFunctionsUsage,
                                StackDepthVisitor stackDepthVisitor) {
         super(localVariables, specialFunctionsUsage, stackDepthVisitor);
@@ -435,21 +437,21 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
             power.acceptLeft(this);
             power.acceptRight(this);
-            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", DOUBLE_BIFUNC, false);
 
         } else if (!power.leftEvaluatesToDouble() && power.rightEvaluatesToDouble()) {
 
             power.acceptLeft(this);
             evalMethod.visitInsn(I2D);
             power.acceptRight(this);
-            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", DOUBLE_BIFUNC, false);
 
         } else if (power.leftEvaluatesToDouble() && !power.rightEvaluatesToDouble()) {
 
             power.acceptLeft(this);
             power.acceptRight(this);
             evalMethod.visitInsn(I2D);
-            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", DOUBLE_BIFUNC, false);
 
         } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
 
@@ -457,7 +459,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
             evalMethod.visitInsn(I2D);
             power.acceptRight(this);
             evalMethod.visitInsn(I2D);
-            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", "(DD)D", false);
+            evalMethod.visitMethodInsn(INVOKESTATIC, MATH_TYPE, "pow", DOUBLE_BIFUNC, false);
             evalMethod.visitInsn(D2I);
 
         }

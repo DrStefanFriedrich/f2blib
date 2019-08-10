@@ -313,6 +313,10 @@ Here is a list of mathematical expression evaluation frameworks similar to this 
 * Michael Koller: [Lebensversicherungsmathematik](https://www.actuaries.ch/de/downloads/aid!b4ae4834-66cd-464b-bd27-1497194efc96/id!101/Koller_LV_2013.pdf) (only available in German)
 * Michael Koller: Stochastische Modelle in der Lebensversicherung, Springer, ISBN 978-3-642-11252-2
 * Hartmut Milbrodt, Manfred Helbig: Mathematische Methoden der Personenversicherung, de Gruyter, 1999.
+* Hansjörg Albrecher: [Finanz- und Versicherungsmathematik 1](https://www.math.tugraz.at/~aistleitner/Lehre/WS2011/Finanz_Vers/FinanzVersicherung20112012/skriptum_finanz_und_versicherungsmathematik.pdf)
+* [Actuarial Notation](https://en.wikipedia.org/wiki/Actuarial_notation)
+* [Actuarial Present Value](https://en.wikipedia.org/wiki/Actuarial_present_value)
+* [Lebensversicherungsmathematik](https://de.wikipedia.org/wiki/Lebensversicherungsmathematik)
 
 
 ## License

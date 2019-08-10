@@ -55,8 +55,8 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
         return functions;
     }
 
-    public <T> T acceptMarkovShift(Visitor visitor) {
-        return (T) markovShift.map(ms -> ms.accept(visitor));
+    public <T> Optional<T> acceptMarkovShift(Visitor visitor) {
+        return markovShift.map(ms -> ms.accept(visitor));
     }
 
     @Override

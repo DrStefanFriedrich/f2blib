@@ -52,7 +52,7 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
                         .map(f -> ((Integer) f.accept(this)))
                         .max(Comparator.naturalOrder())
                         .orElseThrow(() -> new IllegalStateException("Empty function not allowed")),
-                (int) ((Optional<Number>) functionsWrapper.acceptMarkovShift(this)).orElse(0)
+                (int) functionsWrapper.acceptMarkovShift(this).orElse(0)
         );
     }
 

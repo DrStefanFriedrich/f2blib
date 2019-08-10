@@ -97,12 +97,15 @@ public class EvalVisitor extends BaseVisitor {
 
     @Override
     public Double visit(Binomial binomial) {
-        return (double) binomialCoefficient(((Number) binomial.acceptN(this)).intValue(), ((Number) binomial.acceptK(this)).intValue());
+        Number n = binomial.acceptN(this);
+        Number k = binomial.acceptK(this);
+        return (double) binomialCoefficient(n.intValue(), k.intValue());
     }
 
     @Override
     public Double visit(Faculty faculty) {
-        return (double) factorial(((Number) faculty.acceptExpression(this)).intValue());
+        Number n = faculty.acceptExpression(this);
+        return (double) factorial(n.intValue());
     }
 
     @Override
@@ -167,9 +170,13 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(ForLoop forLoop) {
 
-        int start = ((Number) forLoop.acceptStart(this)).intValue();
-        int end = ((Number) forLoop.acceptEnd(this)).intValue();
-        int step = ((Number) forLoop.acceptStep(this)).intValue();
+        Number startNumber = forLoop.acceptStart(this);
+        Number endNumber = forLoop.acceptEnd(this);
+        Number stepNumber = forLoop.acceptStep(this);
+
+        int start = startNumber.intValue();
+        int end = endNumber.intValue();
+        int step = stepNumber.intValue();
 
         if (step == 0) {
 
@@ -283,7 +290,8 @@ public class EvalVisitor extends BaseVisitor {
         if (variable.getIndexExpression() == null) {
             return x[variable.getIndex()];
         } else {
-            return x[((Number) variable.getIndexExpression().accept(this)).intValue() - 1];
+            Number index = variable.getIndexExpression().accept(this);
+            return x[index.intValue() - 1];
         }
     }
 
@@ -292,7 +300,8 @@ public class EvalVisitor extends BaseVisitor {
         if (parameter.getIndexExpression() == null) {
             return p[parameter.getIndex()];
         } else {
-            return p[((Number) parameter.getIndexExpression().accept(this)).intValue() - 1];
+            Number index = parameter.getIndexExpression().accept(this);
+            return p[index.intValue() - 1];
         }
     }
 
@@ -314,7 +323,8 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(MarkovShift markovShift) {
 
-        int offset = ((Number) markovShift.getOffset().accept(this)).intValue();
+        Number offsetNumber = markovShift.getOffset().accept(this);
+        int offset = offsetNumber.intValue();
         int m = y.length;
         int n = x.length;
 

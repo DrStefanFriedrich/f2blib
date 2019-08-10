@@ -42,8 +42,8 @@ public class IntegrationTest {
             "begin" +
             "    for i from round(p_1) to round(p_2) step round(p_3);" +
             "    begin" +
-            "        f_1 := x_2 + i;" +
-            "        markov_shift(1);" +
+            "        f_1 := x_1 + i;" +
+            "        markov_shift(0);" +
             "    end\n" +
             "end";
 
@@ -92,7 +92,7 @@ public class IntegrationTest {
 
         kernel.load(GAUSS_SUM);
 
-        double[] x = new double[]{0, 0};
+        double[] x = new double[]{0};
         double[] p = new double[]{1, 100, 1};
         double[] y = new double[1];
 

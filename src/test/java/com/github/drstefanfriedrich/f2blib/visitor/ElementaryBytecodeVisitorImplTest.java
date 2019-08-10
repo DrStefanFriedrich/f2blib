@@ -441,13 +441,13 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
 
         FunctionDefinition fd = new FunctionDefinition("ForLoopGauß", new FunctionBody(
                 new ForLoop("i", 0, 1, 2,
-                        new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new Addition(new Variable(1),
+                        new FunctionsWrapper(new MarkovShift(new Int(0)), new Function(0, new Addition(new Variable(0),
                                 new ForVar("i")))))));
 
         FunctionEvaluation fe = generateClass(fd);
 
         double[] p = new double[]{1, 100, 1};
-        double[] x = new double[]{0, 0};
+        double[] x = new double[]{0};
         double[] y = new double[1];
 
         fe.eval(p, x, y);

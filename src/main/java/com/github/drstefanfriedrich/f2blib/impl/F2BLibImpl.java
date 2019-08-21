@@ -16,6 +16,7 @@ import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
 import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
 import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGenerator;
 import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
+import com.github.drstefanfriedrich.f2blib.visitor.PrettyPrintVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
     private static final Logger LOG = LoggerFactory.getLogger(F2BLibImpl.class);
 
-    private final Map<String, FunctionEvaluation> cache = new ConcurrentHashMap<>();
+    private final Map<String, FunctionInfo> cache = new ConcurrentHashMap<>();
 
     private final FunctionParser parser;
 
@@ -57,8 +58,14 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
 
         FunctionEvaluation instance = generator.generateAndInstantiate(fd);
 
+        PrettyPrintVisitor ppv = new PrettyPrintVisitor();
+        fd.accept(ppv);
+        String prettyPrintedFunction = ppv.getString();
+
+        FunctionInfo fi = new FunctionInfo(instance, prettyPrintedFunction);
+
         String name = instance.getClass().getName();
-        cache.put(name, instance);
+        cache.put(name, fi);
 
         LOG.info("Function {} loaded into the kernel", name);
     }
@@ -74,13 +81,14 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
     @Override
     public void eval(String functionName, double[] p, double[] x, double[] y) {
 
-        FunctionEvaluation functionEvaluation = cache.get(functionName);
+        FunctionInfo fi = cache.get(functionName);
 
-        if (functionEvaluation == null) {
+        if (fi == null) {
             throw new IllegalArgumentException(format("Unknown function name: %s", functionName));
         }
 
         long start = System.nanoTime();
+        FunctionEvaluation functionEvaluation = fi.getFunctionEvaluation();
         functionEvaluation.eval(p, x, y);
         long end = System.nanoTime();
 
@@ -91,9 +99,9 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
     @Override
     public boolean remove(String functionName) {
 
-        FunctionEvaluation functionEvaluation = cache.remove(functionName);
+        FunctionInfo fi = cache.remove(functionName);
 
-        if (functionEvaluation == null) {
+        if (fi == null) {
             LOG.debug("Function {} not found for removal", functionName);
             return false;
         } else {
@@ -108,6 +116,21 @@ public class F2BLibImpl implements FunctionEvaluationKernel {
         HashSet<String> result = new HashSet<>(cache.keySet());
         LOG.debug("The kernel contains {} entries", result.size());
         return result;
+    }
+
+    @Override
+    public String print(String functionName) {
+
+        FunctionInfo fi = cache.get(functionName);
+
+        if (fi == null) {
+            throw new IllegalArgumentException(format("Unknown function name: %s", functionName));
+        }
+
+        String prettyPrintedFunction = fi.getPrettyPrintedFunction();
+
+        LOG.debug("Function {} pretty printed", functionName);
+        return prettyPrintedFunction;
     }
 
 }

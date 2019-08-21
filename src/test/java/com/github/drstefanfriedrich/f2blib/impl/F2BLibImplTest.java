@@ -51,11 +51,34 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
     }
 
     @Test
-    public void unknownFunction() {
+    public void unknownFunctionToEvaluate() {
 
         exception.expect(IllegalArgumentException.class);
 
         underTest.eval("unknown", null, null, null);
+    }
+
+    @Test
+    public void unknownFunctionToPrettyPrint() {
+
+        exception.expect(IllegalArgumentException.class);
+
+        underTest.print("unknown");
+    }
+
+    @Test
+    public void prettyPrint() {
+
+        FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
+        double[] y = new double[1];
+
+        when(parserMock.parse("f")).thenReturn(fd);
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+
+        underTest.load("f");
+        String prettyPrinted = underTest.print("com.github.drstefanfriedrich.f2blib.impl.AbstractF2BLibImplTest$FunctionEvaluationAsset");
+
+        assertThat(prettyPrinted, is("function f;\nbegin\n    f_1 := x_1;\nend\n"));
     }
 
     @Test
@@ -94,7 +117,6 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
     public void removeAndRemoveTwice() {
 
         FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
-        double[] y = new double[1];
 
         when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
         when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
@@ -109,7 +131,6 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
     public void list() {
 
         FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
-        double[] y = new double[1];
 
         when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
         when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());

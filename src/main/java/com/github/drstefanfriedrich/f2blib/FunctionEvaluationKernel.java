@@ -60,4 +60,12 @@ public interface FunctionEvaluationKernel {
      */
     Set<String> list();
 
+    /**
+     * Pretty print a function.
+     *
+     * @param functionName The name of the function to pretty print.
+     * @return String representation of the function.
+     */
+    String print(String functionName);
+
 }

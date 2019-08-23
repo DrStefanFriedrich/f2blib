@@ -593,6 +593,17 @@ public class PrettyPrintVisitorTest {
     }
 
     @Test
+    public void intExpressions() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Power(new Faculty(new Int(2)),
+                new Faculty(new Int(3))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := (2!) ^ (3!);\nend\n"));
+    }
+
+    @Test
     public void variableSimple() {
 
         FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Variable(0));
@@ -605,8 +616,9 @@ public class PrettyPrintVisitorTest {
     @Test
     public void forLoopAndForVar() {
 
-        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("i"))))));
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i",
+                new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
+                new FunctionsWrapper(new Function(0, new IntVar("i"))))));
 
         fd.accept(underTest);
 
@@ -614,9 +626,21 @@ public class PrettyPrintVisitorTest {
     }
 
     @Test
+    public void forLoopWithIntExpressions() {
+
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("k",
+                new Power(new Int(2), new Int(3)), new Faculty(new Int(5)), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("k"))))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function a.b.c.Test;\nbegin\n    for k from 2 ^ 3 to 5! step 2;\n    begin\n        f_1 := k;\n    end\nend\n"));
+    }
+
+    @Test
     public void noOp() {
 
-        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", 0, 1, 2,
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", new Int(0), new Int(1), new Int(2),
                 new FunctionsWrapper(new Function(0, NoOp.get())))));
 
         exception.expect(IllegalStateException.class);
@@ -628,8 +652,9 @@ public class PrettyPrintVisitorTest {
     @Test
     public void markovShift() {
 
-        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new ForVar("i"))))));
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Test", new FunctionBody(new ForLoop("i",
+                new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
+                new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new IntVar("i"))))));
 
         fd.accept(underTest);
 
@@ -675,7 +700,7 @@ public class PrettyPrintVisitorTest {
     @Test
     public void variableWithComplexIntExpression() {
 
-        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Variable(new Faculty(new ForVar("k"))));
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Variable(new Faculty(new IntVar("k"))));
 
         fd.accept(underTest);
 
@@ -694,11 +719,55 @@ public class PrettyPrintVisitorTest {
     @Test
     public void parameterWithComplexIntExpression() {
 
-        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Parameter(new Faculty(new ForVar("k"))));
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Parameter(new Faculty(new IntVar("k"))));
 
         fd.accept(underTest);
 
         assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := p_{k!};\nend\n"));
+    }
+
+    @Test
+    public void sum() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Sum(new Sin(new IntVar("k")), "k",
+                new Int(2), new Faculty(new Int(5))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := sum_{k = 2}^{5!}(sin k);\nend\n"));
+    }
+
+    @Test
+    public void sumWithIntExpression() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Sum(new IntVar("k"), "k",
+                new Int(2), new Faculty(new Int(5))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := sum_{k = 2}^{5!}(k);\nend\n"));
+    }
+
+    @Test
+    public void prod() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Prod(new Sin(new IntVar("k")), "k",
+                new Int(2), new Faculty(new Int(5))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := prod_{k = 2}^{5!}(sin k);\nend\n"));
+    }
+
+    @Test
+    public void prodWithIntExpression() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Prod(new IntVar("k"), "k",
+                new Int(2), new Faculty(new Int(5))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := prod_{k = 2}^{5!}(k);\nend\n"));
     }
 
 }

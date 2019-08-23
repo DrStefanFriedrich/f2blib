@@ -214,13 +214,23 @@ public class SymbolVisitor implements Visitor {
     }
 
     @Override
-    public String visit(ForVar forVar) {
+    public String visit(IntVar intVar) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
     }
 
     @Override
     public String visit(MarkovShift markovShift) {
         return "markov_shift";
+    }
+
+    @Override
+    public String visit(Sum sum) {
+        return "sum";
+    }
+
+    @Override
+    public String visit(Prod prod) {
+        return "prod";
     }
 
 }

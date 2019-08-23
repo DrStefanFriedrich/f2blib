@@ -245,4 +245,67 @@ public abstract class AbstractCalculatingVisitorTest {
         assertExpressionMatches(new Addition(new Parameter(new Faculty(new Int(0))), new Int(5)), 0, 5);
     }
 
+    @Test
+    public void sumSimple() {
+        assertExpressionMatches(new Sum(new Power(new IntVar("k"), new IntVar("k")), "k",
+                new Int(1), new Int(5)), 0, 3413);
+    }
+
+    @Test
+    public void sumComplex() {
+        assertExpressionMatches(new Sum(new Sin(new IntVar("k")), "k",
+                        new Power(new Int(3), new Int(3)),
+                        new Addition(new Power(new Int(3), new Int(3)), new Int(1))),
+                0, 1.227281717);
+    }
+
+    @Test
+    public void sumCornerCase() {
+        assertExpressionMatches(new Sum(new Power(new IntVar("k"), new IntVar("k")), "k",
+                new Int(5), new Int(5)), 0, 3125);
+    }
+
+    @Test
+    public void sumEmpty() {
+        assertExpressionMatches(new Sum(new Power(new IntVar("k"), new IntVar("k")), "k",
+                new Int(10), new Int(5)), 0, 0);
+    }
+
+    @Test
+    public void prodSimple() {
+        assertExpressionMatches(new Prod(new Power(new IntVar("k"), new IntVar("k")), "k",
+                new Int(1), new Int(5)), 0, 86400000);
+    }
+
+    @Test
+    public void prodComplex() {
+        assertExpressionMatches(new Prod(new Sin(new IntVar("k")), "k",
+                        new Power(new Int(3), new Int(3)),
+                        new Addition(new Power(new Int(3), new Int(3)), new Int(1))),
+                0, 0.259087774);
+    }
+
+    @Test
+    public void prodCornerCase() {
+        assertExpressionMatches(new Prod(new Power(new IntVar("k"), new IntVar("k")), "k",
+                new Int(5), new Int(5)), 0, 3125);
+    }
+
+    @Test
+    public void prodEmpty() {
+        assertExpressionMatches(new Prod(new Power(new IntVar("k"), new IntVar("k")), "k",
+                new Int(10), new Int(5)), 0, 1);
+    }
+
+    @Test
+    public void nestedSumAndProduct() {
+        assertExpressionMatches(new Prod(new Sum(new Multiplication(new IntVar("k"), new IntVar("l")),
+                        "l", new Int(2), new Int(3)),
+                        "k",
+                        new Sum(new IntVar("l"), "l", new Int(1), new Int(5)),
+                        new Subtraction(new Prod(new IntVar("l"), "l", new Int(1),
+                                new Int(4)), new Int(8))),
+                0, 6000);
+    }
+
 }

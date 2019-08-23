@@ -1,5 +1,7 @@
 package com.github.drstefanfriedrich.f2blib.visitor;
 
+import com.github.drstefanfriedrich.f2blib.ast.IntVar;
+
 /**
  * Models the array of local variables as specified by the Java virtual machine
  * specification. It is a simple helper class to ease navigation to variables
@@ -10,7 +12,7 @@ public interface LocalVariables {
 
     int getMaxLocals();
 
-    int getIndexForForLoopStart();
+    int getIndexForIntVar(IntVar intVar);
 
     int getIndexForForLoopEnd();
 
@@ -25,5 +27,9 @@ public interface LocalVariables {
     int getMarkovShiftStart();
 
     int getMarkovShiftEnd();
+
+    int getSumIndex();
+
+    int getProdIndex();
 
 }

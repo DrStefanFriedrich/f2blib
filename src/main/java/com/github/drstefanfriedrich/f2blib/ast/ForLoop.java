@@ -19,28 +19,26 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A {@link ForLoop} models a very simple for loop. The start expression must
- * be of the form round(p_i). The same holds true for the end expression and the
- * step expression.
+ * A {@link ForLoop} models a very simple for loop.
  */
 public final class ForLoop implements Serializable, ASTElement {
 
     private final String variableName;
 
-    private final Round start;
+    private final IntExpression start;
 
-    private final Round end;
+    private final IntExpression end;
 
-    private final Round step;
+    private final IntExpression step;
 
     private final FunctionsWrapper functionsWrapper;
 
-    public ForLoop(String variableName, int startParameterIndex, int endParameterIndex, int stepParameterIndex,
+    public ForLoop(String variableName, IntExpression start, IntExpression end, IntExpression step,
                    FunctionsWrapper functionsWrapper) {
         this.variableName = variableName;
-        this.start = new Round(new Parameter(startParameterIndex));
-        this.end = new Round(new Parameter(endParameterIndex));
-        this.step = new Round(new Parameter(stepParameterIndex));
+        this.start = start;
+        this.end = end;
+        this.step = step;
         this.functionsWrapper = functionsWrapper;
     }
 

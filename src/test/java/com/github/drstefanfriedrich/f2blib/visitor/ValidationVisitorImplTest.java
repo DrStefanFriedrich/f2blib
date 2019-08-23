@@ -14,6 +14,7 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ValidationVisitorImplTest {
 
@@ -59,7 +61,7 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.getMaxLocals(), is(12));
+        assertThat(localVariables.getMaxLocals(), is(15));
     }
 
     @Test
@@ -192,22 +194,21 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.getMaxLocals(), is(12));
-        assertThat(localVariables.getIndexForForLoopStart(), is(4));
-        assertThat(localVariables.getIndexForForLoopEnd(), is(5));
-        assertThat(localVariables.getIndexForForLoopStep(), is(6));
-        assertThat(localVariables.getMarkovShiftOffset(), is(7));
-        assertThat(localVariables.getMarkovShiftM(), is(8));
-        assertThat(localVariables.getMarkovShiftN(), is(9));
-        assertThat(localVariables.getMarkovShiftStart(), is(10));
-        assertThat(localVariables.getMarkovShiftEnd(), is(11));
+        assertThat(localVariables.getMaxLocals(), is(15));
+        assertThat(localVariables.getIndexForForLoopEnd(), is(4));
+        assertThat(localVariables.getIndexForForLoopStep(), is(5));
+        assertThat(localVariables.getMarkovShiftOffset(), is(6));
+        assertThat(localVariables.getMarkovShiftM(), is(7));
+        assertThat(localVariables.getMarkovShiftN(), is(8));
+        assertThat(localVariables.getMarkovShiftStart(), is(9));
+        assertThat(localVariables.getMarkovShiftEnd(), is(10));
     }
 
     @Test
     public void forLoop() {
 
-        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("j", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("j"))))));
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("j", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("j"))))));
 
         fd.accept(underTest);
 
@@ -217,11 +218,126 @@ public class ValidationVisitorImplTest {
     @Test
     public void forLoopWithWrongInnerVariable() {
 
-        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("l"))))));
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("k", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("l"))))));
 
         exception.expect(BytecodeGenerationException.class);
-        exception.expectMessage("For loop variable k does not match variable used in body: l");
+        exception.expectMessage("The variable 'l' is not defined");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void forLoopWithTooLongVariableName() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("kk", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("kk"))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable name 'kk' is not allowed.");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void forLoopWithCapitalLetterVariableName() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new ForLoop("K", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("K"))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable name 'K' is not allowed.");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void sum() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Sum(new IntVar("k"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        fd.accept(underTest);
+
+        assertTrue(true);
+    }
+
+    @Test
+    public void sumWithWrongInnerVariableName() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Sum(new IntVar("l"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable 'l' is not defined");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void prod() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Prod(new IntVar("k"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        fd.accept(underTest);
+
+        assertTrue(true);
+    }
+
+    @Test
+    public void prodWithWrongInnerVariableName() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Prod(new IntVar("l"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable 'l' is not defined");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void nestedSumAndProd() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Prod(new Sum(new Multiplication(new IntVar("k"),
+                        new IntVar("l")), "l", new IntVar("k"), new Int(1000)),
+                        "k", new Int(2), new Faculty(new Int(5)))))));
+
+        fd.accept(underTest);
+
+        assertTrue(true);
+    }
+
+    @Test
+    public void nestedSumAndProdAndWrongIntVarInStartIndex() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Prod(new Sum(new Multiplication(new IntVar("k"),
+                        new IntVar("l")), "l", new IntVar("k"), new Int(1000)),
+                        "k", new IntVar("k"), new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable 'k' is not defined");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void nestedSumAndProdAndWrongIntVarInOuterPart() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new Function(0, new Prod(new Sum(new Multiplication(new IntVar("k"),
+                        new IntVar("l")), "l", new IntVar("k"), new Int(1000)),
+                        "k", new IntVar("l"), new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable 'l' is not defined");
 
         fd.accept(underTest);
     }

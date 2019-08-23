@@ -78,8 +78,8 @@ public class PrecedenceVisitorTest {
 
         assertException();
 
-        new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("k")))).accept(underTest);
+        new ForLoop("k", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("k")))).accept(underTest);
     }
 
     @Test

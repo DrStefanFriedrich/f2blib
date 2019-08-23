@@ -301,16 +301,17 @@ public class ASTTest {
         @Test
         public void forVar() {
 
-            assertThat(new ForVar("k").toString(), is("ForVar{variableName=k}"));
+            assertThat(new IntVar("k").toString(), is("IntVar{variableName=k}"));
         }
 
         @Test
         public void forLoop() {
 
-            assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1)))).toString(),
-                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1, indexExpression=null}}, " +
-                            "end=Round{expression=Parameter{index=2, indexExpression=null}}, step=Round{expression=" +
-                            "Parameter{index=3, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=[" +
+            assertThat(new ForLoop("k", new Round(new Parameter(0)), new Round(new Parameter(1)),
+                            new Round(new Parameter(2)), new FunctionsWrapper(new Function(0, new Variable(1)))).toString(),
+                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=0, indexExpression=null}}, " +
+                            "end=Round{expression=Parameter{index=1, indexExpression=null}}, step=Round{expression=" +
+                            "Parameter{index=2, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=[" +
                             "Function{index=0, expression=Variable{index=1, indexExpression=null}}], " +
                             "markovShift=Optional.empty}}"));
         }
@@ -318,11 +319,12 @@ public class ASTTest {
         @Test
         public void markovShift() {
 
-            assertThat(new ForLoop("k", 1, 2, 3, new FunctionsWrapper(
+            assertThat(new ForLoop("k", new Round(new Parameter(0)), new Round(new Parameter(1)),
+                            new Round(new Parameter(2)), new FunctionsWrapper(
                             new MarkovShift(new Int(0)), new Function(0, new Variable(1)))).toString(),
-                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=1, indexExpression=null}}, " +
-                            "end=Round{expression=Parameter{index=2, indexExpression=null}}, step=Round{expression=" +
-                            "Parameter{index=3, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=" +
+                    is("ForLoop{variableName=k, start=Round{expression=Parameter{index=0, indexExpression=null}}, " +
+                            "end=Round{expression=Parameter{index=1, indexExpression=null}}, step=Round{expression=" +
+                            "Parameter{index=2, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=" +
                             "[Function{index=0, expression=Variable{index=1, indexExpression=null}}], markovShift=" +
                             "Optional[MarkovShift{offset=Int{value=0}}]}}"));
         }
@@ -330,28 +332,42 @@ public class ASTTest {
         @Test
         public void variableWithIntExpression() {
 
-            assertThat(new Variable(new Binomial(new ForVar("i"), new Int(10))).toString(),
-                    is("Variable{index=-1, indexExpression=Binomial{n=ForVar{variableName=i}, k=Int{value=10}}}"));
-            assertThat(new Variable(new Faculty(new Addition(new ForVar("i"), new Int(1)))).toString(),
+            assertThat(new Variable(new Binomial(new IntVar("i"), new Int(10))).toString(),
+                    is("Variable{index=-1, indexExpression=Binomial{n=IntVar{variableName=i}, k=Int{value=10}}}"));
+            assertThat(new Variable(new Faculty(new Addition(new IntVar("i"), new Int(1)))).toString(),
                     is("Variable{index=-1, indexExpression=Faculty{intExpression=Addition{left=" +
-                            "ForVar{variableName=i}, right=Int{value=1}}}}"));
+                            "IntVar{variableName=i}, right=Int{value=1}}}}"));
         }
 
         @Test
         public void parameterWithIntExpression() {
 
-            assertThat(new Parameter(new Binomial(new ForVar("i"), new Int(10))).toString(),
-                    is("Parameter{index=-1, indexExpression=Binomial{n=ForVar{variableName=i}, k=Int{value=10}}}"));
-            assertThat(new Parameter(new Faculty(new Addition(new ForVar("i"), new Int(1)))).toString(),
+            assertThat(new Parameter(new Binomial(new IntVar("i"), new Int(10))).toString(),
+                    is("Parameter{index=-1, indexExpression=Binomial{n=IntVar{variableName=i}, k=Int{value=10}}}"));
+            assertThat(new Parameter(new Faculty(new Addition(new IntVar("i"), new Int(1)))).toString(),
                     is("Parameter{index=-1, indexExpression=Faculty{intExpression=Addition{left=" +
-                            "ForVar{variableName=i}, right=Int{value=1}}}}"));
+                            "IntVar{variableName=i}, right=Int{value=1}}}}"));
         }
 
         @Test
         public void markovShiftWithIntExpression() {
 
-            assertThat(new MarkovShift(new Faculty(new ForVar("i"))).toString(),
-                    is("MarkovShift{offset=Faculty{intExpression=ForVar{variableName=i}}}"));
+            assertThat(new MarkovShift(new Faculty(new IntVar("i"))).toString(),
+                    is("MarkovShift{offset=Faculty{intExpression=IntVar{variableName=i}}}"));
+        }
+
+        @Test
+        public void sum() {
+
+            assertThat(new Sum(new IntVar("i"), "i", new Int(1), new Int(10)).toString(),
+                    is("Sum{inner=IntVar{variableName=i}, variableName=i, start=Int{value=1}, end=Int{value=10}}"));
+        }
+
+        @Test
+        public void prod() {
+
+            assertThat(new Prod(new IntVar("i"), "i", new Int(1), new Int(10)).toString(),
+                    is("Prod{inner=IntVar{variableName=i}, variableName=i, start=Int{value=1}, end=Int{value=10}}"));
         }
 
     }
@@ -1063,9 +1079,9 @@ public class ASTTest {
         @Test
         public void forVar() {
 
-            ForVar fv1 = new ForVar("k");
-            ForVar fv2 = new ForVar("k");
-            ForVar fv3 = new ForVar("i");
+            IntVar fv1 = new IntVar("k");
+            IntVar fv2 = new IntVar("k");
+            IntVar fv3 = new IntVar("i");
 
             assertThat(fv1.equals(fv2), is(true));
             assertThat(fv1.equals(fv3), is(false));
@@ -1078,13 +1094,13 @@ public class ASTTest {
         @Test
         public void forLoop() {
 
-            ForLoop fl1 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
-            ForLoop fl2 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
-            ForLoop fl3 = new ForLoop("j", 1, 2, 3, new FunctionsWrapper(new Function(0, new Variable(1))));
-            ForLoop fl4 = new ForLoop("i", 2, 2, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
-            ForLoop fl5 = new ForLoop("i", 1, 3, 3, new FunctionsWrapper(new Function(0, new Variable(0))));
-            ForLoop fl6 = new ForLoop("i", 1, 2, 4, new FunctionsWrapper(new Function(0, new Variable(0))));
-            ForLoop fl7 = new ForLoop("i", 1, 2, 3, new FunctionsWrapper(new Function(1, new Variable(0))));
+            ForLoop fl1 = new ForLoop("i", new Int(1), new Int(2), new Int(3), new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl2 = new ForLoop("i", new Int(1), new Int(2), new Int(3), new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl3 = new ForLoop("j", new Int(1), new Int(2), new Int(3), new FunctionsWrapper(new Function(0, new Variable(1))));
+            ForLoop fl4 = new ForLoop("i", new Int(2), new Int(2), new Int(3), new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl5 = new ForLoop("i", new Int(1), new Int(3), new Int(3), new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl6 = new ForLoop("i", new Int(1), new Int(2), new Int(4), new FunctionsWrapper(new Function(0, new Variable(0))));
+            ForLoop fl7 = new ForLoop("i", new Int(1), new Int(2), new Int(3), new FunctionsWrapper(new Function(1, new Variable(0))));
             FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME, new Cos(new Variable(0)));
 
             assertThat(fl1.equals(fl2), is(true));
@@ -1122,9 +1138,9 @@ public class ASTTest {
         @Test
         public void parameterWithIntExpression() {
 
-            Variable v1 = new Variable(new Faculty(new ForVar("i")));
-            Variable v2 = new Variable(new Faculty(new ForVar("i")));
-            Variable v3 = new Variable(new Faculty(new ForVar("j")));
+            Variable v1 = new Variable(new Faculty(new IntVar("i")));
+            Variable v2 = new Variable(new Faculty(new IntVar("i")));
+            Variable v3 = new Variable(new Faculty(new IntVar("j")));
             Variable v4 = new Variable(10);
 
             assertThat(v1.equals(v2), is(true));
@@ -1140,9 +1156,9 @@ public class ASTTest {
         @Test
         public void variableWithIntExpression() {
 
-            Parameter p1 = new Parameter(new Faculty(new ForVar("i")));
-            Parameter p2 = new Parameter(new Faculty(new ForVar("i")));
-            Parameter p3 = new Parameter(new Faculty(new ForVar("j")));
+            Parameter p1 = new Parameter(new Faculty(new IntVar("i")));
+            Parameter p2 = new Parameter(new Faculty(new IntVar("i")));
+            Parameter p3 = new Parameter(new Faculty(new IntVar("j")));
             Parameter p4 = new Parameter(10);
 
             assertThat(p1.equals(p2), is(true));
@@ -1153,6 +1169,48 @@ public class ASTTest {
 
             assertThat(p1.hashCode(), is(p2.hashCode()));
             assertThat(p1.hashCode(), is(not(p3.hashCode())));
+        }
+
+        @Test
+        public void sum() {
+
+            Sum s1 = new Sum(new IntVar("z"), "z", new Int(1), new Int(10));
+            Sum s2 = new Sum(new IntVar("z"), "z", new Int(2), new Int(10));
+            Sum s3 = new Sum(new IntVar("z"), "z", new Int(1), new Int(11));
+            Sum s4 = new Sum(new IntVar("l"), "l", new Int(1), new Int(10));
+            Sum s5 = new Sum(new IntVar("z"), "z", new Int(1), new Int(10));
+            Prod p1 = new Prod(new IntVar("z"), "z", new Int(1), new Int(10));
+
+            assertThat(s1.equals(s1), is(true));
+            assertThat(s1.equals(s5), is(true));
+            assertThat(s1.equals(s2), is(false));
+            assertThat(s1.equals(s3), is(false));
+            assertThat(s1.equals(s4), is(false));
+            assertThat(s1.equals(p1), is(false));
+
+            assertThat(s1.hashCode(), is(s5.hashCode()));
+            assertThat(s1.hashCode(), is(not(s2.hashCode())));
+        }
+
+        @Test
+        public void prod() {
+
+            Prod p1 = new Prod(new IntVar("z"), "z", new Int(1), new Int(10));
+            Prod p2 = new Prod(new IntVar("z"), "z", new Int(2), new Int(10));
+            Prod p3 = new Prod(new IntVar("z"), "z", new Int(1), new Int(11));
+            Prod p4 = new Prod(new IntVar("l"), "l", new Int(1), new Int(10));
+            Prod p5 = new Prod(new IntVar("z"), "z", new Int(1), new Int(10));
+            Sum s1 = new Sum(new IntVar("z"), "z", new Int(1), new Int(10));
+
+            assertThat(p1.equals(p1), is(true));
+            assertThat(p1.equals(p5), is(true));
+            assertThat(p1.equals(p2), is(false));
+            assertThat(p1.equals(p3), is(false));
+            assertThat(p1.equals(p4), is(false));
+            assertThat(p1.equals(s1), is(false));
+
+            assertThat(p1.hashCode(), is(p5.hashCode()));
+            assertThat(p1.hashCode(), is(not(p2.hashCode())));
         }
 
     }

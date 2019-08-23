@@ -340,7 +340,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := +p_0;\n" +
-                END, "line: 3, column: 12, message: no viable alternative at input '+p_0', offendingSymbol");
+                END, "line: 3, column: 14, message: missing '{' at '0', offendingSymbol");
     }
 
     @Test
@@ -496,8 +496,9 @@ public class ParserTest extends AbstractParserTest {
                 BEGIN +
                 "    f_1 := i;\n" +
                 END +
-                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("i")))))));
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i",
+                new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
+                new FunctionsWrapper(new Function(0, new IntVar("i")))))));
     }
 
     @Test
@@ -520,14 +521,14 @@ public class ParserTest extends AbstractParserTest {
         assertAST("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
-                "for i from round(p_1) to round(p_2) step round(p_3);" +
+                "for i from 0 to 10 step 3;" +
                 BEGIN +
                 "    f_1 := x_1;\n" +
                 END +
                 END +
                 BEGIN +
                 "    f_1 := x_1;\n" +
-                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", new Int(0), new Int(10), new Int(3),
                 new FunctionsWrapper(new Function(0, new Variable(0)))))));
     }
 
@@ -567,13 +568,13 @@ public class ParserTest extends AbstractParserTest {
         assertAST("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
-                "for i from round(p_1) to round(p_2) step round(p_3);" +
+                "for i from 1 to 2 step 3;" +
                 BEGIN +
                 "    f_1 := i;\n" +
                 "    markov_shift(1);\n" +
                 END +
-                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new ForVar("i")))))));
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new ForLoop("i", new Int(1), new Int(2), new Int(3),
+                new FunctionsWrapper(new MarkovShift(new Int(1)), new Function(0, new IntVar("i")))))));
     }
 
     @Test
@@ -582,7 +583,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := p_{i!};\n" +
-                END, new Parameter(new Faculty(new ForVar("i"))));
+                END, new Parameter(new Faculty(new IntVar("i"))));
     }
 
     @Test
@@ -591,7 +592,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := x_{i!};\n" +
-                END, new Variable(new Faculty(new ForVar("i"))));
+                END, new Variable(new Faculty(new IntVar("i"))));
     }
 
     @Test
@@ -646,6 +647,24 @@ public class ParserTest extends AbstractParserTest {
                 BEGIN +
                 "    f_1 := 3 + 4^sin(x_1) + 5;\n" +
                 END, new Addition(new Addition(new Int(3), new Power(new Int(4), new Sin(new Variable(0)))), new Int(5)));
+    }
+
+    @Test
+    public void sum() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := sum(u, u, 1, 10);\n" +
+                END, new Sum(new IntVar("u"),"u", new Int(1), new Int(10)));
+    }
+
+    @Test
+    public void prod() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := prod(u, u, 1, 10);\n" +
+                END, new Prod(new IntVar("u"),"u", new Int(1), new Int(10)));
     }
 
 }

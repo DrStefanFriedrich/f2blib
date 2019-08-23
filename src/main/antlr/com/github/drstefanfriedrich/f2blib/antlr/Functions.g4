@@ -29,10 +29,10 @@ single_valued_functions:
 ;
 
 for_loop:
-    FOR forVar = FOR_VAR_NAME
-            FROM ROUND LPAREN start = PARAMETER RPAREN
-            TO ROUND LPAREN end = PARAMETER RPAREN
-            STEP ROUND LPAREN step = PARAMETER RPAREN SEMI
+    FOR intVar = intVarName
+            FROM start = intExpression
+            TO end = intExpression
+            STEP step = intExpression SEMI
     BEGIN
         singleValuedFunctions = single_valued_functions
     END
@@ -43,13 +43,15 @@ single_valued_function:
 ;
 
 intExpression:
-    variableName = FOR_VAR_NAME # iforVar |
+    variableName = intVarName # iintVar |
     value = integer # iint |
     left = intExpression POWER right = intExpression # ipower |
     inner = intExpression FACULTY # ifaculty |
     LPAREN inner = intExpression RPAREN # iparenthesis |
     ROUND LPAREN inner = expression RPAREN # round |
-    BINOMIAL LPAREN n = intExpression ',' k = intExpression RPAREN # ibinomial |
+    BINOMIAL LPAREN n = intExpression COMMA k = intExpression RPAREN # ibinomial |
+    SUM LPAREN inner = intExpression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # isum |
+    PROD LPAREN inner = intExpression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # iprod |
     PLUS inner = intExpression # ipos |
     MINUS inner = intExpression # ineg |
     left = intExpression TIMES right = intExpression # imultiplication |
@@ -59,7 +61,7 @@ intExpression:
 ;
 
 expression:
-    variableName = FOR_VAR_NAME # forVar |
+    variableName = intVarName # intVar |
     value = integer # int |
     var = variable # var |
     param = parameter # param |
@@ -83,6 +85,8 @@ expression:
     ARSINH LPAREN inner = expression RPAREN # arsinh |
     ARCOSH LPAREN inner = expression RPAREN # arcosh |
     ARTANH LPAREN inner = expression RPAREN # artanh |
+    SUM LPAREN inner = expression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # sum |
+    PROD LPAREN inner = expression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # prod |
     PLUS inner = expression # pos |
     MINUS inner = expression # neg |
     left = expression TIMES right = expression # multiplication |
@@ -137,6 +141,7 @@ PARAM: 'p_';
 VAR: 'x_';
 F: 'f_';
 SEMI: ';';
+COMMA: ',';
 LPAREN: '(';
 RPAREN: ')';
 LBRACE: '{';
@@ -170,11 +175,16 @@ PI: 'pi';
 E: 'e';
 BOLTZMANN: 'boltzmann';
 FOR: 'for';
-FOR_VAR_NAME: 'i';
 FROM: 'from';
 TO: 'to';
 STEP: 'step';
 MARKOV_SHIFT: 'markov_shift';
+SUM: 'sum';
+PROD: 'prod';
+
+intVarName:
+    IDENTIFIER
+;
 
 IDENTIFIER:
     Letter LetterOrDigit*
@@ -206,7 +216,7 @@ fragment ExponentPart:
 ;
 
 fragment Letter:
-    [a-zA-Z$_] |
+    [a-zA-Z] |
     ~[\u0000-\u007F\uD800-\uDBFF] |
     [\uD800-\uDBFF] [\uDC00-\uDFFF]
 ;

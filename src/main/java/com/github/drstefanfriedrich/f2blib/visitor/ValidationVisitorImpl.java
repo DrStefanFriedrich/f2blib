@@ -15,7 +15,9 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import static java.lang.String.format;
@@ -25,11 +27,63 @@ import static java.lang.String.format;
  */
 public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisitor {
 
+    private static final Set<String> ALLOWED_INT_VAR_NAMES = new HashSet<>();
+
+    static {
+        ALLOWED_INT_VAR_NAMES.add("a");
+        ALLOWED_INT_VAR_NAMES.add("b");
+        ALLOWED_INT_VAR_NAMES.add("c");
+        ALLOWED_INT_VAR_NAMES.add("d");
+        // 'e' is reserved for the Euler number
+        // 'f' is reserved for functions
+        ALLOWED_INT_VAR_NAMES.add("g");
+        ALLOWED_INT_VAR_NAMES.add("h");
+        ALLOWED_INT_VAR_NAMES.add("i");
+        ALLOWED_INT_VAR_NAMES.add("j");
+        ALLOWED_INT_VAR_NAMES.add("k");
+        ALLOWED_INT_VAR_NAMES.add("l");
+        ALLOWED_INT_VAR_NAMES.add("m");
+        ALLOWED_INT_VAR_NAMES.add("n");
+        ALLOWED_INT_VAR_NAMES.add("o");
+        // 'p' is reserved for parameter names
+        ALLOWED_INT_VAR_NAMES.add("q");
+        ALLOWED_INT_VAR_NAMES.add("r");
+        ALLOWED_INT_VAR_NAMES.add("s");
+        ALLOWED_INT_VAR_NAMES.add("t");
+        ALLOWED_INT_VAR_NAMES.add("u");
+        ALLOWED_INT_VAR_NAMES.add("v");
+        ALLOWED_INT_VAR_NAMES.add("w");
+        // 'x' is reserved for variable names
+        ALLOWED_INT_VAR_NAMES.add("y");
+        ALLOWED_INT_VAR_NAMES.add("z");
+    }
+
+    private void checkIntVariableName(String variableName) {
+        if (!ALLOWED_INT_VAR_NAMES.contains(variableName)) {
+            throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
+        }
+    }
+
     private final LocalVariablesImpl localVariables = new LocalVariablesImpl();
 
     private final SpecialFunctionsUsageImpl specialFunctionsUsage = new SpecialFunctionsUsageImpl();
 
-    private String forVariableName;
+    /*
+     * The integer variables that are currently (i.e. at the moment of execution) in scope.
+     */
+    private final Set<String> intVariablesInScope = new HashSet<>();
+
+    private void putIntVariableInScope(String variableName) {
+        if (intVariablesInScope.contains(variableName)) {
+            throw new BytecodeGenerationException(format("The variable '%s' is already in use in an outer scope", variableName));
+        }
+        intVariablesInScope.add(variableName);
+        localVariables.calculateNewIndexForIntVar(variableName);
+    }
+
+    private void removeIntVariableFromScope(String variableName) {
+        intVariablesInScope.remove(variableName);
+    }
 
     @Override
     public LocalVariables getLocalVariables() {
@@ -115,22 +169,60 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     @Override
     public Void visit(ForLoop forLoop) {
 
-        forVariableName = forLoop.getVariableName();
-        super.visit(forLoop);
-        forVariableName = null;
+        String variableName = forLoop.getVariableName();
+        checkIntVariableName(variableName);
+
+        forLoop.acceptStart(this);
+        forLoop.acceptEnd(this);
+        forLoop.acceptStep(this);
+
+        putIntVariableInScope(variableName);
+        forLoop.acceptFunctionsWrapper(this);
+        removeIntVariableFromScope(variableName);
 
         return null;
     }
 
     @Override
-    public Void visit(ForVar forVar) {
+    public Void visit(IntVar intVar) {
 
-        String forVarName = forVar.getVariableName();
+        String variableName = intVar.getVariableName();
 
-        if (!forVarName.equals(forVariableName)) {
-            throw new BytecodeGenerationException(format("For loop variable %s does not match variable used in body: %s",
-                    forVariableName, forVarName));
+        if (!intVariablesInScope.contains(variableName)) {
+            throw new BytecodeGenerationException(format("The variable '%s' is not defined", variableName));
         }
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Sum sum) {
+
+        String variableName = sum.getVariableName();
+        checkIntVariableName(variableName);
+
+        sum.acceptStart(this);
+        sum.acceptEnd(this);
+
+        putIntVariableInScope(variableName);
+        sum.acceptInner(this);
+        removeIntVariableFromScope(variableName);
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Prod prod) {
+
+        String variableName = prod.getVariableName();
+        checkIntVariableName(variableName);
+
+        prod.acceptStart(this);
+        prod.acceptEnd(this);
+
+        putIntVariableInScope(variableName);
+        prod.acceptInner(this);
+        removeIntVariableFromScope(variableName);
 
         return null;
     }

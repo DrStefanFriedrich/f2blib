@@ -18,6 +18,9 @@ import org.apache.commons.math3.analysis.function.Acosh;
 import org.apache.commons.math3.analysis.function.Asinh;
 import org.apache.commons.math3.analysis.function.Atanh;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static java.lang.String.format;
 import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficient;
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
@@ -41,9 +44,9 @@ public class EvalVisitor extends BaseVisitor {
     private static final Atanh ARTANH = new Atanh();
 
     /*
-     * The current value of the for loop variable.
+     * Maps each integer variable to the current value
      */
-    private int forVarValue;
+    private final Map<IntVar, Integer> intVariable2Value = new HashMap<>();
 
     EvalVisitor(double[] x, double[] p, int lengthResultArray) {
         this.x = x;
@@ -170,6 +173,8 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(ForLoop forLoop) {
 
+        IntVar intVar = new IntVar(forLoop.getVariableName());
+
         Number startNumber = forLoop.acceptStart(this);
         Number endNumber = forLoop.acceptEnd(this);
         Number stepNumber = forLoop.acceptStep(this);
@@ -184,22 +189,26 @@ public class EvalVisitor extends BaseVisitor {
                 throw new BytecodeGenerationException("step evaluating to 0 not allowed");
             }
 
+            intVariable2Value.put(intVar, start);
             forLoop.acceptFunctionsWrapper(this);
+            intVariable2Value.remove(intVar);
 
         } else if (step > 0) {
 
             for (int i = start; i <= end; i += step) {
-                forVarValue = i;
+                intVariable2Value.put(intVar, i);
                 forLoop.acceptFunctionsWrapper(this);
             }
+            intVariable2Value.remove(intVar);
 
         } else {
 
             step = -step;
             for (int i = start; i >= end; i -= step) {
-                forVarValue = i;
+                intVariable2Value.put(intVar, i);
                 forLoop.acceptFunctionsWrapper(this);
             }
+            intVariable2Value.remove(intVar);
         }
 
         return 0d;
@@ -316,8 +325,8 @@ public class EvalVisitor extends BaseVisitor {
     }
 
     @Override
-    public Double visit(ForVar forVar) {
-        return (double) forVarValue;
+    public Double visit(IntVar intVar) {
+        return intVariable2Value.get(intVar).doubleValue();
     }
 
     @Override
@@ -344,6 +353,58 @@ public class EvalVisitor extends BaseVisitor {
         System.arraycopy(y, 0, x, offset, m);
 
         return 0d;
+    }
+
+    @Override
+    public Double visit(Sum sum) {
+
+        double s = 0;
+        IntVar intVar = new IntVar(sum.getVariableName());
+
+        Number startNumber = sum.acceptStart(this);
+        Number endNumber = sum.acceptEnd(this);
+
+        int start = startNumber.intValue();
+        int end = endNumber.intValue();
+
+        if (start > end) {
+            return s;
+        }
+
+        for (int i = start; i <= end; i++) {
+            intVariable2Value.put(intVar, i);
+            Number res = sum.acceptInner(this);
+            s += res.doubleValue();
+        }
+        intVariable2Value.remove(intVar);
+
+        return s;
+    }
+
+    @Override
+    public Double visit(Prod prod) {
+
+        double p = 1;
+        IntVar intVar = new IntVar(prod.getVariableName());
+
+        Number startNumber = prod.acceptStart(this);
+        Number endNumber = prod.acceptEnd(this);
+
+        int start = startNumber.intValue();
+        int end = endNumber.intValue();
+
+        if (start > end) {
+            return p;
+        }
+
+        for (int i = start; i <= end; i++) {
+            intVariable2Value.put(intVar, i);
+            Number res = prod.acceptInner(this);
+            p *= res.doubleValue();
+        }
+        intVariable2Value.remove(intVar);
+
+        return p;
     }
 
 }

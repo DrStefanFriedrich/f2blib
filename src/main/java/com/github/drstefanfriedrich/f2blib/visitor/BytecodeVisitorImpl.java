@@ -500,6 +500,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visit(ForLoop forLoop) {
 
+        IntVar intVar = new IntVar(forLoop.getVariableName());
+
         Label stepNonZero = new Label();
         Label stepPos = new Label();
         Label stepNeg = new Label();
@@ -508,7 +510,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         // Calculate the integers on the stack and store them
         forLoop.acceptStart(this);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
         forLoop.acceptEnd(this);
         evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopEnd());
         forLoop.acceptStep(this);
@@ -519,7 +521,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitJumpInsn(IFNE, stepNonZero);
 
         // step = 0:
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopEnd());
         evalMethod.visitJumpInsn(IF_ICMPNE, throwException);
         forLoop.acceptFunctionsWrapper(this);
@@ -540,26 +542,26 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         evalMethod.visitLabel(stepPos);
         // step > 0:
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopEnd());
         evalMethod.visitJumpInsn(IF_ICMPGT, forEnd);
         forLoop.acceptFunctionsWrapper(this);
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStep());
         evalMethod.visitInsn(IADD);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitJumpInsn(GOTO, stepPos);
 
         evalMethod.visitLabel(stepNeg);
         // step < 0:
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopEnd());
         evalMethod.visitJumpInsn(IF_ICMPLT, forEnd);
         forLoop.acceptFunctionsWrapper(this);
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStep());
         evalMethod.visitInsn(IADD);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForForLoopStart());
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
         evalMethod.visitJumpInsn(GOTO, stepNeg);
 
         evalMethod.visitLabel(forEnd);
@@ -568,8 +570,8 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
-    public Void visit(ForVar forVar) {
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForForLoopStart());
+    public Void visit(IntVar intVar) {
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
         return null;
     }
 
@@ -690,6 +692,110 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         evalMethod.visitJumpInsn(GOTO, forLoopCopy);
 
         evalMethod.visitLabel(forLoopCopyEnd);
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Sum sum) {
+
+        Label loop = new Label();
+        Label end = new Label();
+
+        boolean evaluatesToDouble = sum.evaluatesToDouble();
+        IntVar intVar = new IntVar(sum.getVariableName());
+        int sumIndex = localVariables.getSumIndex();
+
+        sum.acceptStart(this);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        sum.acceptEnd(this);
+        if (evaluatesToDouble) {
+            evalMethod.visitInsn(DCONST_0);
+            evalMethod.visitVarInsn(DSTORE, sumIndex);
+        } else {
+            evalMethod.visitInsn(ICONST_0);
+            evalMethod.visitVarInsn(ISTORE, sumIndex);
+        }
+
+        evalMethod.visitLabel(loop);
+        evalMethod.visitInsn(DUP);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitJumpInsn(IF_ICMPLT, end);
+        sum.acceptInner(this);
+        if (evaluatesToDouble) {
+            evalMethod.visitVarInsn(DLOAD, sumIndex);
+            evalMethod.visitInsn(DADD);
+            evalMethod.visitVarInsn(DSTORE, sumIndex);
+        } else {
+            evalMethod.visitVarInsn(ILOAD, sumIndex);
+            evalMethod.visitInsn(IADD);
+            evalMethod.visitVarInsn(ISTORE, sumIndex);
+        }
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitInsn(ICONST_1);
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitJumpInsn(GOTO, loop);
+
+        evalMethod.visitLabel(end);
+        evalMethod.visitInsn(POP);
+        if (evaluatesToDouble) {
+            evalMethod.visitVarInsn(DLOAD, sumIndex);
+        } else {
+            evalMethod.visitVarInsn(ILOAD, sumIndex);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Prod prod) {
+
+        Label loop = new Label();
+        Label end = new Label();
+
+        boolean evaluatesToDouble = prod.evaluatesToDouble();
+        IntVar intVar = new IntVar(prod.getVariableName());
+        int prodIndex = localVariables.getProdIndex();
+
+        prod.acceptStart(this);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        prod.acceptEnd(this);
+        if (evaluatesToDouble) {
+            evalMethod.visitInsn(DCONST_1);
+            evalMethod.visitVarInsn(DSTORE, prodIndex);
+        } else {
+            evalMethod.visitInsn(ICONST_1);
+            evalMethod.visitVarInsn(ISTORE, prodIndex);
+        }
+
+        evalMethod.visitLabel(loop);
+        evalMethod.visitInsn(DUP);
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitJumpInsn(IF_ICMPLT, end);
+        prod.acceptInner(this);
+        if (evaluatesToDouble) {
+            evalMethod.visitVarInsn(DLOAD, prodIndex);
+            evalMethod.visitInsn(DMUL);
+            evalMethod.visitVarInsn(DSTORE, prodIndex);
+        } else {
+            evalMethod.visitVarInsn(ILOAD, prodIndex);
+            evalMethod.visitInsn(IMUL);
+            evalMethod.visitVarInsn(ISTORE, prodIndex);
+        }
+        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitInsn(ICONST_1);
+        evalMethod.visitInsn(IADD);
+        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitJumpInsn(GOTO, loop);
+
+        evalMethod.visitLabel(end);
+        evalMethod.visitInsn(POP);
+        if (evaluatesToDouble) {
+            evalMethod.visitVarInsn(DLOAD, prodIndex);
+        } else {
+            evalMethod.visitVarInsn(ILOAD, prodIndex);
+        }
 
         return null;
     }

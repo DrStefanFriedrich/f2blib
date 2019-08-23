@@ -235,11 +235,23 @@ public class SyntaxTest extends AbstractParserTest {
     }
 
     @Test
-    public void forLoopWrongVariable() {
-        assertWrongGrammar("" +
+    public void forLoopOtherVariableName() {
+        assertGrammar("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "for k from round(p_1) to round(p_2) step round(p_3);\n" +
+                BEGIN +
+                "    f_1 := pi + k;\n" +
+                END +
+                END);
+    }
+
+    @Test
+    public void forLoopWithoutRound() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "for k from 1 to 20 step 10;\n" +
                 BEGIN +
                 "    f_1 := pi + k;\n" +
                 END +
@@ -259,23 +271,11 @@ public class SyntaxTest extends AbstractParserTest {
     }
 
     @Test
-    public void forLoopWithoutRound() {
-        assertWrongGrammar("" +
+    public void forLoopWithComplexExpressions() {
+        assertGrammar("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
-                "for i from round(p_1) to round(p_2) step p_3;\n" +
-                BEGIN +
-                "    f_1 := pi + i;\n" +
-                END +
-                END);
-    }
-
-    @Test
-    public void forLoopWithIntegers() {
-        assertWrongGrammar("" +
-                FUNCTION_XYZ_START +
-                BEGIN +
-                "for i from 1 to 10 step 2;\n" +
+                "for i from 2^4 to 10! step round(5*sin(2));\n" +
                 BEGIN +
                 "    f_1 := pi + i;\n" +
                 END +
@@ -423,6 +423,51 @@ public class SyntaxTest extends AbstractParserTest {
                 BEGIN +
                 "    f_1 := x_{round(sin(3))};\n" +
                 END +
+                END);
+    }
+
+    @Test
+    public void sum() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := sum(u*u, u, 1, 10);\n" +
+                END);
+    }
+
+    @Test
+    public void sumWithExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := sum(sqrt(u), u, 1, 10);\n" +
+                END);
+    }
+
+    @Test
+    public void prod() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := prod(u*u, u, 1, 10);\n" +
+                END);
+    }
+
+    @Test
+    public void prodWithExpression() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := prod(sqrt(u), u, 1, 10);\n" +
+                END);
+    }
+
+    @Test
+    public void complexSumAndProd() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := prod(sqrt(u) + sum(sin(k), k, 1, 10), u, sum(k^2, k, 1, 5), prod(p, p, 1, 10));\n" +
                 END);
     }
 

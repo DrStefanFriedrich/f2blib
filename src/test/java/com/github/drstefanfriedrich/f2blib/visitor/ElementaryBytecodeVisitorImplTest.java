@@ -421,8 +421,9 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     }
 
     private FunctionDefinition forLoop() {
-        return new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("k"))))));
+        return new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k",
+                new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
+                new FunctionsWrapper(new Function(0, new IntVar("k"))))));
     }
 
     @Test
@@ -440,9 +441,9 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     public void test30() {
 
         FunctionDefinition fd = new FunctionDefinition("ForLoopGauß", new FunctionBody(
-                new ForLoop("i", 0, 1, 2,
+                new ForLoop("i", new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
                         new FunctionsWrapper(new MarkovShift(new Int(0)), new Function(0, new Addition(new Variable(0),
-                                new ForVar("i")))))));
+                                new IntVar("i")))))));
 
         FunctionEvaluation fe = generateClass(fd);
 
@@ -458,8 +459,8 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     @Test
     public void test31() {
 
-        FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(new Int(-1)), new Function(0, new Addition(new Variable(1), new ForVar("k")))))));
+        FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new MarkovShift(new Int(-1)), new Function(0, new Addition(new Variable(1), new IntVar("k")))))));
 
         FunctionEvaluation fe = generateClass(fd);
 
@@ -476,11 +477,11 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
     @Test
     public void test32() {
 
-        FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", 0, 1, 2,
+        FunctionDefinition fd = new FunctionDefinition("MarkovShift", new FunctionBody(new ForLoop("k", new Int(0), new Int(1), new Int(2),
                 new FunctionsWrapper(new MarkovShift(new Int(0)),
-                        new Function(0, new Addition(new Variable(1), new ForVar("k"))),
-                        new Function(1, new Addition(new Variable(1), new ForVar("k"))),
-                        new Function(2, new Addition(new Variable(1), new ForVar("k")))))));
+                        new Function(0, new Addition(new Variable(1), new IntVar("k"))),
+                        new Function(1, new Addition(new Variable(1), new IntVar("k"))),
+                        new Function(2, new Addition(new Variable(1), new IntVar("k")))))));
 
         FunctionEvaluation fe = generateClass(fd);
 
@@ -528,6 +529,42 @@ public class ElementaryBytecodeVisitorImplTest extends AbstractBytecodeVisitorIm
         fe.eval(p, x, y);
 
         assertThat(y[0], closeTo(0));
+    }
+
+    @Test
+    public void test35() {
+
+        FunctionDefinition fd = new FunctionDefinition("SumTest",
+                new FunctionBody(new FunctionsWrapper(new Function(0, new Sum(new IntVar("k"), "k",
+                        new Int(1), new Int(10))))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{0};
+        double[] x = new double[]{0};
+        double[] y = new double[1];
+
+        fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(55));
+    }
+
+    @Test
+    public void test36() {
+
+        FunctionDefinition fd = new FunctionDefinition("ProdTest",
+                new FunctionBody(new FunctionsWrapper(new Function(0, new Prod(new IntVar("k"), "k",
+                        new Int(1), new Int(10))))));
+
+        FunctionEvaluation fe = generateClass(fd);
+
+        double[] p = new double[]{0};
+        double[] x = new double[]{0};
+        double[] y = new double[1];
+
+        fe.eval(p, x, y);
+
+        assertThat(y[0], closeTo(3628800));
     }
 
 }

@@ -15,18 +15,26 @@ package com.github.drstefanfriedrich.f2blib.ast;
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
 import com.google.common.base.MoreObjects;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Models a variable name in a for loop.
+ * Common base class for {@link Sum} and {@link Prod}.
  */
-public final class ForVar implements IntExpression, Serializable {
+public abstract class AbstractSumProduct implements Expression, IntExpression {
+
+    private final Expression inner;
 
     private final String variableName;
 
-    public ForVar(String variableName) {
+    private final IntExpression start;
+
+    private final IntExpression end;
+
+    public AbstractSumProduct(Expression inner, String variableName, IntExpression start, IntExpression end) {
+        this.inner = inner;
         this.variableName = variableName;
+        this.start = start;
+        this.end = end;
     }
 
     public String getVariableName() {
@@ -36,7 +44,10 @@ public final class ForVar implements IntExpression, Serializable {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+                .add("inner", inner)
                 .add("variableName", variableName)
+                .add("start", start)
+                .add("end", end)
                 .toString();
     }
 
@@ -48,23 +59,33 @@ public final class ForVar implements IntExpression, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ForVar forVar = (ForVar) o;
-        return Objects.equals(variableName, forVar.variableName);
+        AbstractSumProduct that = (AbstractSumProduct) o;
+        return inner.equals(that.inner) &&
+                variableName.equals(that.variableName) &&
+                start.equals(that.start) &&
+                end.equals(that.end);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(variableName);
-    }
-
-    @Override
-    public <T> T accept(Visitor visitor) {
-        return visitor.visit(this);
+        return Objects.hash(inner, variableName, start, end);
     }
 
     @Override
     public boolean evaluatesToDouble() {
-        return false;
+        return inner.evaluatesToDouble();
+    }
+
+    public <T> T acceptInner(Visitor visitor) {
+        return inner.accept(visitor);
+    }
+
+    public <T> T acceptStart(Visitor visitor) {
+        return start.accept(visitor);
+    }
+
+    public <T> T acceptEnd(Visitor visitor) {
+        return end.accept(visitor);
     }
 
 }

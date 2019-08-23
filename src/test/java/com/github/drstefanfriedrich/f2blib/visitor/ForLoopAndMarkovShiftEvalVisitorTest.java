@@ -31,23 +31,23 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
     public ExpectedException exception = ExpectedException.none();
 
     private final FunctionDefinition fd = new FunctionDefinition("ForLoopEvalVisitorTestFunction", new FunctionBody(
-            new ForLoop("i", 0, 1, 2,
-                    new FunctionsWrapper(new Function(0, new ForVar("i"))))));
+            new ForLoop("i", new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
+                    new FunctionsWrapper(new Function(0, new IntVar("i"))))));
 
     private final FunctionDefinition gaußSum = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
-            new ForLoop("i", 0, 1, 2,
+            new ForLoop("i", new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
                     new FunctionsWrapper(new MarkovShift(new Int(0)), new Function(0, new Addition(new Variable(0),
-                            new ForVar("i")))))));
+                            new IntVar("i")))))));
 
     private final FunctionDefinition markovShiftWithNegativeOffset = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
-            new ForLoop("i", 0, 1, 2,
+            new ForLoop("i", new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
                     new FunctionsWrapper(new MarkovShift(new Int(-1)), new Function(0, new Addition(new Variable(1),
-                            new ForVar("i")))))));
+                            new IntVar("i")))))));
 
     private final FunctionDefinition markovShiftWithHugeOffset = new FunctionDefinition("GaußSumVisitorTestFunction", new FunctionBody(
-            new ForLoop("i", 0, 1, 2,
+            new ForLoop("i", new Round(new Parameter(0)), new Round(new Parameter(1)), new Round(new Parameter(2)),
                     new FunctionsWrapper(new MarkovShift(new Int(10)), new Function(0, new Addition(new Variable(1),
-                            new ForVar("i")))))));
+                            new IntVar("i")))))));
 
     private EvalVisitor evalVisitor;
 

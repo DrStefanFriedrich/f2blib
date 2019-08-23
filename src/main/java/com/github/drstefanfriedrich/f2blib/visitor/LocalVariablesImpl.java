@@ -12,7 +12,13 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
+import com.github.drstefanfriedrich.f2blib.ast.IntVar;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Comparator.naturalOrder;
 
 /**
  * Implementation note on the array of local variables:<p>
@@ -20,18 +26,17 @@ import org.objectweb.asm.MethodVisitor;
  * <code>1: p[]</code><p>
  * <code>2: x[]</code><p>
  * <code>3: y[]</code><p>
- * <code>4: for loop start</code><p>
- * <code>5: for loop end</code><p>
- * <code>6: for loop step</code><p>
- * <code>7: Markov shift offset</code><p>
- * <code>8: Markov shift M</code><p>
- * <code>9: Markov shift N</code><p>
- * <code>10: Markov shift start</code><p>
- * <code>11: Markov shift end</code><p>
+ * <code>4: for loop end</code><p>
+ * <code>5: for loop step</code><p>
+ * <code>6: Markov shift offset</code><p>
+ * <code>7: Markov shift M</code><p>
+ * <code>8: Markov shift N</code><p>
+ * <code>9: Markov shift start</code><p>
+ * <code>10: Markov shift end</code><p>
+ * <code>11: sum variable</code><p>
+ * <code>13: prod variable</code><p>
  */
 public class LocalVariablesImpl implements LocalVariables {
-
-    private int indexForLoopStart;
 
     private int indexForLoopEnd;
 
@@ -47,6 +52,12 @@ public class LocalVariablesImpl implements LocalVariables {
 
     private int markovShiftEnd;
 
+    private int sumIndex;
+
+    private int prodIndex;
+
+    private final Map<IntVar, Integer> intVariable2Index = new HashMap<>();
+
     /**
      * The maximum number of local variables as needed by {@link MethodVisitor}.visitMaxs.
      */
@@ -54,10 +65,11 @@ public class LocalVariablesImpl implements LocalVariables {
     public int getMaxLocals() {
         /*
          * 4: this, x[], y[], p[]
-         * 3: for loop: start, end, step
+         * 2: for loop: end, step
          * 5: Markov shift
+         * 4: sum, prod (double)
          */
-        return 4 + 3 + 5;
+        return 4 + 2 + 5 + 4 + intVariable2Index.size();
     }
 
     /**
@@ -69,7 +81,6 @@ public class LocalVariablesImpl implements LocalVariables {
 
         int localVariableIndex = 4;
 
-        indexForLoopStart = localVariableIndex++;
         indexForLoopEnd = localVariableIndex++;
         indexForLoopStep = localVariableIndex++;
 
@@ -77,12 +88,27 @@ public class LocalVariablesImpl implements LocalVariables {
         markovShiftM = localVariableIndex++;
         markovShiftN = localVariableIndex++;
         markovShiftStart = localVariableIndex++;
-        markovShiftEnd = localVariableIndex; // add ++ if you want to continue here
+        markovShiftEnd = localVariableIndex++;
+        sumIndex = localVariableIndex++;
+        localVariableIndex++;
+        prodIndex = localVariableIndex++; // add ++ if you want to continue here
     }
 
     @Override
-    public int getIndexForForLoopStart() {
-        return indexForLoopStart;
+    public int getIndexForIntVar(IntVar intVar) {
+        return intVariable2Index.get(intVar);
+    }
+
+    public void calculateNewIndexForIntVar(String variableName) {
+
+        IntVar intVar = new IntVar(variableName);
+        if (intVariable2Index.containsKey(intVar)) {
+            return;
+        }
+
+        int nextIndex = intVariable2Index.values().stream().max(naturalOrder()).orElse(14) + 1;
+
+        intVariable2Index.put(intVar, nextIndex);
     }
 
     @Override
@@ -118,6 +144,16 @@ public class LocalVariablesImpl implements LocalVariables {
     @Override
     public int getMarkovShiftEnd() {
         return markovShiftEnd;
+    }
+
+    @Override
+    public int getSumIndex() {
+        return sumIndex;
+    }
+
+    @Override
+    public int getProdIndex() {
+        return prodIndex;
     }
 
 }

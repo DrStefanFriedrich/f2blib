@@ -84,6 +84,9 @@ public class ExpressionTest {
         assertExpression("-1", -1);
         assertExpression("+1", 1);
         assertExpression("round(10)", 10);
+        assertExpression("sum_{k=1}^{100}(k)", 5050);
+        assertExpression("prod_{k=1}^{5}(k)", 120);
+        assertExpression("sum_{k=1}^{4}(prod_{l=1}^{k}(l))", 33);
     }
 
 }

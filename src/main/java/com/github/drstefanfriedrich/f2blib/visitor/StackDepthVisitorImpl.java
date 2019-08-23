@@ -233,13 +233,23 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
     }
 
     @Override
-    public Integer visit(ForVar forVar) {
+    public Integer visit(IntVar intVar) {
         return 2;
     }
 
     @Override
     public Integer visit(MarkovShift markovShift) {
         return 5;
+    }
+
+    @Override
+    public Integer visit(Sum sum) {
+        return 3 + (int) sum.acceptInner(this);
+    }
+
+    @Override
+    public Integer visit(Prod prod) {
+        return 3 + (int) prod.acceptInner(this);
     }
 
 }

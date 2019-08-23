@@ -92,8 +92,12 @@ public interface Visitor {
 
     <T> T visit(ForLoop forLoop);
 
-    <T> T visit(ForVar forVar);
+    <T> T visit(IntVar intVar);
 
     <T> T visit(MarkovShift markovShift);
+
+    <T> T visit(Sum sum);
+
+    <T> T visit(Prod prod);
 
 }

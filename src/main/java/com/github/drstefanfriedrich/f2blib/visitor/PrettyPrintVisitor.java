@@ -446,8 +446,8 @@ public class PrettyPrintVisitor implements Visitor {
     }
 
     @Override
-    public Void visit(ForVar forVar) {
-        pw.print(forVar.getVariableName());
+    public Void visit(IntVar intVar) {
+        pw.print(intVar.getVariableName());
         return null;
     }
 
@@ -459,6 +459,42 @@ public class PrettyPrintVisitor implements Visitor {
         pw.print(spaces + symbol + "(");
         markovShift.getOffset().accept(this);
         pw.println(");");
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Sum sum) {
+
+        String symbol = sum.accept(symbolVisitor);
+
+        pw.print(symbol);
+        pw.print("_{");
+        pw.print(sum.getVariableName() + " = ");
+        sum.acceptStart(this);
+        pw.print("}^{");
+        sum.acceptEnd(this);
+        pw.print("}(");
+        sum.acceptInner(this);
+        pw.print(")");
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Prod prod) {
+
+        String symbol = prod.accept(symbolVisitor);
+
+        pw.print(symbol);
+        pw.print("_{");
+        pw.print(prod.getVariableName() + " = ");
+        prod.acceptStart(this);
+        pw.print("}^{");
+        prod.acceptEnd(this);
+        pw.print("}(");
+        prod.acceptInner(this);
+        pw.print(")");
 
         return null;
     }

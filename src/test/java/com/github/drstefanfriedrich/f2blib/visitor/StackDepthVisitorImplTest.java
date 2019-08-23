@@ -91,8 +91,8 @@ public class StackDepthVisitorImplTest {
     @Test
     public void functionWithForLoop() {
 
-        FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new Function(0, new ForVar("k"))))));
+        FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new Function(0, new IntVar("k"))))));
 
         fd.accept(underTest);
 
@@ -102,8 +102,8 @@ public class StackDepthVisitorImplTest {
     @Test
     public void functionWithForLoopAndMarkovShift() {
 
-        FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", 0, 1, 2,
-                new FunctionsWrapper(new MarkovShift(new Int(0)), new Function(0, new ForVar("k"))))));
+        FunctionDefinition fd = new FunctionDefinition("ForLoop", new FunctionBody(new ForLoop("k", new Int(0), new Int(1), new Int(2),
+                new FunctionsWrapper(new MarkovShift(new Int(0)), new Function(0, new IntVar("k"))))));
 
         fd.accept(underTest);
 
@@ -130,6 +130,22 @@ public class StackDepthVisitorImplTest {
         fd.accept(underTest);
 
         assertThat(underTest.getMaxStackDepth(), is(8));
+    }
+
+    @Test
+    public void sumAndProd() {
+
+        FunctionDefinition fd = createFunctionDefinition(FUNCTION_NAME,
+                new Prod(new Sum(new Multiplication(new IntVar("k"), new IntVar("l")),
+                        "l", new Int(2), new Int(3)),
+                        "k",
+                        new Sum(new IntVar("l"), "l", new Int(1), new Int(5)),
+                        new Subtraction(new Prod(new IntVar("l"), "l", new Int(1),
+                                new Int(4)), new Int(8))));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getMaxStackDepth(), is(12));
     }
 
 }

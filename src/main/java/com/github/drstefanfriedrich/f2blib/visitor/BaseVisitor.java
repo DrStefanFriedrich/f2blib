@@ -231,7 +231,7 @@ public class BaseVisitor extends AbstractVisitor {
     }
 
     @Override
-    public <T> T visit(ForVar forVar) {
+    public <T> T visit(IntVar intVar) {
         return null;
     }
 
@@ -243,6 +243,22 @@ public class BaseVisitor extends AbstractVisitor {
     @Override
     public <T> T visit(MarkovShift markovShift) {
         markovShift.getOffset().accept(this);
+        return null;
+    }
+
+    @Override
+    public <T> T visit(Sum sum) {
+        sum.acceptInner(this);
+        sum.acceptStart(this);
+        sum.acceptEnd(this);
+        return null;
+    }
+
+    @Override
+    public <T> T visit(Prod prod) {
+        prod.acceptInner(this);
+        prod.acceptStart(this);
+        prod.acceptEnd(this);
         return null;
     }
 

@@ -38,6 +38,14 @@ public class IntegrationTest {
             "    end\n" +
             "end";
 
+    private static final String FOR_LOOP_INT_EXPR = "function some.packagename.ForLoopIntExpr;" +
+            "begin" +
+            "    for z from 2^2 to 5! step 3;" +
+            "    begin" +
+            "        f_1 := x_1 * z;" +
+            "    end\n" +
+            "end";
+
     private static final String GAUSS_SUM = "function some.packagename.GaußSum;" +
             "begin" +
             "    for i from round(p_1) to round(p_2) step round(p_3);" +
@@ -45,6 +53,11 @@ public class IntegrationTest {
             "        f_1 := x_1 + i;" +
             "        markov_shift(0);" +
             "    end\n" +
+            "end";
+
+    private static final String GAUSS_SUM_USING_SUM = "function some.packagename.GaußSumUsingSum;" +
+            "begin" +
+            "    f_1 := sum(k, k, 1, 100);" +
             "end";
 
     private static final String INDEXED_PARAMS_AND_VARS = "function some.packagename.IndexedParameter;" +
@@ -84,6 +97,20 @@ public class IntegrationTest {
         assertThat(y[0], closeTo(49.5));
     }
 
+    @Test
+    public void simpleForLoopIntExpr() {
+
+        kernel.load(FOR_LOOP_INT_EXPR);
+
+        double[] x = new double[]{2.5};
+        double[] p = new double[]{};
+        double[] y = new double[1];
+
+        kernel.eval("some.packagename.ForLoopIntExpr", p, x, y);
+
+        assertThat(y[0], closeTo(295));
+    }
+
     /**
      * An (abused) example for the markov_shift.
      */
@@ -97,6 +124,20 @@ public class IntegrationTest {
         double[] y = new double[1];
 
         kernel.eval("some.packagename.GaußSum", p, x, y);
+
+        assertThat(y[0], closeTo(5050));
+    }
+
+    @Test
+    public void gaußSumUsingSum() {
+
+        kernel.load(GAUSS_SUM_USING_SUM);
+
+        double[] x = new double[]{};
+        double[] p = new double[]{};
+        double[] y = new double[1];
+
+        kernel.eval("some.packagename.GaußSumUsingSum", p, x, y);
 
         assertThat(y[0], closeTo(5050));
     }

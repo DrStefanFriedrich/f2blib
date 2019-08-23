@@ -214,13 +214,23 @@ public class PrecedenceVisitor implements Visitor {
     }
 
     @Override
-    public Integer visit(ForVar forVar) {
+    public Integer visit(IntVar intVar) {
         return 0;
     }
 
     @Override
     public <T> T visit(MarkovShift markovShift) {
         throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
+    @Override
+    public Integer visit(Sum sum) {
+        return 4;
+    }
+
+    @Override
+    public Integer visit(Prod prod) {
+        return 4;
     }
 
 }

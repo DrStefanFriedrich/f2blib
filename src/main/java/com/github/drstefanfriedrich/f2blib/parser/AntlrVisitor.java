@@ -68,14 +68,13 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     @Override
     public Object visitFor_loop(FunctionsParser.For_loopContext ctx) {
 
-        String variableName = ctx.forVar.getText();
-        int startParameterIndex = Integer.parseInt(ctx.start.getText().substring(2)) - 1;
-        int endParameterIndex = Integer.parseInt(ctx.end.getText().substring(2)) - 1;
-        int stepParameterIndex = Integer.parseInt(ctx.step.getText().substring(2)) - 1;
+        String variableName = ctx.intVar.getText();
+        IntExpression start = (IntExpression) ctx.start.accept(this);
+        IntExpression end = (IntExpression) ctx.end.accept(this);
+        IntExpression step = (IntExpression) ctx.step.accept(this);
         FunctionsWrapper functionsWrapper = (FunctionsWrapper) ctx.single_valued_functions().accept(this);
 
-        return new ForLoop(variableName, startParameterIndex, endParameterIndex, stepParameterIndex,
-                functionsWrapper);
+        return new ForLoop(variableName, start, end, step, functionsWrapper);
     }
 
     @Override
@@ -261,8 +260,13 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitForVar(FunctionsParser.ForVarContext ctx) {
-        return new ForVar(ctx.variableName.getText());
+    public Object visitIntVar(FunctionsParser.IntVarContext ctx) {
+        return new IntVar(ctx.variableName.getText());
+    }
+
+    @Override
+    public Object visitIintVar(FunctionsParser.IintVarContext ctx) {
+        return new IntVar(ctx.variableName.getText());
     }
 
     @Override
@@ -314,12 +318,6 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitIforVar(FunctionsParser.IforVarContext ctx) {
-
-        return new ForVar(ctx.variableName.getText());
-    }
-
-    @Override
     public Object visitIparenthesis(FunctionsParser.IparenthesisContext ctx) {
 
         return new Parenthesis((IntExpression) ctx.inner.accept(this));
@@ -355,6 +353,50 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
         } else {
             return new Parameter(Integer.parseInt(ctx.PARAMETER().getText().substring(2)) - 1);
         }
+    }
+
+    @Override
+    public Object visitSum(FunctionsParser.SumContext ctx) {
+
+        Expression inner = (Expression) ctx.inner.accept(this);
+        String variableName = ctx.variableName.getText();
+        IntExpression start = (IntExpression) ctx.start.accept(this);
+        IntExpression end = (IntExpression) ctx.end.accept(this);
+
+        return new Sum(inner, variableName, start, end);
+    }
+
+    @Override
+    public Object visitIsum(FunctionsParser.IsumContext ctx) {
+
+        IntExpression inner = (IntExpression) ctx.inner.accept(this);
+        String variableName = ctx.variableName.getText();
+        IntExpression start = (IntExpression) ctx.start.accept(this);
+        IntExpression end = (IntExpression) ctx.end.accept(this);
+
+        return new Sum(inner, variableName, start, end);
+    }
+
+    @Override
+    public Object visitProd(FunctionsParser.ProdContext ctx) {
+
+        Expression inner = (Expression) ctx.inner.accept(this);
+        String variableName = ctx.variableName.getText();
+        IntExpression start = (IntExpression) ctx.start.accept(this);
+        IntExpression end = (IntExpression) ctx.end.accept(this);
+
+        return new Prod(inner, variableName, start, end);
+    }
+
+    @Override
+    public Object visitIprod(FunctionsParser.IprodContext ctx) {
+
+        IntExpression inner = (IntExpression) ctx.inner.accept(this);
+        String variableName = ctx.variableName.getText();
+        IntExpression start = (IntExpression) ctx.start.accept(this);
+        IntExpression end = (IntExpression) ctx.end.accept(this);
+
+        return new Prod(inner, variableName, start, end);
     }
 
 }

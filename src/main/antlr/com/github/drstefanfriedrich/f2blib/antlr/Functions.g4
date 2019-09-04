@@ -24,12 +24,13 @@ function_body:
 ;
 
 single_valued_functions:
+    auxiliary_variable*
     single_valued_function*
     (MARKOV_SHIFT LPAREN offset = intExpression RPAREN SEMI)?
 ;
 
 for_loop:
-    FOR intVar = intVarName
+    FOR intVar = specialVariable
             FROM start = intExpression
             TO end = intExpression
             STEP step = intExpression SEMI
@@ -42,16 +43,20 @@ single_valued_function:
     FUNC DEFINE inner = expression SEMI
 ;
 
+auxiliary_variable:
+    specialVariable DEFINE inner = expression SEMI
+;
+
 intExpression:
-    variableName = intVarName # iintVar |
+    variableName = specialVariable # iintVar |
     value = integer # iint |
     left = intExpression POWER right = intExpression # ipower |
     inner = intExpression FACULTY # ifaculty |
     LPAREN inner = intExpression RPAREN # iparenthesis |
     ROUND LPAREN inner = expression RPAREN # round |
     BINOMIAL LPAREN n = intExpression COMMA k = intExpression RPAREN # ibinomial |
-    SUM LPAREN inner = intExpression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # isum |
-    PROD LPAREN inner = intExpression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # iprod |
+    SUM LPAREN inner = intExpression COMMA variableName = specialVariable COMMA start = intExpression COMMA end = intExpression RPAREN # isum |
+    PROD LPAREN inner = intExpression COMMA variableName = specialVariable COMMA start = intExpression COMMA end = intExpression RPAREN # iprod |
     PLUS inner = intExpression # ipos |
     MINUS inner = intExpression # ineg |
     left = intExpression TIMES right = intExpression # imultiplication |
@@ -61,7 +66,7 @@ intExpression:
 ;
 
 expression:
-    variableName = intVarName # intVar |
+    variableName = specialVariable # intVar |
     value = integer # int |
     var = variable # var |
     param = parameter # param |
@@ -85,8 +90,8 @@ expression:
     ARSINH LPAREN inner = expression RPAREN # arsinh |
     ARCOSH LPAREN inner = expression RPAREN # arcosh |
     ARTANH LPAREN inner = expression RPAREN # artanh |
-    SUM LPAREN inner = expression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # sum |
-    PROD LPAREN inner = expression COMMA variableName = intVarName COMMA start = intExpression COMMA end = intExpression RPAREN # prod |
+    SUM LPAREN inner = expression COMMA variableName = specialVariable COMMA start = intExpression COMMA end = intExpression RPAREN # sum |
+    PROD LPAREN inner = expression COMMA variableName = specialVariable COMMA start = intExpression COMMA end = intExpression RPAREN # prod |
     PLUS inner = expression # pos |
     MINUS inner = expression # neg |
     left = expression TIMES right = expression # multiplication |
@@ -182,7 +187,7 @@ MARKOV_SHIFT: 'markov_shift';
 SUM: 'sum';
 PROD: 'prod';
 
-intVarName:
+specialVariable:
     IDENTIFIER
 ;
 

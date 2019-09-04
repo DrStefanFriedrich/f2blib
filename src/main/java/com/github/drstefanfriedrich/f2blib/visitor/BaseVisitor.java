@@ -262,4 +262,16 @@ public class BaseVisitor extends AbstractVisitor {
         return null;
     }
 
+    @Override
+    public <T> T visit(AuxVar auxVar) {
+        return null;
+    }
+
+    @Override
+    public <T> T visit(AuxiliaryVariable auxiliaryVariable) {
+        auxiliaryVariable.acceptAuxVar(this);
+        auxiliaryVariable.acceptInner(this);
+        return null;
+    }
+
 }

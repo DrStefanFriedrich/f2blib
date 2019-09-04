@@ -100,4 +100,8 @@ public interface Visitor {
 
     <T> T visit(Prod prod);
 
+    <T> T visit(AuxVar auxVar);
+
+    <T> T visit(AuxiliaryVariable auxiliaryVariable);
+
 }

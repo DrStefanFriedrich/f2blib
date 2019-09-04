@@ -123,11 +123,27 @@ public class SymbolVisitorTest {
     }
 
     @Test
-    public void visitForVar() {
+    public void visitIntVar() {
 
         assertException();
 
         new IntVar("k").accept(underTest);
+    }
+
+    @Test
+    public void visitAuxVar() {
+
+        assertException();
+
+        new AuxVar("K").accept(underTest);
+    }
+
+    @Test
+    public void visitAuxiliaryVariable() {
+
+        assertException();
+
+        new AuxiliaryVariable(new AuxVar("I"), new Int(1)).accept(underTest);
     }
 
 }

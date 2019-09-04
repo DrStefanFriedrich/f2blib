@@ -19,6 +19,9 @@ public abstract class AbstractCalculatingVisitorTest {
 
     protected abstract void assertExpressionMatches(Expression expression, double xValue, double yValue);
 
+    protected abstract void assertExpressionMatches(Expression expression, Expression auxiliaryExpression,
+                                                    double xValue, double yValue);
+
     @Test
     public void abs() {
         assertExpressionMatches(new Abs(new Variable(0)), 1.11, 1.11);
@@ -306,6 +309,18 @@ public abstract class AbstractCalculatingVisitorTest {
                         new Subtraction(new Prod(new IntVar("l"), "l", new Int(1),
                                 new Int(4)), new Int(8))),
                 0, 6000);
+    }
+
+    @Test
+    public void auxVar() {
+        assertExpressionMatches(new Multiplication(new AuxVar("I"), new AuxVar("I")),
+                new Multiplication(new Variable(0), new Variable((0))), 4, 256);
+    }
+
+    @Test
+    public void auxVarWithInt() {
+        assertExpressionMatches(new Multiplication(new AuxVar("I"), new AuxVar("I")),
+                new Multiplication(new Int(10), new Int(10)), 4, 10000);
     }
 
 }

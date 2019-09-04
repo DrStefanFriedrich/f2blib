@@ -233,4 +233,14 @@ public class SymbolVisitor implements Visitor {
         return "prod";
     }
 
+    @Override
+    public String visit(AuxVar auxVar) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
+    @Override
+    public String visit(AuxiliaryVariable auxiliaryVariable) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
 }

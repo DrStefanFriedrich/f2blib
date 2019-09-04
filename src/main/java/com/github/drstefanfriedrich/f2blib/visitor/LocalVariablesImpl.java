@@ -12,11 +12,14 @@
 
 package com.github.drstefanfriedrich.f2blib.visitor;
 
+import com.github.drstefanfriedrich.f2blib.ast.AuxVar;
 import com.github.drstefanfriedrich.f2blib.ast.IntVar;
 import org.objectweb.asm.MethodVisitor;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Comparator.naturalOrder;
 
@@ -35,6 +38,7 @@ import static java.util.Comparator.naturalOrder;
  * <code>10: Markov shift end</code><p>
  * <code>11: sum variable</code><p>
  * <code>13: prod variable</code><p>
+ * <code>14, ...: auxiliary variables</code>
  */
 public class LocalVariablesImpl implements LocalVariables {
 
@@ -58,6 +62,10 @@ public class LocalVariablesImpl implements LocalVariables {
 
     private final Map<IntVar, Integer> intVariable2Index = new HashMap<>();
 
+    private final Set<AuxVar> tmpAuxVars = new HashSet<>();
+
+    private final Map<AuxVar, Integer> auxVar2Index = new HashMap<>();
+
     /**
      * The maximum number of local variables as needed by {@link MethodVisitor}.visitMaxs.
      */
@@ -69,7 +77,7 @@ public class LocalVariablesImpl implements LocalVariables {
          * 5: Markov shift
          * 4: sum, prod (double)
          */
-        return 4 + 2 + 5 + 4 + intVariable2Index.size();
+        return 4 + 2 + 5 + 2 * 2 + intVariable2Index.size() + 2 * auxVar2Index.size();
     }
 
     /**
@@ -91,7 +99,13 @@ public class LocalVariablesImpl implements LocalVariables {
         markovShiftEnd = localVariableIndex++;
         sumIndex = localVariableIndex++;
         localVariableIndex++;
-        prodIndex = localVariableIndex++; // add ++ if you want to continue here
+        prodIndex = localVariableIndex++;
+        localVariableIndex++;
+
+        for (AuxVar av : tmpAuxVars) {
+            auxVar2Index.put(av, localVariableIndex++);
+            localVariableIndex++;
+        }
     }
 
     @Override
@@ -154,6 +168,15 @@ public class LocalVariablesImpl implements LocalVariables {
     @Override
     public int getProdIndex() {
         return prodIndex;
+    }
+
+    @Override
+    public int getIndexForAuxVar(AuxVar auxVar) {
+        return auxVar2Index.get(auxVar);
+    }
+
+    public void addAuxVariable(AuxVar auxVar) {
+        tmpAuxVars.add(auxVar);
     }
 
 }

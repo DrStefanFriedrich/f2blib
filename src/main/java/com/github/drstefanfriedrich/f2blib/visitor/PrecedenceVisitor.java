@@ -233,4 +233,14 @@ public class PrecedenceVisitor implements Visitor {
         return 4;
     }
 
+    @Override
+    public Integer visit(AuxVar auxVar) {
+        return 0;
+    }
+
+    @Override
+    public <T> T visit(AuxiliaryVariable auxiliaryVariable) {
+        throw new IllegalStateException(EXCEPTION_MESSAGE);
+    }
+
 }

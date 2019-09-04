@@ -770,4 +770,15 @@ public class PrettyPrintVisitorTest {
         assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := prod_{k = 2}^{5!}(k);\nend\n"));
     }
 
+    @Test
+    public void auxVar() {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, new Prod(new IntVar("k"), "k",
+                new Int(2), new Faculty(new Int(5))), new Power(new AuxVar("I"), new Int(3)));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    I := I ^ 3;\n    f_1 := prod_{k = 2}^{5!}(k);\nend\n"));
+    }
+
 }

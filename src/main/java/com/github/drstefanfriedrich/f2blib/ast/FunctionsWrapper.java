@@ -25,13 +25,17 @@ import java.util.*;
  */
 public final class FunctionsWrapper implements Serializable, ASTElement {
 
+    private final List<AuxiliaryVariable> auxiliaryVariables = new ArrayList<>();
+
     private final List<Function> functions = new ArrayList<>();
 
     private final transient Optional<MarkovShift> markovShift;
 
-    public FunctionsWrapper(List<Function> functions, MarkovShift markovShift) {
+    public FunctionsWrapper(List<AuxiliaryVariable> auxiliaryVariables, List<Function> functions,
+                            MarkovShift markovShift) {
+        this.auxiliaryVariables.addAll(auxiliaryVariables);
         this.functions.addAll(functions);
-        this.markovShift = Optional.of(markovShift);
+        this.markovShift = Optional.ofNullable(markovShift);
     }
 
     public FunctionsWrapper(List<Function> functions) {
@@ -43,8 +47,12 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
         this(Arrays.asList(functions));
     }
 
+    public FunctionsWrapper(AuxiliaryVariable auxVar, Function... functions) {
+        this(Arrays.asList(auxVar), Arrays.asList(functions), null);
+    }
+
     public FunctionsWrapper(MarkovShift markovShift, Function... functions) {
-        this(Arrays.asList(functions), markovShift);
+        this(Collections.emptyList(), Arrays.asList(functions), markovShift);
     }
 
     /*
@@ -53,6 +61,10 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
      */
     public List<Function> getFunctions() {
         return functions;
+    }
+
+    public List<AuxiliaryVariable> getAuxiliaryVariables() {
+        return auxiliaryVariables;
     }
 
     public <T> Optional<T> acceptMarkovShift(Visitor visitor) {

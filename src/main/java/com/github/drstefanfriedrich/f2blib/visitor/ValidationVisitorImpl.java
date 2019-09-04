@@ -58,20 +58,31 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
         ALLOWED_INT_VAR_NAMES.add("z");
     }
 
+    private final LocalVariablesImpl localVariables = new LocalVariablesImpl();
+
+    private final SpecialFunctionsUsageImpl specialFunctionsUsage = new SpecialFunctionsUsageImpl();
+
+    private boolean currentlyInScopeOfAuxiliaryExpression;
+
+    /*
+     * The integer variables that are currently (i.e. at the moment of execution) in scope.
+     */
+    private final Set<String> intVariablesInScope = new HashSet<>();
+
     private void checkIntVariableName(String variableName) {
         if (!ALLOWED_INT_VAR_NAMES.contains(variableName)) {
             throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
         }
     }
 
-    private final LocalVariablesImpl localVariables = new LocalVariablesImpl();
-
-    private final SpecialFunctionsUsageImpl specialFunctionsUsage = new SpecialFunctionsUsageImpl();
-
-    /*
-     * The integer variables that are currently (i.e. at the moment of execution) in scope.
-     */
-    private final Set<String> intVariablesInScope = new HashSet<>();
+    private void checkAuxVariableName(String variableName) {
+        if (variableName.length() != 1) {
+            throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
+        }
+        if (!variableName.toUpperCase().equals(variableName)) {
+            throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
+        }
+    }
 
     private void putIntVariableInScope(String variableName) {
         if (intVariablesInScope.contains(variableName)) {
@@ -196,6 +207,22 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     }
 
     @Override
+    public Void visit(AuxVar auxVar) {
+
+        String variableName = auxVar.getVariableName();
+        checkAuxVariableName(variableName);
+
+        if (currentlyInScopeOfAuxiliaryExpression) {
+            throw new BytecodeGenerationException("On the right hand side of an auxiliary variable no other auxiliary " +
+                    "variables are allowed");
+        }
+
+        localVariables.addAuxVariable(auxVar);
+
+        return null;
+    }
+
+    @Override
     public Void visit(Sum sum) {
 
         String variableName = sum.getVariableName();
@@ -223,6 +250,17 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
         putIntVariableInScope(variableName);
         prod.acceptInner(this);
         removeIntVariableFromScope(variableName);
+
+        return null;
+    }
+
+    @Override
+    public Void visit(AuxiliaryVariable auxiliaryVariable) {
+
+        auxiliaryVariable.acceptAuxVar(this);
+        currentlyInScopeOfAuxiliaryExpression = true;
+        auxiliaryVariable.acceptInner(this);
+        currentlyInScopeOfAuxiliaryExpression = false;
 
         return null;
     }

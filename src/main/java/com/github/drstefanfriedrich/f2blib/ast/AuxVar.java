@@ -18,14 +18,13 @@ import com.google.common.base.MoreObjects;
 import java.util.Objects;
 
 /**
- * Models an integer variable like the loop variable in a for loop, or the
- * summation or product indexes in sum and product expression.
+ * Model an auxiliary variable.
  */
-public final class IntVar implements IntExpression {
+public final class AuxVar implements Expression {
 
     private final String variableName;
 
-    public IntVar(String variableName) {
+    public AuxVar(String variableName) {
         this.variableName = variableName;
     }
 
@@ -48,8 +47,8 @@ public final class IntVar implements IntExpression {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        IntVar intVar = (IntVar) o;
-        return Objects.equals(variableName, intVar.variableName);
+        AuxVar auxVar = (AuxVar) o;
+        return Objects.equals(variableName, auxVar.variableName);
     }
 
     @Override
@@ -64,7 +63,7 @@ public final class IntVar implements IntExpression {
 
     @Override
     public boolean evaluatesToDouble() {
-        return false;
+        return true;
     }
 
 }

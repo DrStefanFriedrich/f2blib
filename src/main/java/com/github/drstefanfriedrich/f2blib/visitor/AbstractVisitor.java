@@ -44,6 +44,7 @@ public abstract class AbstractVisitor implements Visitor {
 
     @Override
     public <T> T visit(FunctionsWrapper functionsWrapper) {
+        functionsWrapper.getAuxiliaryVariables().forEach(av -> av.accept(this));
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
         functionsWrapper.acceptMarkovShift(this);
         return null;

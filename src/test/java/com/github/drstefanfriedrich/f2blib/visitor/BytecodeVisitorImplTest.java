@@ -142,6 +142,35 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
         }
     }
 
+    @Override
+    protected void assertExpressionMatches(Expression expression, Expression auxiliaryExpression, double xValue,
+                                           double yValue) {
+        try {
+
+            FunctionDefinition fd = ASTTest.createFunctionDefinition("BytecodeTestFunc", expression, auxiliaryExpression);
+
+            fd.accept(validationVisitor);
+            fd.accept(stackDepthVisitor);
+
+            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
+            fd.accept(bytecodeVisitor);
+
+            FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+
+            double[] x = new double[]{xValue};
+            double[] p = new double[]{0};
+            double[] y = new double[1];
+
+            functionEvaluation.eval(p, x, y);
+
+            assertThat(y[0], closeTo(yValue));
+
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new InternalError(e);
+        }
+    }
+
     @Test
     public void parametersAndVariablesWithGaps() {
 

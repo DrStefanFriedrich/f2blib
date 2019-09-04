@@ -90,4 +90,12 @@ public class PrecedenceVisitorTest {
         new MarkovShift(new Int(0)).accept(underTest);
     }
 
+    @Test
+    public void auxiliaryVariable() {
+
+        assertException();
+
+        new AuxiliaryVariable(new AuxVar("I"), new Int(1)).accept(underTest);
+    }
+
 }

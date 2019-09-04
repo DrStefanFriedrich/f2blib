@@ -94,6 +94,23 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     }
 
     @Override
+    public Void visit(AuxiliaryVariable auxiliaryVariable) {
+
+        AuxVar auxVar = auxiliaryVariable.getAuxVar();
+
+        // Push a double on the operand stack
+        auxiliaryVariable.acceptInner(this);
+
+        if(!auxiliaryVariable.evaluatesToDoublel()){
+            evalMethod.visitInsn(I2D);
+        }
+
+        evalMethod.visitVarInsn(DSTORE, localVariables.getIndexForAuxVar(auxVar));
+
+        return null;
+    }
+
+    @Override
     public Void visit(Constant constant) {
         switch (constant) {
             case PI:
@@ -481,6 +498,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
     @Override
     public Void visit(FunctionsWrapper functionsWrapper) {
+        functionsWrapper.getAuxiliaryVariables().forEach(av -> av.accept(this));
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
         functionsWrapper.acceptMarkovShift(this);
         return null;
@@ -572,6 +590,12 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
     @Override
     public Void visit(IntVar intVar) {
         evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        return null;
+    }
+
+    @Override
+    public Void visit(AuxVar auxVar) {
+        evalMethod.visitVarInsn(DLOAD, localVariables.getIndexForAuxVar(auxVar));
         return null;
     }
 

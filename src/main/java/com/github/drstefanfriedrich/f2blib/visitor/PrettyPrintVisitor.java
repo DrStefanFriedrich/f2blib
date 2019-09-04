@@ -294,6 +294,8 @@ public class PrettyPrintVisitor implements Visitor {
 
     @Override
     public Void visit(FunctionsWrapper functionsWrapper) {
+        functionsWrapper.getAuxiliaryVariables().stream()
+                .forEach(av -> av.accept(this));
         functionsWrapper.getFunctions().stream()
                 .forEach(f -> f.accept(this));
         functionsWrapper.acceptMarkovShift(this);
@@ -496,6 +498,24 @@ public class PrettyPrintVisitor implements Visitor {
         prod.acceptInner(this);
         pw.print(")");
 
+        return null;
+    }
+
+    @Override
+    public Void visit(AuxVar auxVar) {
+        pw.print(auxVar.getVariableName());
+        return null;
+    }
+
+    @Override
+    public Void visit(AuxiliaryVariable auxiliaryVariable) {
+        String spaces = spaces();
+
+        pw.print(spaces);
+        auxiliaryVariable.acceptAuxVar(this);
+        pw.print(" := ");
+        auxiliaryVariable.acceptInner(this);
+        pw.println(";");
         return null;
     }
 

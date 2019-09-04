@@ -47,11 +47,16 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
     public Object visitSingle_valued_functions(FunctionsParser.Single_valued_functionsContext ctx) {
 
         List<FunctionsParser.Single_valued_functionContext> functions = ctx.single_valued_function();
+        List<FunctionsParser.Auxiliary_variableContext> auxVars = ctx.auxiliary_variable();
 
         List<Function> result = new ArrayList<>();
+        List<AuxiliaryVariable> auxs = new ArrayList<>();
 
         for (FunctionsParser.Single_valued_functionContext function : functions) {
             result.add((Function) function.accept(this));
+        }
+        for (FunctionsParser.Auxiliary_variableContext aux : auxVars) {
+            auxs.add((AuxiliaryVariable) aux.accept(this));
         }
 
         if (result.isEmpty()) {
@@ -59,7 +64,8 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
         }
 
         if (ctx.offset != null) {
-            return new FunctionsWrapper(result, new MarkovShift((IntExpression) ctx.offset.accept(this)));
+            return new FunctionsWrapper(auxs, result,
+                    new MarkovShift((IntExpression) ctx.offset.accept(this)));
         }
 
         return new FunctionsWrapper(result);
@@ -261,12 +267,12 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
 
     @Override
     public Object visitIntVar(FunctionsParser.IntVarContext ctx) {
-        return new IntVar(ctx.variableName.getText());
+        return ctx.specialVariable().accept(this);
     }
 
     @Override
     public Object visitIintVar(FunctionsParser.IintVarContext ctx) {
-        return new IntVar(ctx.variableName.getText());
+        return ctx.specialVariable().accept(this);
     }
 
     @Override
@@ -397,6 +403,26 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
         IntExpression end = (IntExpression) ctx.end.accept(this);
 
         return new Prod(inner, variableName, start, end);
+    }
+
+    @Override
+    public Object visitAuxiliary_variable(FunctionsParser.Auxiliary_variableContext ctx) {
+
+        AuxVar auxVar = (AuxVar) ctx.specialVariable().accept(this);
+
+        return new AuxiliaryVariable(auxVar, (Expression) ctx.expression().accept(this));
+    }
+
+    @Override
+    public Object visitSpecialVariable(FunctionsParser.SpecialVariableContext ctx) {
+
+        String varName = ctx.IDENTIFIER().getText();
+
+        if (varName.substring(0, 1).equals(varName.substring(0, 1).toLowerCase())) {
+            return new IntVar(varName);
+        } else {
+            return new AuxVar(varName);
+        }
     }
 
 }

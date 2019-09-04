@@ -1224,4 +1224,17 @@ public class ASTTest {
         return new FunctionDefinition(name, new FunctionBody(new FunctionsWrapper(list)));
     }
 
+    public static FunctionDefinition createFunctionDefinition(String name, Expression expression, Expression aux) {
+
+        List<Function> functions = new ArrayList<>();
+        Function f = new Function(0, expression);
+        functions.add(f);
+
+        List<AuxiliaryVariable> auxVars = new ArrayList<>();
+        AuxiliaryVariable av = new AuxiliaryVariable(new AuxVar("I"), aux);
+        auxVars.add(av);
+
+        return new FunctionDefinition(name, new FunctionBody(new FunctionsWrapper(auxVars, functions, null)));
+    }
+
 }

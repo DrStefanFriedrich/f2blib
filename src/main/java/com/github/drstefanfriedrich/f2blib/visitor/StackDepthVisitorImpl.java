@@ -252,4 +252,14 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
         return 3 + (int) prod.acceptInner(this);
     }
 
+    @Override
+    public Integer visit(AuxVar auxVar) {
+        return 2;
+    }
+
+    @Override
+    public Integer visit(AuxiliaryVariable auxiliaryVariable) {
+        return auxiliaryVariable.acceptInner(this);
+    }
+
 }

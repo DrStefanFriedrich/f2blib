@@ -174,6 +174,19 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         assertThat(y, closeTo(yValue));
     }
 
+    @Override
+    protected void assertExpressionMatches(Expression expression, Expression auxiliaryExpression, double xValue,
+                                           double yValue) {
+
+        FunctionDefinition fd = ASTTest.createFunctionDefinition("EvalTestFunc", expression, auxiliaryExpression);
+
+        x[0] = xValue;
+        fd.accept(evalVisitor);
+        double y = evalVisitor.getResult()[0];
+
+        assertThat(y, closeTo(yValue));
+    }
+
     @Test
     public void tooLessVariables() {
 

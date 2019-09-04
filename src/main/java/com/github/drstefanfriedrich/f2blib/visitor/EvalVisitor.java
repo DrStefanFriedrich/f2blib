@@ -48,6 +48,11 @@ public class EvalVisitor extends BaseVisitor {
      */
     private final Map<IntVar, Integer> intVariable2Value = new HashMap<>();
 
+    /*
+     * Maps each auxiliary variable to the current value
+     */
+    private final Map<AuxVar, Double> auxVariable2Value = new HashMap<>();
+
     EvalVisitor(double[] x, double[] p, int lengthResultArray) {
         this.x = x;
         this.p = p;
@@ -163,6 +168,8 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(FunctionsWrapper functionsWrapper) {
 
+        functionsWrapper.getAuxiliaryVariables().forEach(av -> av.accept(this));
+
         functionsWrapper.getFunctions().forEach(f -> f.accept(this));
 
         functionsWrapper.acceptMarkovShift(this);
@@ -220,6 +227,17 @@ public class EvalVisitor extends BaseVisitor {
         int index = function.getIndex();
 
         y[index] = function.acceptExpression(this);
+
+        return 0d;
+    }
+
+    @Override
+    public Double visit(AuxiliaryVariable auxiliaryVariable) {
+
+        AuxVar auxVar = auxiliaryVariable.getAuxVar();
+
+        Double res = auxiliaryVariable.acceptInner(this);
+        auxVariable2Value.put(auxVar, res);
 
         return 0d;
     }
@@ -327,6 +345,11 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(IntVar intVar) {
         return intVariable2Value.get(intVar).doubleValue();
+    }
+
+    @Override
+    public Double visit(AuxVar auxVar) {
+        return auxVariable2Value.get(auxVar);
     }
 
     @Override

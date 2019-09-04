@@ -1,5 +1,6 @@
 package com.github.drstefanfriedrich.f2blib.visitor;
 
+import com.github.drstefanfriedrich.f2blib.ast.AuxVar;
 import com.github.drstefanfriedrich.f2blib.ast.IntVar;
 
 /**
@@ -31,5 +32,7 @@ public interface LocalVariables {
     int getSumIndex();
 
     int getProdIndex();
+
+    int getIndexForAuxVar(AuxVar auxVar);
 
 }

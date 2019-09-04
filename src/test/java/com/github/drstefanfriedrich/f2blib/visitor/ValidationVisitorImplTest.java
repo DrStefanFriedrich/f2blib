@@ -20,6 +20,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -338,6 +341,61 @@ public class ValidationVisitorImplTest {
 
         exception.expect(BytecodeGenerationException.class);
         exception.expectMessage("The variable 'l' is not defined");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void auxVariable() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new AuxiliaryVariable(new AuxVar("I"), new Int(2)),
+                new Function(0, new Prod(new IntVar("k"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        fd.accept(underTest);
+
+        assertTrue(true);
+    }
+
+    @Test
+    public void auxVariableReferencesOtherAuxVar() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new AuxiliaryVariable(new AuxVar("I"), new AuxVar("K")),
+                new Function(0, new Prod(new IntVar("k"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("On the right hand side of an auxiliary variable no other auxiliary variables are allowed");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void auxVariableTooLong() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new AuxiliaryVariable(new AuxVar("II"), new Int(1)),
+                new Function(0, new Prod(new IntVar("k"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable name 'II' is not allowed.");
+
+        fd.accept(underTest);
+    }
+
+    @Test
+    public void auxVariableNoCapitalLetter() {
+
+        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
+                new AuxiliaryVariable(new AuxVar("i"), new Int(1)),
+                new Function(0, new Prod(new IntVar("k"), "k", new Int(2),
+                        new Faculty(new Int(5)))))));
+
+        exception.expect(BytecodeGenerationException.class);
+        exception.expectMessage("The variable name 'i' is not allowed.");
 
         fd.accept(underTest);
     }

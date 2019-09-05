@@ -29,6 +29,8 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
 
     private static final Set<String> ALLOWED_INT_VAR_NAMES = new HashSet<>();
 
+    private static final String VAR_NOT_ALLOWED = "The variable name '%s' is not allowed.";
+
     static {
         ALLOWED_INT_VAR_NAMES.add("a");
         ALLOWED_INT_VAR_NAMES.add("b");
@@ -71,16 +73,16 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
 
     private void checkIntVariableName(String variableName) {
         if (!ALLOWED_INT_VAR_NAMES.contains(variableName)) {
-            throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
+            throw new BytecodeGenerationException(format(VAR_NOT_ALLOWED, variableName));
         }
     }
 
     private void checkAuxVariableName(String variableName) {
         if (variableName.length() != 1) {
-            throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
+            throw new BytecodeGenerationException(format(VAR_NOT_ALLOWED, variableName));
         }
-        if (!variableName.toUpperCase().equals(variableName)) {
-            throw new BytecodeGenerationException(format("The variable name '%s' is not allowed.", variableName));
+        if (Character.isLowerCase(variableName.charAt(0))) {
+            throw new BytecodeGenerationException(format(VAR_NOT_ALLOWED, variableName));
         }
     }
 

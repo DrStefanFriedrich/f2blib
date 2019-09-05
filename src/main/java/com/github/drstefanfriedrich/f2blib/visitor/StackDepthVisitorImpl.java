@@ -244,12 +244,12 @@ public class StackDepthVisitorImpl implements StackDepthVisitor {
 
     @Override
     public Integer visit(Sum sum) {
-        return 3 + (int) sum.acceptInner(this);
+        return 3 + (Integer) sum.acceptInner(this);
     }
 
     @Override
     public Integer visit(Prod prod) {
-        return 3 + (int) prod.acceptInner(this);
+        return 3 + (Integer) prod.acceptInner(this);
     }
 
     @Override

@@ -13,47 +13,14 @@
 package com.github.drstefanfriedrich.f2blib.ast;
 
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
-import com.google.common.base.MoreObjects;
-
-import java.util.Objects;
 
 /**
  * Model an auxiliary variable.
  */
-public final class AuxVar implements Expression {
-
-    private final String variableName;
+public final class AuxVar extends AbstractVar implements Expression {
 
     public AuxVar(String variableName) {
-        this.variableName = variableName;
-    }
-
-    public String getVariableName() {
-        return variableName;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("variableName", variableName)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        AuxVar auxVar = (AuxVar) o;
-        return Objects.equals(variableName, auxVar.variableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(variableName);
+        super(variableName);
     }
 
     @Override

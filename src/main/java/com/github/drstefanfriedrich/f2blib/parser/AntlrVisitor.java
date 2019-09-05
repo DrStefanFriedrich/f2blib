@@ -418,7 +418,7 @@ class AntlrVisitor extends FunctionsBaseVisitor<Object> {
 
         String varName = ctx.IDENTIFIER().getText();
 
-        if (varName.substring(0, 1).equals(varName.substring(0, 1).toLowerCase())) {
+        if (Character.isLowerCase(varName.charAt(0))) {
             return new IntVar(varName);
         } else {
             return new AuxVar(varName);

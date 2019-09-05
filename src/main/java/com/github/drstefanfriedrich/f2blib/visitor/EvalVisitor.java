@@ -381,7 +381,7 @@ public class EvalVisitor extends BaseVisitor {
     @Override
     public Double visit(Sum sum) {
 
-        double s = 0;
+        double tmp = 0;
         IntVar intVar = new IntVar(sum.getVariableName());
 
         Number startNumber = sum.acceptStart(this);
@@ -391,23 +391,23 @@ public class EvalVisitor extends BaseVisitor {
         int end = endNumber.intValue();
 
         if (start > end) {
-            return s;
+            return tmp;
         }
 
         for (int i = start; i <= end; i++) {
             intVariable2Value.put(intVar, i);
             Number res = sum.acceptInner(this);
-            s += res.doubleValue();
+            tmp += res.doubleValue();
         }
         intVariable2Value.remove(intVar);
 
-        return s;
+        return tmp;
     }
 
     @Override
     public Double visit(Prod prod) {
 
-        double p = 1;
+        double tmp = 1;
         IntVar intVar = new IntVar(prod.getVariableName());
 
         Number startNumber = prod.acceptStart(this);
@@ -417,17 +417,17 @@ public class EvalVisitor extends BaseVisitor {
         int end = endNumber.intValue();
 
         if (start > end) {
-            return p;
+            return tmp;
         }
 
         for (int i = start; i <= end; i++) {
             intVariable2Value.put(intVar, i);
             Number res = prod.acceptInner(this);
-            p *= res.doubleValue();
+            tmp *= res.doubleValue();
         }
         intVariable2Value.remove(intVar);
 
-        return p;
+        return tmp;
     }
 
 }

@@ -14,12 +14,13 @@ package com.github.drstefanfriedrich.f2blib.ast;
 
 import com.google.common.base.MoreObjects;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Common base class for all &quot;variables&quot;.
  */
-public abstract class AbstractVar {
+public abstract class AbstractVar implements Serializable {
 
     private final String variableName;
 

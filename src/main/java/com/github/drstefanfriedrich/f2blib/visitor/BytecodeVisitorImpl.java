@@ -101,7 +101,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         // Push a double on the operand stack
         auxiliaryVariable.acceptInner(this);
 
-        if(!auxiliaryVariable.evaluatesToDoublel()){
+        if (!auxiliaryVariable.evaluatesToDoublel()) {
             evalMethod.visitInsn(I2D);
         }
 
@@ -404,8 +404,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
         } else { // !binaryExpression.leftEvaluatesToDouble() && !binaryExpression.rightEvaluatesToDouble()
 
             division.acceptLeft(this);
+            evalMethod.visitInsn(I2D);
             division.acceptRight(this);
-            evalMethod.visitInsn(IDIV);
+            evalMethod.visitInsn(I2D);
+            evalMethod.visitInsn(DDIV);
 
         }
 
@@ -728,10 +730,12 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         boolean evaluatesToDouble = sum.evaluatesToDouble();
         IntVar intVar = new IntVar(sum.getVariableName());
-        int sumIndex = localVariables.getSumIndex();
+
+        int intVarIndex = localVariables.getIndexForIntVar(intVar);
+        int sumIndex = localVariables.getSumIndex(intVar);
 
         sum.acceptStart(this);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ISTORE, intVarIndex);
         sum.acceptEnd(this);
         if (evaluatesToDouble) {
             evalMethod.visitInsn(DCONST_0);
@@ -743,7 +747,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         evalMethod.visitLabel(loop);
         evalMethod.visitInsn(DUP);
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ILOAD, intVarIndex);
         evalMethod.visitJumpInsn(IF_ICMPLT, end);
         sum.acceptInner(this);
         if (evaluatesToDouble) {
@@ -755,10 +759,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
             evalMethod.visitInsn(IADD);
             evalMethod.visitVarInsn(ISTORE, sumIndex);
         }
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ILOAD, intVarIndex);
         evalMethod.visitInsn(ICONST_1);
         evalMethod.visitInsn(IADD);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ISTORE, intVarIndex);
         evalMethod.visitJumpInsn(GOTO, loop);
 
         evalMethod.visitLabel(end);
@@ -780,10 +784,12 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         boolean evaluatesToDouble = prod.evaluatesToDouble();
         IntVar intVar = new IntVar(prod.getVariableName());
-        int prodIndex = localVariables.getProdIndex();
+
+        int intVarIndex = localVariables.getIndexForIntVar(intVar);
+        int prodIndex = localVariables.getProdIndex(intVar);
 
         prod.acceptStart(this);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ISTORE, intVarIndex);
         prod.acceptEnd(this);
         if (evaluatesToDouble) {
             evalMethod.visitInsn(DCONST_1);
@@ -795,7 +801,7 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
 
         evalMethod.visitLabel(loop);
         evalMethod.visitInsn(DUP);
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ILOAD, intVarIndex);
         evalMethod.visitJumpInsn(IF_ICMPLT, end);
         prod.acceptInner(this);
         if (evaluatesToDouble) {
@@ -807,10 +813,10 @@ public class BytecodeVisitorImpl extends AbstractBytecodeVisitor {
             evalMethod.visitInsn(IMUL);
             evalMethod.visitVarInsn(ISTORE, prodIndex);
         }
-        evalMethod.visitVarInsn(ILOAD, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ILOAD, intVarIndex);
         evalMethod.visitInsn(ICONST_1);
         evalMethod.visitInsn(IADD);
-        evalMethod.visitVarInsn(ISTORE, localVariables.getIndexForIntVar(intVar));
+        evalMethod.visitVarInsn(ISTORE, intVarIndex);
         evalMethod.visitJumpInsn(GOTO, loop);
 
         evalMethod.visitLabel(end);

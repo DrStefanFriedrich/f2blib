@@ -19,6 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.assumePerformanceTest;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
 import static org.junit.Assert.assertThat;
@@ -42,13 +44,13 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
     }
 
     @Test
-    public void simpleEvaluation() throws IllegalAccessException, InstantiationException {
+    public void simpleEvaluation() {
 
         double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         double[] p = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
         double[] y = new double[5];
 
-        FunctionDefinition fd = EvalVisitorTest.createSampleFunction();
+        FunctionDefinition fd = EvalVisitorImplTest.createSampleFunction();
 
         fd.accept(validationVisitor);
         fd.accept(stackDepthVisitor);
@@ -57,7 +59,7 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
                 validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
         fd.accept(bytecodeVisitor);
 
-        FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
         functionEvaluation.eval(p, x, y);
 
@@ -69,10 +71,10 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
     }
 
     @Test
-    public void performance() throws IllegalAccessException, InstantiationException {
+    public void performance() {
         assumePerformanceTest();
 
-        FunctionDefinition fd = EvalVisitorTest.createSampleFunction();
+        FunctionDefinition fd = EvalVisitorImplTest.createSampleFunction();
 
         fd.accept(validationVisitor);
         fd.accept(stackDepthVisitor);
@@ -81,7 +83,7 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
                 validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
         fd.accept(bytecodeVisitor);
 
-        FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
         long start = System.currentTimeMillis();
 
@@ -110,65 +112,57 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
 
         long end = System.currentTimeMillis();
 
-        fail("Performance should always be better. That's why we fail the unit test\n\n" +
-                "The execution took (ms): " + (end - start));
+        fail("Performance should always be better. That's why we fail the unit test. " +
+                "Total duration (ms): " + (end - start));
     }
 
     @Override
     protected void assertExpressionMatches(Expression expression, double xValue, double yValue) {
-        try {
 
-            FunctionDefinition fd = ASTTest.createFunctionDefinition("BytecodeTestFunc", expression);
+        FunctionDefinition fd = ASTTest.createFunctionDefinition("BytecodeTestFunc", expression);
 
-            fd.accept(validationVisitor);
-            fd.accept(stackDepthVisitor);
+        fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
 
-            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
-            fd.accept(bytecodeVisitor);
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
+        fd.accept(bytecodeVisitor);
 
-            FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
-            double[] x = new double[]{xValue};
-            double[] p = new double[]{0};
-            double[] y = new double[1];
+        double[] x = new double[]{xValue};
+        double[] p = new double[]{0};
+        double[] y = new double[1];
 
-            functionEvaluation.eval(p, x, y);
+        functionEvaluation.eval(p, x, y);
 
-            assertThat(y[0], closeTo(yValue));
+        assertThat(y[0], closeTo(yValue));
 
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new InternalError(e);
-        }
     }
 
     @Override
     protected void assertExpressionMatches(Expression expression, Expression auxiliaryExpression, double xValue,
                                            double yValue) {
-        try {
 
-            FunctionDefinition fd = ASTTest.createFunctionDefinition("BytecodeTestFunc", expression, auxiliaryExpression);
+        FunctionDefinition fd = ASTTest.createFunctionDefinition("BytecodeTestFunc", expression, auxiliaryExpression);
 
-            fd.accept(validationVisitor);
-            fd.accept(stackDepthVisitor);
+        fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
 
-            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
-            fd.accept(bytecodeVisitor);
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
+        fd.accept(bytecodeVisitor);
 
-            FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
-            double[] x = new double[]{xValue};
-            double[] p = new double[]{0};
-            double[] y = new double[1];
+        double[] x = new double[]{xValue};
+        double[] p = new double[]{0};
+        double[] y = new double[1];
 
-            functionEvaluation.eval(p, x, y);
+        functionEvaluation.eval(p, x, y);
 
-            assertThat(y[0], closeTo(yValue));
+        assertThat(y[0], closeTo(yValue));
 
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new InternalError(e);
-        }
     }
 
     @Test
@@ -200,40 +194,36 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
     }
 
     private void testParametersAndVariablesWithGaps(int numberOfVariables, int numberOfParameters) {
-        try {
 
-            FunctionDefinition fd = ASTTest.createFunctionDefinition("ManyParametersAndVariables",
-                    new Addition(scalarProductOfParameters(numberOfParameters), scalarProductOfVariables(numberOfVariables)));
+        FunctionDefinition fd = ASTTest.createFunctionDefinition("ManyParametersAndVariables",
+                new Addition(scalarProductOfParameters(numberOfParameters), scalarProductOfVariables(numberOfVariables)));
 
-            fd.accept(validationVisitor);
-            fd.accept(stackDepthVisitor);
+        fd.accept(validationVisitor);
+        fd.accept(stackDepthVisitor);
 
-            bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
-                    validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
-            fd.accept(bytecodeVisitor);
+        bytecodeVisitor = new BytecodeVisitorImpl(validationVisitor.getLocalVariables(),
+                validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
+        fd.accept(bytecodeVisitor);
 
-            FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
-            double[] x = new double[numberOfVariables];
-            double[] p = new double[numberOfParameters];
-            double[] y = new double[1];
+        double[] x = new double[numberOfVariables];
+        double[] p = new double[numberOfParameters];
+        double[] y = new double[1];
 
-            for (int i = 0; i < numberOfVariables; i++) {
-                x[i] = (double) i + 1;
-            }
-            for (int i = 0; i < numberOfParameters; i++) {
-                p[i] = (double) i + 1;
-            }
-
-            functionEvaluation.eval(p, x, y);
-
-            // Verify the sum formula of the young Carl Friedrich Gauß...
-            assertThat(y[0], closeTo(numberOfParameters * (numberOfParameters + 1) / 2 + numberOfVariables * (numberOfVariables + 1) / 2));
-            // ...he was right
-
-        } catch (IllegalAccessException | InstantiationException e) {
-            throw new InternalError(e);
+        for (int i = 0; i < numberOfVariables; i++) {
+            x[i] = (double) i + 1;
         }
+        for (int i = 0; i < numberOfParameters; i++) {
+            p[i] = (double) i + 1;
+        }
+
+        functionEvaluation.eval(p, x, y);
+
+        // Verify the sum formula of the young Carl Friedrich Gauß...
+        assertThat(y[0], closeTo(numberOfParameters * (numberOfParameters + 1) / 2 + numberOfVariables * (numberOfVariables + 1) / 2));
+        // ...he was right
+
     }
 
     private Expression scalarProductOfParameters(int numberOfParameters) {
@@ -279,7 +269,7 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
                 validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
         fd.accept(bytecodeVisitor);
 
-        FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
         exception.expect(ArrayIndexOutOfBoundsException.class);
         exception.expectMessage("");
@@ -304,12 +294,20 @@ public class BytecodeVisitorImplTest extends AbstractCalculatingVisitorTest {
                 validationVisitor.getSpecialFunctionsUsage(), stackDepthVisitor);
         fd.accept(bytecodeVisitor);
 
-        FunctionEvaluation functionEvaluation = bytecodeVisitor.generate().newInstance();
+        FunctionEvaluation functionEvaluation = instantiate(bytecodeVisitor.generate());
 
         exception.expect(ArrayIndexOutOfBoundsException.class);
         exception.expectMessage("");
 
         functionEvaluation.eval(p, x, y);
+    }
+
+    private FunctionEvaluation instantiate(Class<? extends FunctionEvaluation> clazz) {
+        try {
+            return clazz.getConstructor((Class<?>[]) null).newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
 }

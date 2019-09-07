@@ -39,8 +39,7 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
     }
 
     public FunctionsWrapper(List<Function> functions) {
-        this.functions.addAll(functions);
-        this.markovShift = Optional.empty();
+        this(new ArrayList<>(), functions, null);
     }
 
     public FunctionsWrapper(Function... functions) {
@@ -75,6 +74,7 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("functions", functions)
+                .add("auxiliaryVariables", auxiliaryVariables)
                 .add("markovShift", markovShift)
                 .toString();
     }
@@ -89,12 +89,13 @@ public final class FunctionsWrapper implements Serializable, ASTElement {
         }
         FunctionsWrapper that = (FunctionsWrapper) o;
         return Objects.equals(functions, that.functions) &&
-                Objects.equals(markovShift, that.markovShift);
+                Objects.equals(markovShift, that.markovShift) &&
+                Objects.equals(auxiliaryVariables, that.auxiliaryVariables);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(functions, markovShift);
+        return Objects.hash(functions, markovShift, auxiliaryVariables);
     }
 
     @Override

@@ -12,7 +12,6 @@
 
 package com.github.drstefanfriedrich.f2blib.lifeinsurance;
 
-import com.github.drstefanfriedrich.f2blib.FunctionEvaluationFactory;
 import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
@@ -20,14 +19,19 @@ import com.google.common.io.ByteSource;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static java.lang.String.format;
+
 /**
  * This class calculates very simple life insurances.
  */
 public class LifeInsuranceCalculator {
 
-    private final FunctionEvaluationKernel kernel = new FunctionEvaluationFactory().get().create();
+    private static final String LIFE_INSURANCE_FORMULA = "com.github.drstefanfriedrich.f2blib.lifeinsurance.LifeInsuranceFormula";
+    private final FunctionEvaluationKernel kernel;
+    private final LifeInsuranceBuilder lib = new LifeInsuranceBuilder();
 
-    public LifeInsuranceCalculator() {
+    public LifeInsuranceCalculator(FunctionEvaluationKernel kernel) {
+        this.kernel = kernel;
         kernel.load(readLifeInsuranceFormula());
     }
 
@@ -49,24 +53,20 @@ public class LifeInsuranceCalculator {
      * Calculates a life insurance with the given parameters. The method is thread-safe.
      */
     public double calculate(int ageAtContractBeginning, int durationOfContract, double fee, double deathPremium,
-                            boolean sex, double interestRate) {
+                            boolean sex, double interestRate, double expenseFactor) {
 
-        LifeInsuranceBuilder lib = new LifeInsuranceBuilder();
-
-        lib.setAgeAtContractBeginning(ageAtContractBeginning);
-        lib.setDurationOfContract(durationOfContract);
-        lib.setFee(fee);
-        lib.setDeathPremium(deathPremium);
-        lib.setSex(sex);
-        lib.setInterestRate(interestRate);
-
-        double x[] = new double[1];
-        double p[] = lib.getParameters();
+        double x[] = new double[0];
+        double p[] = lib.getParameters(ageAtContractBeginning, durationOfContract, fee, sex, deathPremium,
+                interestRate, expenseFactor);
         double y[] = new double[1];
 
-        kernel.eval("com.github.drstefanfriedrich.f2blib.lifeinsurance.LifeInsuranceFormula", p, x, y);
+        kernel.eval(LIFE_INSURANCE_FORMULA, p, x, y);
 
         return y[0];
+    }
+
+    public String prettyPrint() {
+        return kernel.print(LIFE_INSURANCE_FORMULA);
     }
 
 }

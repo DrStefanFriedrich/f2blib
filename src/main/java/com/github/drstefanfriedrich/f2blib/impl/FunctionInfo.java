@@ -12,6 +12,8 @@
 
 package com.github.drstefanfriedrich.f2blib.impl;
 
+import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
+import com.github.drstefanfriedrich.f2blib.visitor.FunctionEvaluationValidator;
 import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
@@ -22,12 +24,24 @@ import java.util.Objects;
 class FunctionInfo {
 
     private final FunctionEvaluation functionEvaluation;
-
     private final String prettyPrintedFunction;
+    private final FunctionDefinition functionDefinition;
+    private final FunctionEvaluationValidator functionEvaluationValidator;
 
-    public FunctionInfo(FunctionEvaluation functionEvaluation, String prettyPrintedFunction) {
+    public FunctionInfo(FunctionEvaluation functionEvaluation, String prettyPrintedFunction,
+                        FunctionEvaluationValidator functionEvaluationValidator) {
         this.functionEvaluation = functionEvaluation;
         this.prettyPrintedFunction = prettyPrintedFunction;
+        this.functionDefinition = null;
+        this.functionEvaluationValidator = functionEvaluationValidator;
+    }
+
+    public FunctionInfo(FunctionDefinition functionDefinition, String prettyPrintedFunction,
+                        FunctionEvaluationValidator functionEvaluationValidator) {
+        this.functionEvaluation = null;
+        this.prettyPrintedFunction = prettyPrintedFunction;
+        this.functionDefinition = functionDefinition;
+        this.functionEvaluationValidator = functionEvaluationValidator;
     }
 
     public FunctionEvaluation getFunctionEvaluation() {
@@ -38,11 +52,21 @@ class FunctionInfo {
         return prettyPrintedFunction;
     }
 
+    public FunctionDefinition getFunctionDefinition() {
+        return functionDefinition;
+    }
+
+    public FunctionEvaluationValidator getFunctionEvaluationValidator() {
+        return functionEvaluationValidator;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("functionEvaluation", functionEvaluation)
                 .add("prettyPrintedFunction", prettyPrintedFunction)
+                .add("functionDefinition", prettyPrintedFunction)
+                .add("functionEvaluationValidator", functionEvaluationValidator)
                 .toString();
     }
 
@@ -56,12 +80,14 @@ class FunctionInfo {
         }
         FunctionInfo that = (FunctionInfo) o;
         return functionEvaluation.equals(that.functionEvaluation) &&
-                prettyPrintedFunction.equals(that.prettyPrintedFunction);
+                prettyPrintedFunction.equals(that.prettyPrintedFunction) &&
+                functionEvaluationValidator.equals(that.functionEvaluationValidator) &&
+                functionDefinition.equals(that.functionDefinition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(functionEvaluation, prettyPrintedFunction);
+        return Objects.hash(functionEvaluation, prettyPrintedFunction, functionDefinition, functionEvaluationValidator);
     }
 
 }

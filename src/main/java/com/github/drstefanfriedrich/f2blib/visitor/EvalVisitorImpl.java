@@ -29,7 +29,7 @@ import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
  * A {@link Visitor} implementation that evaluates a mathematical expression
  * given as abstract syntax tree by recursively walking through the tree.
  */
-public class EvalVisitor extends BaseVisitor {
+public class EvalVisitorImpl extends BaseVisitor {
 
     private final double[] x;
 
@@ -53,13 +53,13 @@ public class EvalVisitor extends BaseVisitor {
      */
     private final Map<AuxVar, Double> auxVariable2Value = new HashMap<>();
 
-    EvalVisitor(double[] x, double[] p, int lengthResultArray) {
+    public EvalVisitorImpl(double[] x, double[] p, int lengthResultArray) {
         this.x = x;
         this.p = p;
         this.y = new double[lengthResultArray];
     }
 
-    double[] getResult() {
+    public double[] getResult() {
         return y;
     }
 

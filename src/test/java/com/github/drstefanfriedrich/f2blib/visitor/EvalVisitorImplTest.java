@@ -26,12 +26,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
 
-public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
+public class EvalVisitorImplTest extends AbstractCalculatingVisitorTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    private EvalVisitor evalVisitor;
+    private EvalVisitorImpl evalVisitorImpl;
 
     private double[] x;
 
@@ -39,7 +39,7 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
     public void setup() {
         x = new double[1];
         double[] p = new double[1];
-        evalVisitor = new EvalVisitor(x, p, 1);
+        evalVisitorImpl = new EvalVisitorImpl(x, p, 1);
     }
 
     public static FunctionDefinition createSampleFunction() {
@@ -100,30 +100,30 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
 
         double[] xArray = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         double[] pArray = new double[]{0, 2, 4, 6, 8, 10, 12, 14, 16, 18};
-        evalVisitor = new EvalVisitor(xArray, pArray, 5);
+        evalVisitorImpl = new EvalVisitorImpl(xArray, pArray, 5);
 
         FunctionDefinition fd = createSampleFunction();
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(660));
-        assertThat(evalVisitor.getResult()[1], closeTo(1.385614343926388));
-        assertThat(evalVisitor.getResult()[2], closeTo(50.58293575689467));
-        assertThat(evalVisitor.getResult()[3], closeTo(-3.7776177920749547));
-        assertThat(evalVisitor.getResult()[4], closeTo(0));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(660));
+        assertThat(evalVisitorImpl.getResult()[1], closeTo(1.385614343926388));
+        assertThat(evalVisitorImpl.getResult()[2], closeTo(50.58293575689467));
+        assertThat(evalVisitorImpl.getResult()[3], closeTo(-3.7776177920749547));
+        assertThat(evalVisitorImpl.getResult()[4], closeTo(0));
     }
 
     @Test
     public void evalNoOp() {
 
-        evalVisitor = new EvalVisitor(null, null, 0);
+        evalVisitorImpl = new EvalVisitorImpl(null, null, 0);
 
         FunctionDefinition fd = ASTTest.createFunctionDefinition("NoOp", NoOp.get());
 
         exception.expect(IllegalStateException.class);
         exception.expectMessage("visit must not be called on the EvalVisitor");
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
     }
 
     @Test
@@ -146,9 +146,9 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
                                             3 + (double) i4 / 10, 5, 6, 7, 8, 9, 10};
                                     double[] pArray = new double[]{(double) i5 / 10, 1 + (double) i6 / 10,
                                             3 + (double) i7 / 10, 6, 8, 10, 12, 14, 16, 18};
-                                    evalVisitor = new EvalVisitor(xArray, pArray, 5);
+                                    evalVisitorImpl = new EvalVisitorImpl(xArray, pArray, 5);
 
-                                    fd.accept(evalVisitor);
+                                    fd.accept(evalVisitorImpl);
                                 }
                             }
                         }
@@ -159,8 +159,8 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
 
         long end = System.currentTimeMillis();
 
-        fail("Performance should always be better. That's why we fail the unit test\n\n" +
-                "The execution took (ms): " + (end - start));
+        fail("Performance should always be better. That's why we fail the unit test. " +
+                "Total duration (ms): " + (end - start));
     }
 
     protected void assertExpressionMatches(Expression expression, double xValue, double yValue) {
@@ -168,8 +168,8 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         FunctionDefinition fd = ASTTest.createFunctionDefinition("EvalTestFunc", expression);
 
         x[0] = xValue;
-        fd.accept(evalVisitor);
-        double y = evalVisitor.getResult()[0];
+        fd.accept(evalVisitorImpl);
+        double y = evalVisitorImpl.getResult()[0];
 
         assertThat(y, closeTo(yValue));
     }
@@ -181,8 +181,8 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
         FunctionDefinition fd = ASTTest.createFunctionDefinition("EvalTestFunc", expression, auxiliaryExpression);
 
         x[0] = xValue;
-        fd.accept(evalVisitor);
-        double y = evalVisitor.getResult()[0];
+        fd.accept(evalVisitorImpl);
+        double y = evalVisitorImpl.getResult()[0];
 
         assertThat(y, closeTo(yValue));
     }
@@ -192,14 +192,14 @@ public class EvalVisitorTest extends AbstractCalculatingVisitorTest {
 
         double[] xArray = new double[]{1};
         double[] pArray = new double[]{1};
-        evalVisitor = new EvalVisitor(xArray, pArray, 1);
+        evalVisitorImpl = new EvalVisitorImpl(xArray, pArray, 1);
 
         FunctionDefinition fd = new FunctionDefinition("TooLessVariables", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(10)))));
 
         exception.expect(ArrayIndexOutOfBoundsException.class);
         exception.expectMessage("");
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
     }
 
 }

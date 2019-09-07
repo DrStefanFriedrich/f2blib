@@ -12,6 +12,7 @@
 
 package com.github.drstefanfriedrich.f2blib.impl;
 
+import com.github.drstefanfriedrich.f2blib.visitor.FunctionEvaluationValidator;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -36,13 +37,19 @@ public class FunctionInfoTest {
         }
     };
 
+    private static final FunctionEvaluationValidator fev = new FunctionEvaluationValidator() {
+        @Override
+        public void validate(double[] p, double[] x, double[] y) throws IllegalArgumentException {
+        }
+    };
+
     @Test
     public void equalsAndHashCodeTest() {
 
-        FunctionInfo functionInfo11 = new FunctionInfo(fe1, PRETTY_PRINTED_1);
-        FunctionInfo functionInfo12 = new FunctionInfo(fe1, PRETTY_PRINTED_2);
-        FunctionInfo functionInfo21 = new FunctionInfo(fe2, PRETTY_PRINTED_1);
-        FunctionInfo functionInfo22 = new FunctionInfo(fe2, PRETTY_PRINTED_2);
+        FunctionInfo functionInfo11 = new FunctionInfo(fe1, PRETTY_PRINTED_1, fev);
+        FunctionInfo functionInfo12 = new FunctionInfo(fe1, PRETTY_PRINTED_2, fev);
+        FunctionInfo functionInfo21 = new FunctionInfo(fe2, PRETTY_PRINTED_1, fev);
+        FunctionInfo functionInfo22 = new FunctionInfo(fe2, PRETTY_PRINTED_2, fev);
 
         assertThat(functionInfo11.equals(functionInfo11), is(true));
         assertThat(functionInfo11.equals(functionInfo12), is(false));
@@ -56,7 +63,7 @@ public class FunctionInfoTest {
     @Test
     public void toStringTest() {
 
-        FunctionInfo functionInfo = new FunctionInfo(fe1, PRETTY_PRINTED_1);
+        FunctionInfo functionInfo = new FunctionInfo(fe1, PRETTY_PRINTED_1, fev);
 
         assertThat(functionInfo.toString(), startsWith("FunctionInfo{functionEvaluation=com.github.drstefanfriedrich.f2blib.impl.FunctionInfoTest$"));
     }

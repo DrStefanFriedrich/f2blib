@@ -20,6 +20,8 @@ package com.github.drstefanfriedrich.f2blib.lifeinsurance;
  * ageAtContractBeginning years old.</li>
  * <li>The life insurance contract runs durationOfContract years.</li>
  * <li>Every year the policy holder pays a specified fee.</li>
+ * <li>The effective (or net) fee will be calculated by applying an
+ * expense factor.</li>
  * <li>The calculations will be done using a specified interest rate.</li>
  * <li>If the policy holder dies before the end of the contract, an amount
  * of deathPremium will be paid to the bereaved.</li>
@@ -31,7 +33,7 @@ package com.github.drstefanfriedrich.f2blib.lifeinsurance;
  * tugraz.at/~aistleitner/Lehre/WS2011/Finanz_Vers/FinanzVersicherung
  * 20112012/skriptum_finanz_und_versicherungsmathematik.pdf">here</a>.</p>
  */
-public class LifeInsuranceBuilder {
+class LifeInsuranceBuilder {
 
     private static final double[] MORTALITY_TABLE_MALE = {
             0.0053430, 0.0003452, 0.0002639, 0.0001984, 0.0001512, 0.0001295,
@@ -50,7 +52,7 @@ public class LifeInsuranceBuilder {
             0.0614277, 0.0682233, 0.0759351, 0.0846979, 0.0946637, 0.1053137,
             0.1161986, 0.1276845, 0.1399040, 0.1531484, 0.1676838, 0.1839279,
             0.2020555, 0.2221826, 0.2440479, 0.2672621, 0.2914275, 0.3162331,
-            0.3414812, 0.3670574, 0.3928725, 0.4188563, 1.0
+            0.3414812, 0.3670574, 0.3928725, 0.4188563, 1.0, 1.0
     };
 
     private static final double[] MORTALITY_TABLE_FEMALE = {
@@ -70,82 +72,46 @@ public class LifeInsuranceBuilder {
             0.0377085, 0.0429438, 0.0489131, 0.0557097, 0.0634426, 0.0722388,
             0.0822385, 0.0936000, 0.1065040, 0.1204218, 0.1353127, 0.1517418,
             0.1698118, 0.1895022, 0.2108727, 0.2338888, 0.2583034, 0.2836835,
-            0.3095368, 0.3357864, 0.3624251, 0.3893823, 1.0
+            0.3095368, 0.3357864, 0.3624251, 0.3893823, 1.0, 1.0
     };
 
     /**
-     * The age of the policy holder at the beginning of the contract in years.
+     * Determines the parameter array needed to calculate a life insurance.
+     *
+     * @param ageAtContractBeginning The age of the policy holder at the beginning of the contract in years.
+     * @param durationOfContract     The duration of the life insurance contract in years.
+     * @param fee                    The fee/dues paid yearly by the policy holder.
+     * @param sex                    The sex of the policy holder. true means male, false means female.
+     *                               Unfortunately, we have to be a little bit sexist at this point. As of
+     *                               this writing, it seems there exist no mortality tables for all other
+     *                               sexes.
+     * @param deathPremium           The premium that will be paid to the bereaved in case the policy holder
+     *                               dies before the end of the contract.
+     * @param interestRate           The interest rate used during the calculation.
+     * @param expenseFactor          The net fee f will be calculated as f := (1 - expenseFactor) * F.
+     * @return The array of parameters.
      */
-    private int ageAtContractBeginning;
+    public double[] getParameters(int ageAtContractBeginning, int durationOfContract, double fee, boolean sex,
+                                  double deathPremium, double interestRate, double expenseFactor) {
+        int endOfContract = ageAtContractBeginning + durationOfContract;
 
-    /**
-     * The duration of the life insurance contract in years.
-     */
-    private int durationOfContract;
+        if (endOfContract >= 100) {
+            throw new IllegalArgumentException(String.format("ageAtContractBeginning + durationOfContract must not be" +
+                    "greater or equal to 100, but is %d", endOfContract));
+        }
 
-    /**
-     * The fee/dues paid yearly by the policy holder.
-     */
-    private double fee;
+        double[] p = new double[107];
 
-    /**
-     * The sex of the policy holder. true means male, false means female.
-     * Unfortunately, we have to be a little bit sexist at this point. As of
-     * this writing, it seems there exist no mortality tables for all other
-     * sexes.
-     */
-    private boolean sex;
-
-    /**
-     * The premium that will be paid to the bereaved in case the policy holder
-     * dies before the end of the contract.
-     */
-    private double deathPremium;
-
-    /**
-     * The interest rate used during the calculation.
-     */
-    private double interestRate;
-
-    public void setAgeAtContractBeginning(int ageAtContractBeginning) {
-        this.ageAtContractBeginning = ageAtContractBeginning;
-    }
-
-    public void setDurationOfContract(int durationOfContract) {
-        this.durationOfContract = durationOfContract;
-    }
-
-    public void setFee(double fee) {
-        this.fee = fee;
-    }
-
-    public void setDeathPremium(double deathPremium) {
-        this.deathPremium = deathPremium;
-    }
-
-    public void setSex(boolean sex) {
-        this.sex = sex;
-    }
-
-    public void setInterestRate(double interestRate) {
-        this.interestRate = interestRate;
-    }
-
-    public double[] getParameters() {
-        double[] p = new double[108];
-
-        p[0] = 1; // 'start' for the for loop
-        p[1] = durationOfContract; // 'end' for the for loop
-        p[2] = 1; // 'step' for the for loop
-        p[3] = ageAtContractBeginning;
-        p[4] = fee;
-        p[5] = deathPremium;
-        p[6] = interestRate;
+        p[0] = durationOfContract;
+        p[1] = ageAtContractBeginning;
+        p[2] = (1 - expenseFactor) * fee;
+        p[3] = deathPremium;
+        p[4] = interestRate;
 
         if (sex) {
-            System.arraycopy(MORTALITY_TABLE_MALE, 0, p, 7, 101);
+            System.arraycopy(MORTALITY_TABLE_MALE, 0, p, 5, 102);
         } else {
-            System.arraycopy(MORTALITY_TABLE_FEMALE, 0, p, 7, 101);
+            System.arraycopy(MORTALITY_TABLE_FEMALE, 0, p, 5, 102);
         }
 
         return p;

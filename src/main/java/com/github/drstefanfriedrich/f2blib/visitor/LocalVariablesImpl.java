@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Comparator.naturalOrder;
-
 /**
  * Implementation note on the array of local variables:<p>
  * <code>0: this</code><p>
@@ -36,34 +34,34 @@ import static java.util.Comparator.naturalOrder;
  * <code>8: Markov shift N</code><p>
  * <code>9: Markov shift start</code><p>
  * <code>10: Markov shift end</code><p>
- * <code>11: sum variable</code><p>
- * <code>13: prod variable</code><p>
- * <code>14, ...: auxiliary variables</code>
+ * <code>11: IntVar</code><p>
+ * <code>12: summation for the IntVar</code><p>
+ * <code>14: multiplication for the IntVar</code>
+ * <code>16: ...</code>
+ * <code>...: AuxVar's</code><p>
  */
 public class LocalVariablesImpl implements LocalVariables {
 
-    private int indexForLoopEnd;
+    private static final int INDEX_FOR_LOOP_END = 4;
 
-    private int indexForLoopStep;
+    private static final int INDEX_FOR_LOOP_STEP = 5;
 
-    private int markovShiftOffset;
+    private static final int MARKOV_SHIFT_OFFSET = 6;
 
-    private int markovShiftM;
+    private static final int MARKOV_SHIFT_M = 7;
 
-    private int markovShiftN;
+    private static final int MARKOV_SHIFT_N = 8;
 
-    private int markovShiftStart;
+    private static final int MARKOV_SHIFT_START = 9;
 
-    private int markovShiftEnd;
+    private static final int MARKOV_SHIFT_END = 10;
 
-    private int sumIndex;
-
-    private int prodIndex;
-
+    private final Set<IntVar> tmpIntVars = new HashSet<>();
     private final Map<IntVar, Integer> intVariable2Index = new HashMap<>();
+    private final Map<IntVar, Integer> intVariable2SumIndex = new HashMap<>();
+    private final Map<IntVar, Integer> intVariable2ProdIndex = new HashMap<>();
 
     private final Set<AuxVar> tmpAuxVars = new HashSet<>();
-
     private final Map<AuxVar, Integer> auxVar2Index = new HashMap<>();
 
     /**
@@ -75,9 +73,9 @@ public class LocalVariablesImpl implements LocalVariables {
          * 4: this, x[], y[], p[]
          * 2: for loop: end, step
          * 5: Markov shift
-         * 4: sum, prod (double)
          */
-        return 4 + 2 + 5 + 2 * 2 + intVariable2Index.size() + 2 * auxVar2Index.size();
+        return 4 + 2 + 5 + intVariable2Index.size() + 2 * auxVar2Index.size() +
+                2 * intVariable2SumIndex.size() + 2 * intVariable2ProdIndex.size();
     }
 
     /**
@@ -87,24 +85,19 @@ public class LocalVariablesImpl implements LocalVariables {
      */
     void finalizeLocalVariables() {
 
-        int localVariableIndex = 4;
+        int nextLocalVariableIndex = 11;
 
-        indexForLoopEnd = localVariableIndex++;
-        indexForLoopStep = localVariableIndex++;
-
-        markovShiftOffset = localVariableIndex++;
-        markovShiftM = localVariableIndex++;
-        markovShiftN = localVariableIndex++;
-        markovShiftStart = localVariableIndex++;
-        markovShiftEnd = localVariableIndex++;
-        sumIndex = localVariableIndex++;
-        localVariableIndex++;
-        prodIndex = localVariableIndex++;
-        localVariableIndex++;
+        for (IntVar iv : tmpIntVars) {
+            intVariable2Index.put(iv, nextLocalVariableIndex++);
+            intVariable2SumIndex.put(iv, nextLocalVariableIndex++);
+            nextLocalVariableIndex++;
+            intVariable2ProdIndex.put(iv, nextLocalVariableIndex++);
+            nextLocalVariableIndex++;
+        }
 
         for (AuxVar av : tmpAuxVars) {
-            auxVar2Index.put(av, localVariableIndex++);
-            localVariableIndex++;
+            auxVar2Index.put(av, nextLocalVariableIndex++);
+            nextLocalVariableIndex++;
         }
     }
 
@@ -113,61 +106,54 @@ public class LocalVariablesImpl implements LocalVariables {
         return intVariable2Index.get(intVar);
     }
 
-    public void calculateNewIndexForIntVar(String variableName) {
-
+    public void addIntVar(String variableName) {
         IntVar intVar = new IntVar(variableName);
-        if (intVariable2Index.containsKey(intVar)) {
-            return;
-        }
-
-        int nextIndex = intVariable2Index.values().stream().max(naturalOrder()).orElse(14) + 1;
-
-        intVariable2Index.put(intVar, nextIndex);
+        tmpIntVars.add(intVar);
     }
 
     @Override
     public int getIndexForForLoopEnd() {
-        return indexForLoopEnd;
+        return INDEX_FOR_LOOP_END;
     }
 
     @Override
     public int getIndexForForLoopStep() {
-        return indexForLoopStep;
+        return INDEX_FOR_LOOP_STEP;
     }
 
     @Override
     public int getMarkovShiftOffset() {
-        return markovShiftOffset;
+        return MARKOV_SHIFT_OFFSET;
     }
 
     @Override
     public int getMarkovShiftM() {
-        return markovShiftM;
+        return MARKOV_SHIFT_M;
     }
 
     @Override
     public int getMarkovShiftN() {
-        return markovShiftN;
+        return MARKOV_SHIFT_N;
     }
 
     @Override
     public int getMarkovShiftStart() {
-        return markovShiftStart;
+        return MARKOV_SHIFT_START;
     }
 
     @Override
     public int getMarkovShiftEnd() {
-        return markovShiftEnd;
+        return MARKOV_SHIFT_END;
     }
 
     @Override
-    public int getSumIndex() {
-        return sumIndex;
+    public int getSumIndex(IntVar intVar) {
+        return intVariable2SumIndex.get(intVar);
     }
 
     @Override
-    public int getProdIndex() {
-        return prodIndex;
+    public int getProdIndex(IntVar intVar) {
+        return intVariable2ProdIndex.get(intVar);
     }
 
     @Override

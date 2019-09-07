@@ -29,9 +29,9 @@ public interface LocalVariables {
 
     int getMarkovShiftEnd();
 
-    int getSumIndex();
+    int getSumIndex(IntVar intVar);
 
-    int getProdIndex();
+    int getProdIndex(IntVar intVar);
 
     int getIndexForAuxVar(AuxVar auxVar);
 

@@ -9,3 +9,4 @@
 #
 
 com.github.drstefanfriedrich.f2blib.impl.F2BLibAssembler
+com.github.drstefanfriedrich.f2blib.impl.EvalAssembler

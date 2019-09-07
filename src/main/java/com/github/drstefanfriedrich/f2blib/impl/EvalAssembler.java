@@ -13,27 +13,26 @@
 package com.github.drstefanfriedrich.f2blib.impl;
 
 import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
-import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGeneratorImpl;
 import com.github.drstefanfriedrich.f2blib.parser.AntlrFunctionParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Separate construction of a system from using it.
+ * Construct an instance of {@link EvalImpl}.
  */
-public class F2BLibAssembler extends AbstractFEPImpl {
+public class EvalAssembler extends AbstractFEPImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(F2BLibAssembler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EvalAssembler.class);
 
     protected FunctionEvaluationKernel constructInstance() {
-        F2BLibImpl f2BLib = new F2BLibImpl(new AntlrFunctionParser(), new FunctionEvaluationBytecodeGeneratorImpl());
+        EvalImpl eval = new EvalImpl(new AntlrFunctionParser());
         LOG.info("F2BLib started successfully");
-        return f2BLib;
+        return eval;
     }
 
     @Override
     public String getKernelIdentifier() {
-        return "f2blib";
+        return "eval";
     }
 
 }

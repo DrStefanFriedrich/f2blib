@@ -6,4 +6,5 @@ build/
 f2blib.iws
 f2blib.ipr
 out/
+*.log
 

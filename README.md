@@ -10,6 +10,8 @@
 
  ------------------------------------------------------------------------------>
 
+<img src="https://cdn.pixabay.com/photo/2017/06/16/07/26/under-construction-2408061_960_720.png" width="100"/>
+
 # F2BLib &mdash; Function to Bytecode Library
 
 [![Language Java](https://img.shields.io/static/v1.svg?label=Language&message=Java&color=fbff8a&style=plastic)](https://openjdk.java.net/)
@@ -262,6 +264,480 @@ $ ./gradlew -Dcom.github.drstefanfriedrich.f2blib.performancetest.enabled=true
 
 * Right now variables must be named x_i, where i is an integer and parameters must be named p_j, where j is
   an integer.
+
+
+## Finance Mathematics/Life Insurances
+
+Lets consider a life insurance contract with the following conditions:
+
+* At the beginning of the contract the policy holder is x years old
+* The life insurance contract runs n years
+* Every year the policy holder pays a specified fee denoted by F at the beginning of the year
+* The fee F is a gross value. The net value will be calculated by reducing the value by an
+  expense factor e.
+* If the policy holder dies before the end of the contract, a death premium D will be paid to
+  the bereaved at the end of the year the policy holder died
+* If the policy holder reaches the end of the contract, an annuity A that is to be calculated,
+  will be paid to the policy holder every year at the end of the year until its death
+* The calculations will be done using a specified interest rate i, which is fixed
+
+Let K be the rounded down number of years when the policy holder dies. Then K is a probability
+variable. If we denote by v = 1/(1+i) the discounting factor, we get for the benefit B
+discounted to the beginning of the contract (+ means money will be paid into the insurance, -
+means you get money out from the insurance):
+
+<center>
+<!--
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow>
+	<msub>
+		<mi>B</mi>
+		<mrow>
+			<mi>K</mi>
+			<mo>,</mo>
+			<mi>x</mi>
+		</mrow>
+	</msub>
+	<mo>:</mo>
+	<mo>=</mo>
+	<mrow>
+		<mo rspace="0.3em" lspace="0em" stretchy="true" fence="true" form="prefix">{</mo>
+		<mtable class="m-matrix">
+			<mtr>
+				<mtd>
+					<mi>F</mi>
+					<mstyle displaystyle="true">
+						<munderover>
+							<mo>&#x02211;</mo>
+							<mrow>
+								<mi>l</mi>
+								<mo>=</mo>
+								<mn>0</mn>
+							</mrow>
+							<mi>K</mi>
+						</munderover>
+					</mstyle>
+					<msup>
+						<mi>v</mi>
+						<mi>l</mi>
+					</msup>
+					<mo>-</mo>
+					<mi>D</mi>
+					<msup>
+						<mi>v</mi>
+						<mrow>
+							<mi>K</mi>
+							<mo>+</mo>
+							<mn>1</mn>
+						</mrow>
+					</msup>
+					<mo>,</mo>
+				</mtd>
+				<mtd>
+					<mi>K</mi>
+					<mo>=</mo>
+					<mn>0</mn>
+					<mo>,</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mo>,</mo>
+					<mi>n</mi>
+					<mo>-</mo>
+					<mn>1</mn>
+				</mtd>
+			</mtr>
+			<mtr>
+				<mtd>
+					<mi>F</mi>
+					<mstyle displaystyle="true">
+						<munderover>
+							<mo>&#x02211;</mo>
+							<mrow>
+								<mi>l</mi>
+								<mo>=</mo>
+								<mn>0</mn>
+							</mrow>
+							<mrow>
+								<mi>n</mi>
+								<mo>-</mo>
+								<mn>1</mn>
+							</mrow>
+						</munderover>
+					</mstyle>
+					<msup>
+						<mi>v</mi>
+						<mi>l</mi>
+					</msup>
+					<mo>-</mo>
+					<mi>A</mi>
+					<mstyle displaystyle="true">
+						<munderover>
+							<mo>&#x02211;</mo>
+							<mrow>
+								<mi>l</mi>
+								<mo>=</mo>
+								<mi>n</mi>
+							</mrow>
+							<mi>K</mi>
+						</munderover>
+					</mstyle>
+					<msup>
+						<mi>v</mi>
+						<mi>l</mi>
+					</msup>
+					<mo>,</mo>
+				</mtd>
+				<mtd>
+					<mi>K</mi>
+					<mo>=</mo>
+					<mi>n</mi>
+					<mo>,</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mn>,101</mn>
+					<mo>-</mo>
+					<mi>x</mi>
+				</mtd>
+			</mtr>
+		</mtable>
+		<mphantom rspace="0em" lspace="0.3em" stretchy="true" fence="true" form="postfix">}</mphantom>
+	</mrow>
+</mrow>
+</math>
+-->
+<img src="src/main/docs/benefit1.png" />
+</center>
+
+By using a well known formula for the geometric series, we get
+
+<center>
+<!--
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow>
+	<msub>
+		<mi>B</mi>
+		<mrow>
+			<mi>K</mi>
+			<mo>,</mo>
+			<mi>x</mi>
+		</mrow>
+	</msub>
+	<mo>:</mo>
+	<mo>=</mo>
+	<mrow>
+		<mo rspace="0.3em" lspace="0em" stretchy="true" fence="true" form="prefix">{</mo>
+		<mtable class="m-matrix">
+			<mtr>
+				<mtd>
+					<mi>F</mi>
+					<mfrac linethickness="1">
+						<mrow>
+							<mn>1</mn>
+							<mo>-</mo>
+							<msup>
+								<mi>v</mi>
+								<mrow>
+									<mi>K</mi>
+									<mo>+</mo>
+									<mn>1</mn>
+								</mrow>
+							</msup>
+						</mrow>
+						<mrow>
+							<mn>1</mn>
+							<mo>-</mo>
+							<mi>v</mi>
+						</mrow>
+					</mfrac>
+					<mo>-</mo>
+					<mi>D</mi>
+					<msup>
+						<mi>v</mi>
+						<mrow>
+							<mi>K</mi>
+							<mo>+</mo>
+							<mn>1</mn>
+						</mrow>
+					</msup>
+					<mo>,</mo>
+				</mtd>
+				<mtd>
+					<mi>K</mi>
+					<mo>=</mo>
+					<mn>0</mn>
+					<mo>,</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mo>,</mo>
+					<mi>n</mi>
+					<mo>-</mo>
+					<mn>1</mn>
+				</mtd>
+			</mtr>
+			<mtr>
+				<mtd>
+					<mi>F</mi>
+					<mfrac linethickness="1">
+						<mrow>
+							<mn>1</mn>
+							<mo>-</mo>
+							<msup>
+								<mi>v</mi>
+								<mi>n</mi>
+							</msup>
+						</mrow>
+						<mrow>
+							<mn>1</mn>
+							<mo>-</mo>
+							<mi>v</mi>
+						</mrow>
+					</mfrac>
+					<mo>-</mo>
+					<mi>A</mi>
+					<mfrac linethickness="1">
+						<mrow>
+							<msup>
+								<mi>v</mi>
+								<mi>n</mi>
+							</msup>
+							<mo>-</mo>
+							<msup>
+								<mi>v</mi>
+								<mrow>
+									<mi>K</mi>
+									<mo>+</mo>
+									<mn>1</mn>
+								</mrow>
+							</msup>
+						</mrow>
+						<mrow>
+							<mn>1</mn>
+							<mo>-</mo>
+							<mi>v</mi>
+						</mrow>
+					</mfrac>
+				</mtd>
+				<mtd>
+					<mi>K</mi>
+					<mo>=</mo>
+					<mi>n</mi>
+					<mo>,</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mo>.</mo>
+					<mn>,101</mn>
+					<mo>-</mo>
+					<mi>x</mi>
+				</mtd>
+			</mtr>
+		</mtable>
+		<mphantom rspace="0em" lspace="0.3em" stretchy="true" fence="true" form="postfix">}</mphantom>
+	</mrow>
+</mrow>
+</math>
+-->
+<img src="src/main/docs/benefit2.png" />
+</center>
+
+Crucial in life insurances are mortality tables.
+
+<center>
+<!--
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow>
+	<msub>
+		<mrow>
+			<mo form="prefix">(</mo>
+			<msub>
+				<mi>q</mi>
+				<mi>x</mi>
+			</msub>
+			<mo form="postfix">)</mo>
+		</mrow>
+		<mrow>
+			<mi>x</mi>
+			<mo>&#x02208;</mo>
+			<mi>&#x02115;</mi>
+		</mrow>
+	</msub>
+</mrow>
+</math>
+-->
+<img src="src/main/docs/mortality.png" />
+</center>
+
+denotes the probability that an x year old dies within one year. The expression 101 - x in the
+formula above results from the fact that typical mortality tables will be cut off at the age
+of 101. Then
+
+<center>
+<!--
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow>
+	<msub>
+		<mi>E</mi>
+		<mrow>
+			<mi>x</mi>
+			<mo>,</mo>
+			<mi>k</mi>
+		</mrow>
+	</msub>
+	<mo>=</mo>
+	<msub>
+		<mi>q</mi>
+		<mrow>
+			<mi>x</mi>
+			<mo>+</mo>
+			<mi>k</mi>
+		</mrow>
+	</msub>
+	<mstyle displaystyle="true">
+		<munderover>
+			<mo>&#x0220F;</mo>
+			<mrow>
+				<mi>l</mi>
+				<mo>=</mo>
+				<mi>x</mi>
+			</mrow>
+			<mrow>
+				<mi>x</mi>
+				<mo>+</mo>
+				<mi>k</mi>
+				<mo>-</mo>
+				<mn>1</mn>
+			</mrow>
+		</munderover>
+	</mstyle>
+	<mrow>
+		<mo form="prefix">(</mo>
+		<mn>1</mn>
+		<mo>-</mo>
+		<msub>
+			<mi>q</mi>
+			<mi>l</mi>
+		</msub>
+		<mo form="postfix">)</mo>
+	</mrow>
+</mrow>
+</math>
+-->
+<img src="src/main/docs/probability.png" />
+</center>
+
+is the probability that an x year old lives exactly for another k years and then dies within one
+year.
+
+A life insurance is considered to be fair, if and only if the expected value is zero, which leads
+to
+
+<center>
+<!--
+<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mrow>
+	<mstyle displaystyle="true">
+		<munderover>
+			<mo>&#x02211;</mo>
+			<mrow>
+				<mi>K</mi>
+				<mo>=</mo>
+				<mn>0</mn>
+			</mrow>
+			<mrow>
+				<mn>101</mn>
+				<mo>-</mo>
+				<mi>x</mi>
+			</mrow>
+		</munderover>
+	</mstyle>
+	<msub>
+		<mi>E</mi>
+		<mrow>
+			<mi>x</mi>
+			<mo>,</mo>
+			<mi>K</mi>
+		</mrow>
+	</msub>
+	<msub>
+		<mi>B</mi>
+		<mrow>
+			<mi>K</mi>
+			<mo>,</mo>
+			<mi>x</mi>
+		</mrow>
+	</msub>
+	<mo>=</mo>
+	<mn>0</mn>
+</mrow>
+</math>
+-->
+<img src="src/main/docs/expected_value.png" />
+</center>
+
+From the above formula an expression for the annuity A can easily be deduced, which is left to
+the reader as an exercise. For the impatient, we refer to the package
+
+```
+com.github.drstefanfriedrich.f2blib.lifeinsurance
+```
+
+under `src/test/java`.
+
+
+## Performance Tests
+
+We carried out a few performance tests to demonstrate the capabilities of F2BLib.
+
+The hardware used to perform the test was an ASUS notebook running Fedora 23 Linux
+with a 2.4 series kernel. The CPU of the notebook is a Intel Core i7-6700HQ with 2.6
+GHz. We used JDK 11.0.4. The test setup was as follows: we executed the script
+`performance-test.sh`, analyzed the log file `performance-test.log` and calculated
+the Mean and Standard Deviation from [here](https://www.rapidtables.com/calc/math/standard-deviation-calculator.html).
+
+We performed the following test cases:
+
+**Test Case 1: BytecodeVisitorImplTest**
+
+On one thread a lot of 'nonsense' functions will be evaluated. This test case
+uses the bytecode visitor.
+
+**Test Case 2: EvalVisitorImplTest**
+
+Same as Test Case 1, but this time using the EvalVisitor.
+
+**Test Case 3: BytecodePerformanceTest**
+
+This test case uses two queues. One request queue and one response queue. One
+worker thread fills the request queue and a specified number of worker threads
+listen on the request queue, dequeue elements, process them, and write the
+result to the response queue. This test case uses the bytecode visitor.
+
+**Test Case 4: EvalPerformanceTest**
+
+Same as Test Case 3, but this time using the EvalVisitor.
+
+**Test Case 5: BytecodeLifeInsuranceVariantsTest**
+
+This test case starts a specified number of worker threads and executes on each
+thread a lot of different life insurances calculations. The bytecode visitor is
+used.
+
+**Test Case 6: EvalLifeInsuranceVariantsTest**
+
+Same as Test Case 5, but this time using the EvalVisitor.
+
+The result was as follows:
+
+| Test Case                           | Duration (secs) | Standard Deviation |
+| ------------------------------------|-----------------|--------------------|
+| BytecodeVisitorImplTest             | 2.095           | 0.02465            |
+| EvalVisitorImplTest                 | 16.455          | 0.5356             |
+| BytecodePerformanceTest             | 1.852           | 0.05596            |
+| EvalPerformanceTest                 | 32.948          | 1.904              |
+| BytecodeLifeInsuranceVariantsTest   | 0.3727          | 0.01523            |
+| EvalLifeInsuranceVariantsTest       | 58.300          | 2.682              |
 
 
 ## References

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -44,8 +43,8 @@ public class ASTTest {
 
             assertThat(fd.toString(), is("FunctionDefinition{name=MyFunc, functionBody=FunctionBody{" +
                     "functionsWrapper=FunctionsWrapper{functions=[Function{index=0, expression=Sin{expression=" +
-                    "Multiplication{left=PI, right=Variable{index=0, indexExpression=null}}}}], markovShift=" +
-                    "Optional.empty}, forLoop=null}}"));
+                    "Multiplication{left=PI, right=Variable{index=0, indexExpression=null}}}}], auxiliaryVariables=[], " +
+                    "markovShift=Optional.empty}, forLoop=null}}"));
         }
 
         @Test
@@ -313,7 +312,7 @@ public class ASTTest {
                             "end=Round{expression=Parameter{index=1, indexExpression=null}}, step=Round{expression=" +
                             "Parameter{index=2, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=[" +
                             "Function{index=0, expression=Variable{index=1, indexExpression=null}}], " +
-                            "markovShift=Optional.empty}}"));
+                            "auxiliaryVariables=[], markovShift=Optional.empty}}"));
         }
 
         @Test
@@ -325,8 +324,8 @@ public class ASTTest {
                     is("ForLoop{variableName=k, start=Round{expression=Parameter{index=0, indexExpression=null}}, " +
                             "end=Round{expression=Parameter{index=1, indexExpression=null}}, step=Round{expression=" +
                             "Parameter{index=2, indexExpression=null}}, functionsWrapper=FunctionsWrapper{functions=" +
-                            "[Function{index=0, expression=Variable{index=1, indexExpression=null}}], markovShift=" +
-                            "Optional[MarkovShift{offset=Int{value=0}}]}}"));
+                            "[Function{index=0, expression=Variable{index=1, indexExpression=null}}], " +
+                            "auxiliaryVariables=[], markovShift=Optional[MarkovShift{offset=Int{value=0}}]}}"));
         }
 
         @Test
@@ -370,6 +369,39 @@ public class ASTTest {
                     is("Prod{inner=IntVar{variableName=i}, variableName=i, start=Int{value=1}, end=Int{value=10}}"));
         }
 
+        @Test
+        public void auxiliaryVariable() {
+
+            assertThat(new AuxiliaryVariable(new AuxVar("O"), new Multiplication(new AuxVar("O"), new Int(5))).toString(),
+                    is("AuxiliaryVariable{auxVar=AuxVar{variableName=O}, inner=Multiplication{left=AuxVar{variableName=O}, right=Int{value=5}}}"));
+        }
+
+        @Test
+        public void auxiliaryVariableWithMixedExpression() {
+
+            assertThat(new AuxiliaryVariable(new AuxVar("O"), new Power(new AuxVar("O"), new Int(5))).toString(),
+                    is("AuxiliaryVariable{auxVar=AuxVar{variableName=O}, inner=Power{left=AuxVar{variableName=O}, right=Int{value=5}}}"));
+        }
+
+        @Test
+        public void auxiliaryVariableWithIntExpression() {
+
+            assertThat(new AuxiliaryVariable(new AuxVar("O"), new Power(new Int(2), new Int(5))).toString(),
+                    is("AuxiliaryVariable{auxVar=AuxVar{variableName=O}, inner=Power{left=Int{value=2}, right=Int{value=5}}}"));
+        }
+
+        @Test
+        public void expressionFromLifeInsuranceFormula() {
+
+            assertThat(new AuxiliaryVariable(new AuxVar("A"), new Subtraction(new Power(new AuxVar("V"),
+                            new Round(new Parameter(0))), new Power(new AuxVar("V"),
+                            new Addition(new IntVar("k"), new Int(1))))).toString(),
+                    is("AuxiliaryVariable{auxVar=AuxVar{variableName=A}, inner=Subtraction{left=Power{left=" +
+                            "AuxVar{variableName=V}, right=Round{expression=Parameter{index=0, indexExpression=null}}}," +
+                            " right=Power{left=AuxVar{variableName=V}, right=Addition{left=IntVar{variableName=k}," +
+                            " right=Int{value=1}}}}}"));
+        }
+
     }
 
     public static class EqualsAndHashCodeTest {
@@ -384,7 +416,6 @@ public class ASTTest {
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
             assertThat(fd1.equals(fd2), is(true));
-
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
         }
 
@@ -398,8 +429,6 @@ public class ASTTest {
                     new Sin(new Multiplication(Constant.PI, new Variable(0))));
 
             assertThat(fd1.equals(fd2), is(false));
-
-            assertThat(fd1.hashCode(), is(not(fd2.hashCode())));
         }
 
         @Test
@@ -412,7 +441,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -425,7 +453,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -438,7 +465,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -451,7 +477,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -464,7 +489,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -477,7 +501,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -490,7 +513,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -503,7 +525,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -516,7 +537,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -529,7 +549,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -542,7 +561,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -555,7 +573,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -568,7 +585,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -581,7 +597,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -594,7 +609,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -607,7 +621,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -620,7 +633,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -633,7 +645,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -646,7 +657,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -659,7 +669,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -672,7 +681,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -685,7 +693,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -698,7 +705,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -711,7 +717,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -724,7 +729,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -737,7 +741,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -750,7 +753,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -763,7 +765,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -776,7 +777,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -789,7 +789,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -802,7 +801,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -815,7 +813,6 @@ public class ASTTest {
             assertThat(fd1.equals(fd2), is(true));
             assertThat(fd1.equals(fd3), is(false));
             assertThat(fd1.hashCode(), is(fd2.hashCode()));
-            assertThat(fd1.hashCode(), is(not(fd3.hashCode())));
         }
 
         @Test
@@ -1088,7 +1085,6 @@ public class ASTTest {
             assertThat(fv1.equals(null), is(false));
             assertThat(fv1.equals(fv1), is(true));
             assertThat(fv1.hashCode(), is(fv2.hashCode()));
-            assertThat(fv1.hashCode(), is(not(fv3.hashCode())));
         }
 
         @Test
@@ -1114,7 +1110,6 @@ public class ASTTest {
             assertThat(fl1.equals(fl7), is(false));
 
             assertThat(fl1.hashCode(), is(fl2.hashCode()));
-            assertThat(fl1.hashCode(), is(not(fl3.hashCode())));
         }
 
         @Test
@@ -1132,7 +1127,6 @@ public class ASTTest {
             assertThat(ms1.equals(fd), is(false));
 
             assertThat(ms1.hashCode(), is(ms2.hashCode()));
-            assertThat(ms1.hashCode(), is(not(ms3.hashCode())));
         }
 
         @Test
@@ -1150,7 +1144,6 @@ public class ASTTest {
             assertThat(v1.equals(v1), is(true));
 
             assertThat(v1.hashCode(), is(v2.hashCode()));
-            assertThat(v1.hashCode(), is(not(v3.hashCode())));
         }
 
         @Test
@@ -1168,7 +1161,6 @@ public class ASTTest {
             assertThat(p1.equals(p1), is(true));
 
             assertThat(p1.hashCode(), is(p2.hashCode()));
-            assertThat(p1.hashCode(), is(not(p3.hashCode())));
         }
 
         @Test
@@ -1189,7 +1181,6 @@ public class ASTTest {
             assertThat(s1.equals(p1), is(false));
 
             assertThat(s1.hashCode(), is(s5.hashCode()));
-            assertThat(s1.hashCode(), is(not(s2.hashCode())));
         }
 
         @Test
@@ -1210,7 +1201,38 @@ public class ASTTest {
             assertThat(p1.equals(s1), is(false));
 
             assertThat(p1.hashCode(), is(p5.hashCode()));
-            assertThat(p1.hashCode(), is(not(p2.hashCode())));
+        }
+
+        @Test
+        public void auxVar() {
+
+            AuxVar a1 = new AuxVar("K");
+            AuxVar a2 = new AuxVar("K");
+            AuxVar a3 = new AuxVar("L");
+            IntVar i1 = new IntVar("K");
+
+            assertThat(a1.equals(a1), is(true));
+            assertThat(a1.equals(a2), is(true));
+            assertThat(a1.equals(a3), is(false));
+            assertThat(a1.equals(i1), is(false));
+
+            assertThat(a1.hashCode(), is(a2.hashCode()));
+        }
+
+        @Test
+        public void auxiliaryVariable() {
+
+            AuxiliaryVariable av1 = new AuxiliaryVariable(new AuxVar("K"), new Variable(0));
+            AuxiliaryVariable av2 = new AuxiliaryVariable(new AuxVar("K"), new Variable(0));
+            AuxiliaryVariable av3 = new AuxiliaryVariable(new AuxVar("L"), new Variable(0));
+            AuxiliaryVariable av4 = new AuxiliaryVariable(new AuxVar("K"), new Variable(1));
+            Sum s1 = new Sum(new IntVar("z"), "z", new Int(1), new Int(10));
+
+            assertThat(av1.equals(av1), is(true));
+            assertThat(av1.equals(av2), is(true));
+            assertThat(av1.equals(av3), is(false));
+            assertThat(av1.equals(av4), is(false));
+            assertThat(av1.equals(s1), is(false));
         }
 
     }

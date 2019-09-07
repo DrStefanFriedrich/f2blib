@@ -10,15 +10,13 @@
  *
  ******************************************************************************/
 
-package com.github.drstefanfriedrich.f2blib.generator;
+package com.github.drstefanfriedrich.f2blib;
 
-import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
+public class EvalExpressionTest extends AbstractExpressionTest {
 
-/**
- * Abstraction layer to decouple the system and to improve testability.
- */
-public interface FunctionEvaluationBytecodeGenerator {
-
-    FunctionEvaluationWrapper generateAndInstantiate(FunctionDefinition functionDefinition);
+    @Override
+    protected FunctionEvaluationKernel instantiateKernel() {
+        return new FunctionEvaluationFactory().get("eval").create();
+    }
 
 }

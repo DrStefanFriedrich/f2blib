@@ -15,12 +15,10 @@ package com.github.drstefanfriedrich.f2blib.visitor;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import com.github.drstefanfriedrich.f2blib.exception.BytecodeGenerationException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.Comparator.naturalOrder;
 
 /**
  * Validates a given abstract syntax tree (AST).
@@ -28,7 +26,6 @@ import static java.lang.String.format;
 public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisitor {
 
     private static final Set<String> ALLOWED_INT_VAR_NAMES = new HashSet<>();
-
     private static final String VAR_NOT_ALLOWED = "The variable name '%s' is not allowed.";
 
     static {
@@ -36,7 +33,7 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
         ALLOWED_INT_VAR_NAMES.add("b");
         ALLOWED_INT_VAR_NAMES.add("c");
         ALLOWED_INT_VAR_NAMES.add("d");
-        // 'e' is reserved for the Euler number
+        ALLOWED_INT_VAR_NAMES.add("e");
         // 'f' is reserved for functions
         ALLOWED_INT_VAR_NAMES.add("g");
         ALLOWED_INT_VAR_NAMES.add("h");
@@ -61,10 +58,14 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     }
 
     private final LocalVariablesImpl localVariables = new LocalVariablesImpl();
-
     private final SpecialFunctionsUsageImpl specialFunctionsUsage = new SpecialFunctionsUsageImpl();
-
-    private boolean currentlyInScopeOfAuxiliaryExpression;
+    private final SortedSet<Integer> tmpParameterIndexes = new TreeSet<>();
+    private final SortedSet<Integer> tmpVariableIndexes = new TreeSet<>();
+    private boolean atLeastOneParameterIsIntExpression = false;
+    private boolean atLeastOneVariableIsIntExpression = false;
+    private int sizeP;
+    private int sizeX;
+    private int sizeY;
 
     /*
      * The integer variables that are currently (i.e. at the moment of execution) in scope.
@@ -91,7 +92,7 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
             throw new BytecodeGenerationException(format("The variable '%s' is already in use in an outer scope", variableName));
         }
         intVariablesInScope.add(variableName);
-        localVariables.calculateNewIndexForIntVar(variableName);
+        localVariables.addIntVar(variableName);
     }
 
     private void removeIntVariableFromScope(String variableName) {
@@ -159,6 +160,8 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
         if (firstIndex != 0 || lastIndex != size - 1) {
             throw new BytecodeGenerationException("Functions must be defined consecutively; gaps are not allowed");
         }
+
+        sizeY = size;
     }
 
     @Override
@@ -214,10 +217,9 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
         String variableName = auxVar.getVariableName();
         checkAuxVariableName(variableName);
 
-        if (currentlyInScopeOfAuxiliaryExpression) {
-            throw new BytecodeGenerationException("On the right hand side of an auxiliary variable no other auxiliary " +
-                    "variables are allowed");
-        }
+        // Formerly, we had a check here to avoid the use of auxiliary variables on the right hand side of another
+        // auxiliary variable. We think this is not necessary. Care must be taken to avoid recursive evaluation.
+        // Also, auxiliary variables will be evaluated in order of occurrence in the function definition.
 
         localVariables.addAuxVariable(auxVar);
 
@@ -260,11 +262,39 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     public Void visit(AuxiliaryVariable auxiliaryVariable) {
 
         auxiliaryVariable.acceptAuxVar(this);
-        currentlyInScopeOfAuxiliaryExpression = true;
         auxiliaryVariable.acceptInner(this);
-        currentlyInScopeOfAuxiliaryExpression = false;
 
         return null;
+    }
+
+    @Override
+    public Void visit(Parameter parameter) {
+        if (parameter.getIndexExpression() == null) {
+            tmpParameterIndexes.add(parameter.getIndex());
+        } else {
+            atLeastOneParameterIsIntExpression = true;
+        }
+        return null;
+    }
+
+    @Override
+    public <T> T visit(Variable variable) {
+        if (variable.getIndexExpression() == null) {
+            tmpVariableIndexes.add(variable.getIndex());
+        } else {
+            atLeastOneVariableIsIntExpression = true;
+        }
+        return null;
+    }
+
+    @Override
+    public FunctionEvaluationValidator getFunctionEvaluationValidator() {
+
+        sizeX = tmpVariableIndexes.stream().max(naturalOrder()).orElse(-1);
+        sizeP = tmpParameterIndexes.stream().max(naturalOrder()).orElse(-1);
+
+        return new FunctionEvaluationValidatorImpl(sizeP, sizeX, sizeY, atLeastOneParameterIsIntExpression,
+                atLeastOneVariableIsIntExpression);
     }
 
 }

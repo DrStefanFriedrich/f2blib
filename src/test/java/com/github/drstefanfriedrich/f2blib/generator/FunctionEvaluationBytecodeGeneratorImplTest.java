@@ -101,7 +101,8 @@ public class FunctionEvaluationBytecodeGeneratorImplTest {
 
         double[] y = new double[1];
 
-        FunctionEvaluation fe = integrationTest.generateAndInstantiate(functionDefinition);
+        FunctionEvaluationWrapper few = integrationTest.generateAndInstantiate(functionDefinition);
+        FunctionEvaluation fe = few.getFunctionEvaluation();
 
         fe.eval(new double[0], new double[]{Math.PI / 2}, y);
 

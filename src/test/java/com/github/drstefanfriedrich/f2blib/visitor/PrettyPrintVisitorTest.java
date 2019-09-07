@@ -6,6 +6,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -33,7 +36,7 @@ public class PrettyPrintVisitorTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := sin(PI * x_1);\nend\n"));
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := sin(pi * x_1);\nend\n"));
     }
 
     @Test
@@ -237,11 +240,11 @@ public class PrettyPrintVisitorTest {
     @Test
     public void constantSimple() {
 
-        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, Constant.PI);
+        FunctionDefinition fd = ASTTest.createFunctionDefinition(FUNCTION_NAME, Constant.E);
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := PI;\nend\n"));
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := euler;\nend\n"));
     }
 
     @Test
@@ -411,7 +414,7 @@ public class PrettyPrintVisitorTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := -(sinh x_1 * PI);\nend\n"));
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := -(sinh x_1 * pi);\nend\n"));
     }
 
     @Test
@@ -569,7 +572,7 @@ public class PrettyPrintVisitorTest {
 
         fd.accept(underTest);
 
-        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := (x_1 * p_1 - PI) * x_1;\nend\n"));
+        assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    f_1 := (x_1 * p_1 - pi) * x_1;\nend\n"));
     }
 
     @Test
@@ -779,6 +782,36 @@ public class PrettyPrintVisitorTest {
         fd.accept(underTest);
 
         assertThat(underTest.getString(), is("function MyFunc;\nbegin\n    I := I ^ 3;\n    f_1 := prod_{k = 2}^{5!}(k);\nend\n"));
+    }
+
+    @Test
+    public void expressionFromLifeInsurance() {
+
+        List<AuxiliaryVariable> auxVars = new ArrayList<>();
+        auxVars.add(new AuxiliaryVariable(new AuxVar("V"), new Division(new Int(1),
+                new Parenthesis(new Addition(new Int(1), new Parameter(4))))));
+        auxVars.add(new AuxiliaryVariable(new AuxVar("A"), new Sum(
+                new Multiplication(
+                        new Parenthesis(new Subtraction(new Power(new AuxVar("V"), new Round(new Parameter(4))),
+                                new Power(new AuxVar("V"), new Addition(new Int(1), new IntVar("k"))))),
+                        new Prod(new IntVar("l"), "l", new Int(1), new Int(10))),
+                "k",
+                new Round(new Parameter(0)),
+                new Subtraction(new Int(101), new Round(new Parameter(1))))));
+
+        List<Function> funcs = new ArrayList<>();
+        funcs.add(new Function(0, new Variable(0)));
+
+        FunctionDefinition fd = new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new FunctionsWrapper(auxVars, funcs, null)));
+
+        fd.accept(underTest);
+
+        assertThat(underTest.getString(), is("function a.b.c.Xyz;\n" +
+                "begin\n" +
+                "    V := 1 / (1 + p_5);\n" +
+                "    A := sum_{k = round p_1}^{101 - round p_2}((V ^ (round p_5) - V ^ (1 + k)) * prod_{l = 1}^{10}(l));\n" +
+                "    f_1 := x_1;\n" +
+                "end\n"));
     }
 
 }

@@ -24,11 +24,11 @@ import java.util.stream.IntStream;
 
 abstract class AbstractPerformanceTest {
 
-    static final int NUMBER_OBJECTS = 10000000;
+    static final int NUMBER_OBJECTS = 10000;
 
     static final int NUMBER_CORES = Runtime.getRuntime().availableProcessors();
 
-    private static final String FUNCTION_NAME = "com.github.drstefanfriedrich.f2blib.performance.TestFunction";
+    protected static final String FUNCTION_NAME = "com.github.drstefanfriedrich.f2blib.performance.TestFunction";
 
     static String readFunctionByFileName(String fileName) throws IOException {
         return new ByteSource() {
@@ -50,10 +50,15 @@ abstract class AbstractPerformanceTest {
     static class RequestResponse {
 
         private final double[] p = new double[2];
-
         private final double[] x = new double[2];
+        private final double[] y = new double[4];
 
-        private final double[] y = new double[2];
+        RequestResponse() {
+            x[0] = Math.random();
+            x[1] = Math.random();
+            p[0] = Math.random();
+            p[1] = Math.random();
+        }
 
         double[] getP() {
             return p;

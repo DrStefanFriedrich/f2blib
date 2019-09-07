@@ -14,6 +14,7 @@ package com.github.drstefanfriedrich.f2blib.impl;
 
 import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
 import com.github.drstefanfriedrich.f2blib.ast.*;
+import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationWrapper;
 import org.junit.Test;
 
 import static com.github.drstefanfriedrich.f2blib.util.TestUtil.closeTo;
@@ -41,7 +42,8 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         double[] y = new double[1];
 
         when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
-        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(
+                new FunctionEvaluationWrapper(new FunctionEvaluationAsset(), new FunctionEvaluationValidatorAsset()));
 
         underTest.load("someFakeDefinition");
 
@@ -73,7 +75,8 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         double[] y = new double[1];
 
         when(parserMock.parse("f")).thenReturn(fd);
-        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(
+                new FunctionEvaluationWrapper(new FunctionEvaluationAsset(), new FunctionEvaluationValidatorAsset()));
 
         underTest.load("f");
         String prettyPrinted = underTest.print("com.github.drstefanfriedrich.f2blib.impl.AbstractF2BLibImplTest$FunctionEvaluationAsset");
@@ -119,7 +122,8 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
 
         when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
-        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(
+                new FunctionEvaluationWrapper(new FunctionEvaluationAsset(), new FunctionEvaluationValidatorAsset()));
 
         underTest.load("someFakeDefinition");
 
@@ -133,7 +137,8 @@ public class F2BLibImplTest extends AbstractF2BLibImplTest {
         FunctionDefinition fd = new FunctionDefinition("f", new FunctionBody(new FunctionsWrapper(new Function(0, new Variable(0)))));
 
         when(parserMock.parse("someFakeDefinition")).thenReturn(fd);
-        when(generatorMock.generateAndInstantiate(fd)).thenReturn(new FunctionEvaluationAsset());
+        when(generatorMock.generateAndInstantiate(fd)).thenReturn(
+                new FunctionEvaluationWrapper(new FunctionEvaluationAsset(), new FunctionEvaluationValidatorAsset()));
 
         underTest.load("someFakeDefinition");
 

@@ -14,6 +14,7 @@ package com.github.drstefanfriedrich.f2blib.impl;
 
 import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGenerator;
 import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
+import com.github.drstefanfriedrich.f2blib.visitor.FunctionEvaluationValidator;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -26,6 +27,12 @@ public abstract class AbstractF2BLibImplTest {
         @Override
         public void eval(double[] p, double[] x, double[] y) {
             y[0] = 1.234;
+        }
+    }
+
+    public static class FunctionEvaluationValidatorAsset implements FunctionEvaluationValidator {
+        @Override
+        public void validate(double[] p, double[] x, double[] y) throws IllegalArgumentException {
         }
     }
 

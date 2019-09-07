@@ -115,7 +115,7 @@ public class IntegrationTest {
      * An (abused) example for the markov_shift.
      */
     @Test
-    public void gaußSum() {
+    public void gaussSum() {
 
         kernel.load(GAUSS_SUM);
 
@@ -129,7 +129,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void gaußSumUsingSum() {
+    public void gaussSumUsingSum() {
 
         kernel.load(GAUSS_SUM_USING_SUM);
 

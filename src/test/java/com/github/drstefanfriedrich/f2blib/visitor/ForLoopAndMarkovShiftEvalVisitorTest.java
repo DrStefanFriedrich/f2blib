@@ -49,7 +49,7 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
                     new FunctionsWrapper(new MarkovShift(new Int(10)), new Function(0, new Addition(new Variable(1),
                             new IntVar("i")))))));
 
-    private EvalVisitor evalVisitor;
+    private EvalVisitorImpl evalVisitorImpl;
 
     private double[] x;
 
@@ -59,7 +59,7 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
     public void setup() {
         x = new double[1];
         p = new double[3];
-        evalVisitor = new EvalVisitor(x, p, 1);
+        evalVisitorImpl = new EvalVisitorImpl(x, p, 1);
     }
 
     @Test
@@ -71,15 +71,15 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
         exception.expect(BytecodeGenerationException.class);
         exception.expectMessage("step evaluating to 0 not allowed");
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
     }
 
     @Test
     public void forLoopWithZeroStepAndEqualStartEnd() {
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(0));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(0));
     }
 
     @Test
@@ -89,9 +89,9 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
         p[1] = 10;
         p[2] = 2;
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(9));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(9));
     }
 
     @Test
@@ -101,9 +101,9 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
         p[1] = -6;
         p[2] = -2;
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(-6));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(-6));
     }
 
     @Test
@@ -113,9 +113,9 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
         p[1] = 10;
         p[2] = 2;
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(0));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(0));
     }
 
     @Test
@@ -125,9 +125,9 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
         p[1] = -6;
         p[2] = -2;
 
-        fd.accept(evalVisitor);
+        fd.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(0));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(0));
     }
 
     @Test
@@ -135,11 +135,11 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
 
         x = new double[]{0};
         p = new double[]{1, 100, 1};
-        evalVisitor = new EvalVisitor(x, p, 1);
+        evalVisitorImpl = new EvalVisitorImpl(x, p, 1);
 
-        gaußSum.accept(evalVisitor);
+        gaußSum.accept(evalVisitorImpl);
 
-        assertThat(evalVisitor.getResult()[0], closeTo(5050));
+        assertThat(evalVisitorImpl.getResult()[0], closeTo(5050));
     }
 
     @Test
@@ -147,12 +147,12 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
 
         x = new double[]{0, 0};
         p = new double[]{1, 100, 1};
-        evalVisitor = new EvalVisitor(x, p, 1);
+        evalVisitorImpl = new EvalVisitorImpl(x, p, 1);
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("offset must not be negative");
 
-        markovShiftWithNegativeOffset.accept(evalVisitor);
+        markovShiftWithNegativeOffset.accept(evalVisitorImpl);
     }
 
     @Test
@@ -160,12 +160,12 @@ public class ForLoopAndMarkovShiftEvalVisitorTest {
 
         x = new double[]{0, 0};
         p = new double[]{1, 100, 1};
-        evalVisitor = new EvalVisitor(x, p, 1);
+        evalVisitorImpl = new EvalVisitorImpl(x, p, 1);
 
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("x.lenth - offset must be greater or equal than y.length");
 
-        markovShiftWithHugeOffset.accept(evalVisitor);
+        markovShiftWithHugeOffset.accept(evalVisitorImpl);
     }
 
 }

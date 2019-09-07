@@ -64,7 +64,7 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.getMaxLocals(), is(15));
+        assertThat(localVariables.getMaxLocals(), is(11));
     }
 
     @Test
@@ -197,7 +197,7 @@ public class ValidationVisitorImplTest {
 
         LocalVariables localVariables = underTest.getLocalVariables();
 
-        assertThat(localVariables.getMaxLocals(), is(15));
+        assertThat(localVariables.getMaxLocals(), is(11));
         assertThat(localVariables.getIndexForForLoopEnd(), is(4));
         assertThat(localVariables.getIndexForForLoopStep(), is(5));
         assertThat(localVariables.getMarkovShiftOffset(), is(6));
@@ -356,20 +356,6 @@ public class ValidationVisitorImplTest {
         fd.accept(underTest);
 
         assertTrue(true);
-    }
-
-    @Test
-    public void auxVariableReferencesOtherAuxVar() {
-
-        FunctionDefinition fd = new FunctionDefinition("x.y.T", new FunctionBody(new FunctionsWrapper(
-                new AuxiliaryVariable(new AuxVar("I"), new AuxVar("K")),
-                new Function(0, new Prod(new IntVar("k"), "k", new Int(2),
-                        new Faculty(new Int(5)))))));
-
-        exception.expect(BytecodeGenerationException.class);
-        exception.expectMessage("On the right hand side of an auxiliary variable no other auxiliary variables are allowed");
-
-        fd.accept(underTest);
     }
 
     @Test

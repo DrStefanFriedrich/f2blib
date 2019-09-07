@@ -14,58 +14,42 @@ package com.github.drstefanfriedrich.f2blib.impl;
 
 import com.github.drstefanfriedrich.f2blib.FunctionEvaluationKernel;
 import com.github.drstefanfriedrich.f2blib.ast.FunctionDefinition;
-import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationBytecodeGenerator;
-import com.github.drstefanfriedrich.f2blib.generator.FunctionEvaluationWrapper;
 import com.github.drstefanfriedrich.f2blib.parser.FunctionParser;
+import com.github.drstefanfriedrich.f2blib.visitor.EvalVisitorImpl;
+import com.github.drstefanfriedrich.f2blib.visitor.ValidationVisitor;
+import com.github.drstefanfriedrich.f2blib.visitor.ValidationVisitorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.lang.String.format;
 
 /**
- * F2BLib implementation of a {@link FunctionEvaluationKernel}. Generates Java
- * bytecode from the supplied functions.
+ * Implementation of {@link FunctionEvaluationKernel} using {@link EvalVisitorImpl}.
  */
-public class F2BLibImpl extends AbstractFEKImpl {
+public class EvalImpl extends AbstractFEKImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(F2BLibImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EvalImpl.class);
 
-    private final FunctionEvaluationBytecodeGenerator generator;
-
-    F2BLibImpl(FunctionParser parser, FunctionEvaluationBytecodeGenerator generator) {
+    EvalImpl(FunctionParser parser) {
         super(parser);
-        this.generator = generator;
     }
 
-    /**
-     * Load a new function definition into the kernel.
-     *
-     * @param functionDefinition The function definition as defined by the grammar.
-     */
     @Override
     public void load(String functionDefinition) {
 
         FunctionDefinition fd = parser.parse(functionDefinition);
 
-        FunctionEvaluationWrapper wrapper = generator.generateAndInstantiate(fd);
-        FunctionEvaluation instance = wrapper.getFunctionEvaluation();
+        ValidationVisitor validationVisitor = new ValidationVisitorImpl();
+        fd.accept(validationVisitor);
 
-        FunctionInfo fi = new FunctionInfo(instance, prettyPrint(fd), wrapper.getFunctionEvaluationValidator());
+        FunctionInfo fi = new FunctionInfo(fd, prettyPrint(fd), validationVisitor.getFunctionEvaluationValidator());
 
-        String name = instance.getClass().getName();
+        String name = fd.getName();
         cache.put(name, fi);
 
         LOG.info("Function {} loaded into the kernel", name);
     }
 
-    /**
-     * Evaluate a function.
-     *
-     * @param functionName The name of the function.
-     * @param p            The parameters of the function.
-     * @param x            The variables of the function.
-     * @param y            The vector which stores the result.
-     */
     @Override
     public void eval(String functionName, double[] p, double[] x, double[] y) {
 
@@ -76,9 +60,16 @@ public class F2BLibImpl extends AbstractFEKImpl {
         }
 
         long start = System.nanoTime();
-        FunctionEvaluation functionEvaluation = fi.getFunctionEvaluation();
+
+        FunctionDefinition fd = fi.getFunctionDefinition();
         fi.getFunctionEvaluationValidator().validate(p, x, y);
-        functionEvaluation.eval(p, x, y);
+
+        EvalVisitorImpl evalVisitorImpl = new EvalVisitorImpl(x, p, y.length);
+        fd.accept(evalVisitorImpl);
+        double[] result = evalVisitorImpl.getResult();
+
+        System.arraycopy(result, 0, y, 0, y.length);
+
         long end = System.nanoTime();
 
         LOG.trace("Evaluation of function {} took {} ns", functionName, (end - start));

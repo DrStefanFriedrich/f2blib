@@ -13,8 +13,10 @@
 package com.github.drstefanfriedrich.f2blib.ast;
 
 import com.github.drstefanfriedrich.f2blib.visitor.Visitor;
+import com.google.common.base.MoreObjects;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public final class AuxiliaryVariable implements Serializable, ASTElement {
 
@@ -36,6 +38,10 @@ public final class AuxiliaryVariable implements Serializable, ASTElement {
         return auxVar;
     }
 
+    public Expression getInner() {
+        return inner;
+    }
+
     public <T> T acceptInner(Visitor visitor) {
         return inner.accept(visitor);
     }
@@ -46,6 +52,32 @@ public final class AuxiliaryVariable implements Serializable, ASTElement {
 
     public boolean evaluatesToDoublel() {
         return inner.evaluatesToDouble();
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("auxVar", auxVar)
+                .add("inner", inner)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AuxiliaryVariable that = (AuxiliaryVariable) o;
+        return auxVar.equals(that.auxVar) &&
+                inner.equals(that.inner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(auxVar, inner);
     }
 
 }

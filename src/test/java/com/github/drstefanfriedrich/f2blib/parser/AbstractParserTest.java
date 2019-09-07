@@ -34,6 +34,8 @@ public abstract class AbstractParserTest {
 
     public static final String NO_FUNCTION_SPECIFIED = "No function specified";
 
+    public static final String NO_AUXVAR_SPECIFIED = "No auxiliary variable specified";
+
     protected final FunctionParser parser = new AntlrFunctionParser();
 
     @Rule
@@ -61,6 +63,16 @@ public abstract class AbstractParserTest {
                 .getFunctionsWrapper().getFunctions().stream()
                 .findFirst().orElseThrow(() -> new IllegalStateException(NO_FUNCTION_SPECIFIED))
                 .getExpression();
+
+        assertThat(ex, is(expression));
+    }
+
+    protected void assertAuxVar(String functionDefinition, Expression expression) {
+
+        Expression ex = parser.parse(functionDefinition).getFunctionBody()
+                .getFunctionsWrapper().getAuxiliaryVariables().stream()
+                .findFirst().orElseThrow(() -> new IllegalStateException(NO_AUXVAR_SPECIFIED))
+                .getInner();
 
         assertThat(ex, is(expression));
     }

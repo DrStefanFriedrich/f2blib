@@ -11,8 +11,36 @@
 function com.github.drstefanfriedrich.f2blib.lifeinsurance.LifeInsuranceFormula;
 begin
 
-    f_1 := sin(cos(x_1) * p_1) + exp(1 / (1 + x_2 ^ 2)) - p_2;
+    # n = durationOfContract = round(p_1)
+    # i = interestRate = p_5
+    # v = 1 / (1 + i)
+    # x = ageAtContractBeginning = round(p_2)
+    # fee = p_3
+    # deathPremium = p_4
+    # q_l = p_{6 + l}
 
-    f_2 := binomial(10, 6) + sqrt(1 + x_1 * x_1 + x_2 * x_2) - (p_1 * p_1 + p_2 * p_2);
+    V := 1 / (1 + p_5);
+
+    # E can't be calculated and must be substituted
+    # For ease of identifying E, we use ((E))
+    # E := p_{6 + round(p_2) + k} * prod(1 - p_{6 + l}, l, round(p_2), round(p_2) + k - 1);
+
+    A := sum((V^round(p_1) - V^(k+1)) * ((
+                                            p_{6 + round(p_2) + k} * prod(1 - p_{6 + l}, l, round(p_2), round(p_2) + k - 1)
+                                        )) , k, round(p_1), 101 - round(p_2));
+
+    B := sum((1-V^(k+1)) * ((
+                               p_{6 + round(p_2) + k} * prod(1 - p_{6 + l}, l, round(p_2), round(p_2) + k - 1)
+                           )), k, 0, round(p_1) - 1);
+
+    C := (1 - V^round(p_1)) * sum(((
+                                      p_{6 + round(p_2) + k} * prod(1 - p_{6 + l}, l, round(p_2), round(p_2) + k - 1)
+                                  )), k, round(p_1), 101 - round(p_2));
+
+    D := (1 - V) * sum(V^(k+1) * ((
+                                     p_{6 + round(p_2) + k} * prod(1 - p_{6 + l}, l, round(p_2), round(p_2) + k - 1)
+                                 )), k, 0, round(p_1) - 1);
+
+    f_1 := 1 / A * ( (B + C) * p_3 - D * p_4 );
 
 end

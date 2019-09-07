@@ -15,6 +15,9 @@ package com.github.drstefanfriedrich.f2blib.parser;
 import com.github.drstefanfriedrich.f2blib.ast.*;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParserTest extends AbstractParserTest {
 
     @Test
@@ -136,13 +139,13 @@ public class ParserTest extends AbstractParserTest {
     }
 
     @Test
-    public void binomialAnsSin() {
+    public void binomialAndSin() {
         /* Does not compile: new Binomial(new Int(5), new Sin(new Doub(1.2))) */
         assertWrongAST("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := binomial(5,sin(1.2));\n" +
-                END, "line: 3, column: 22, message: extraneous input 'sin' expecting");
+                END, "line: 3, column: 22, message: no viable alternative at input 'binomial(5,sin'");
     }
 
     @Test
@@ -168,7 +171,7 @@ public class ParserTest extends AbstractParserTest {
         assertAST("" +
                 FUNCTION_XYZ_START +
                 BEGIN +
-                "    f_1 := cosh(cosh(cosh(e)));\n" +
+                "    f_1 := cosh(cosh(cosh(euler)));\n" +
                 END, new Cosh(new Cosh(new Cosh(Constant.E))));
     }
 
@@ -619,7 +622,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := 3 * 3 ! * 3;\n" +
-                END, new Multiplication(new Int(3), new Multiplication(new Faculty(new Int(3)), new Int(3))));
+                END, new Multiplication(new Multiplication(new Int(3), new Faculty(new Int(3))), new Int(3)));
     }
 
     @Test
@@ -655,7 +658,7 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := sum(u, u, 1, 10);\n" +
-                END, new Sum(new IntVar("u"),"u", new Int(1), new Int(10)));
+                END, new Sum(new IntVar("u"), "u", new Int(1), new Int(10)));
     }
 
     @Test
@@ -664,7 +667,65 @@ public class ParserTest extends AbstractParserTest {
                 FUNCTION_XYZ_START +
                 BEGIN +
                 "    f_1 := prod(u, u, 1, 10);\n" +
-                END, new Prod(new IntVar("u"),"u", new Int(1), new Int(10)));
+                END, new Prod(new IntVar("u"), "u", new Int(1), new Int(10)));
+    }
+
+    @Test
+    public void partOfLifeInsuranceFormula() {
+
+        List<AuxiliaryVariable> auxVars = new ArrayList<>();
+        auxVars.add(new AuxiliaryVariable(new AuxVar("V"), new Division(new Int(1),
+                new Parenthesis(new Addition(new Int(1), new Parameter(4))))));
+        auxVars.add(new AuxiliaryVariable(new AuxVar("A"), new Sum(
+                new Multiplication(
+                        new Parenthesis(new Subtraction(new Power(new AuxVar("V"), new Round(new Parameter(0))),
+                                new Power(new AuxVar("V"), new Parenthesis(new Addition(new IntVar("k"), new Int(1)))))),
+                        new Prod(new IntVar("l"), "l", new Int(1), new Int(10))),
+                "k",
+                new Round(new Parameter(0)),
+                new Subtraction(new Int(101), new Round(new Parameter(1))))));
+
+        List<Function> funcs = new ArrayList<>();
+        funcs.add(new Function(0, new Variable(0)));
+
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    V := 1 / (1 + p_5);\n" +
+                "    A := sum((V^round(p_1) - V^(k+1)) * prod(l, l, 1, 10), k, round(p_1), 101 - round(p_2));\n" +
+                "    f_1 := x_1;\n" +
+                END, new FunctionDefinition("a.b.c.Xyz", new FunctionBody(new FunctionsWrapper(auxVars, funcs, null))));
+    }
+
+    @Test
+    public void auxVar() {
+        assertAuxVar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    A := V^round(p_1) - V^(k+1);\n" +
+                "    f_1 := prod(u, u, 1, 10);\n" +
+                END, new Subtraction(new Power(new AuxVar("V"), new Round(new Parameter(0))), new Power(new AuxVar("V"), new Parenthesis(new Addition(new IntVar("k"), new Int(1))))));
+    }
+
+    @Test
+    public void powerWithoutAuxVar() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := x_1^round(p_1) - x_2^(k+1);\n" +
+                END, new Subtraction(new Power(new Variable(0), new Round(new Parameter(0))),
+                new Power(new Variable(1), new Parenthesis(new Addition(new IntVar("k"),
+                        new Int(1))))));
+    }
+
+    @Test
+    public void alternatingPower() {
+        assertAST("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := (-1)^3/3!;\n" +
+                END, new Division(new Power(new Parenthesis(new Neg(new Int(1))), new Int(3)),
+                new Faculty(new Int(3))));
     }
 
 }

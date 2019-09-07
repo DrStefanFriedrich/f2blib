@@ -17,6 +17,8 @@ import com.github.drstefanfriedrich.f2blib.ast.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static java.lang.String.format;
+
 /**
  * {@link Visitor} that pretty prints an abstract syntax tree when it is applied to it.
  */
@@ -239,7 +241,19 @@ public class PrettyPrintVisitor implements Visitor {
 
     @Override
     public Void visit(Constant constant) {
-        pw.print(constant);
+        switch (constant) {
+            case E:
+                pw.print("euler");
+                break;
+            case PI:
+                pw.print("pi");
+                break;
+            case BOLTZMANN:
+                pw.print("boltzmann");
+                break;
+            default:
+                throw new IllegalArgumentException(format("Unknown enum %s", constant.toString()));
+        }
         return null;
     }
 

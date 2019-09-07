@@ -57,11 +57,9 @@ generateGrammarSource {
 
 test {
     systemProperty "com.github.drstefanfriedrich.f2blib.performancetest.enabled", System.getProperty("com.github.drstefanfriedrich.f2blib.performancetest.enabled")
-    systemProperty "com.github.drstefanfriedrich.f2blib.performancetest.gradle", "true"
     systemProperty "com.github.drstefanfriedrich.f2blib.debugging", "true"
     maxHeapSize = '1G'
     jvmArgs '-XX:MaxMetaspaceSize=256m'
-    maxParallelForks = 3 * Runtime.runtime.availableProcessors().intdiv(4) ?: 1
 }
 
 sonarqube {

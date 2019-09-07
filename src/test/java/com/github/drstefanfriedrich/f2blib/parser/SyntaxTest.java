@@ -150,6 +150,24 @@ public class SyntaxTest extends AbstractParserTest {
     }
 
     @Test
+    public void euler() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := euler;\n" +
+                END);
+    }
+
+    @Test
+    public void variableE() {
+        assertGrammar("" +
+                FUNCTION_XYZ_START +
+                BEGIN +
+                "    f_1 := e;\n" +
+                END);
+    }
+
+    @Test
     public void unaryPlus() {
         assertGrammar("" +
                 FUNCTION_XYZ_START +

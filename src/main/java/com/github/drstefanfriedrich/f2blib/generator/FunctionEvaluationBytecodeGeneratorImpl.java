@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluationBytecodeGenerator {
 
     @Override
-    public FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition) {
+    public FunctionEvaluationWrapper generateAndInstantiate(FunctionDefinition functionDefinition) {
 
         ValidationVisitor validationVisitor = new ValidationVisitorImpl();
         LocalVariables localVariables = validationVisitor.getLocalVariables();
@@ -37,10 +37,10 @@ public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluati
     }
 
     @VisibleForTesting
-    protected FunctionEvaluation generateAndInstantiate(FunctionDefinition functionDefinition,
-                                                        ValidationVisitor validationVisitor,
-                                                        BytecodeVisitor bytecodeVisitor,
-                                                        StackDepthVisitor stackDepthVisitor) {
+    protected FunctionEvaluationWrapper generateAndInstantiate(FunctionDefinition functionDefinition,
+                                                               ValidationVisitor validationVisitor,
+                                                               BytecodeVisitor bytecodeVisitor,
+                                                               StackDepthVisitor stackDepthVisitor) {
         try {
 
             functionDefinition.accept(validationVisitor);
@@ -49,7 +49,7 @@ public class FunctionEvaluationBytecodeGeneratorImpl implements FunctionEvaluati
 
             Class<? extends FunctionEvaluation> clazz = bytecodeVisitor.generate();
 
-            return instantiate(clazz);
+            return new FunctionEvaluationWrapper(instantiate(clazz), validationVisitor.getFunctionEvaluationValidator());
 
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException e) {
             throw new BytecodeGenerationException("Cannot instantiate class", e);

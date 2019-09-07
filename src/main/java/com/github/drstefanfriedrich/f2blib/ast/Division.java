@@ -28,4 +28,9 @@ public final class Division extends BinaryExpression implements IntExpression {
         return visitor.visit(this);
     }
 
+    @Override
+    public boolean evaluatesToDouble() {
+        return true;
+    }
+
 }

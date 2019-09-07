@@ -22,4 +22,6 @@ public interface ValidationVisitor extends Visitor {
 
     SpecialFunctionsUsage getSpecialFunctionsUsage();
 
+    FunctionEvaluationValidator getFunctionEvaluationValidator();
+
 }

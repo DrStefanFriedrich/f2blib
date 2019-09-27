@@ -63,8 +63,6 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     private final SortedSet<Integer> tmpVariableIndexes = new TreeSet<>();
     private boolean atLeastOneParameterIsIntExpression = false;
     private boolean atLeastOneVariableIsIntExpression = false;
-    private int sizeP;
-    private int sizeX;
     private int sizeY;
 
     /*
@@ -290,8 +288,8 @@ public class ValidationVisitorImpl extends BaseVisitor implements ValidationVisi
     @Override
     public FunctionEvaluationValidator getFunctionEvaluationValidator() {
 
-        sizeX = tmpVariableIndexes.stream().max(naturalOrder()).orElse(-1);
-        sizeP = tmpParameterIndexes.stream().max(naturalOrder()).orElse(-1);
+        int sizeX = tmpVariableIndexes.stream().max(naturalOrder()).orElse(-1);
+        int sizeP = tmpParameterIndexes.stream().max(naturalOrder()).orElse(-1);
 
         return new FunctionEvaluationValidatorImpl(sizeP, sizeX, sizeY, atLeastOneParameterIsIntExpression,
                 atLeastOneVariableIsIntExpression);

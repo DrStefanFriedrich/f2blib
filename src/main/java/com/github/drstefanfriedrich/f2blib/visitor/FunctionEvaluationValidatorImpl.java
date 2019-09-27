@@ -32,7 +32,7 @@ class FunctionEvaluationValidatorImpl implements FunctionEvaluationValidator {
     }
 
     @Override
-    public void validate(double[] p, double[] x, double[] y) throws IllegalArgumentException {
+    public void validate(double[] p, double[] x, double[] y) {
 
         int actualP = p.length;
         int actualX = x.length;

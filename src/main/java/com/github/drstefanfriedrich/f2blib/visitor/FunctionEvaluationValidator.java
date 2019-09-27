@@ -13,6 +13,6 @@ public interface FunctionEvaluationValidator {
      * @param y The result of the function evaluation. <code>y in IR^m</code>
      * @throws IllegalArgumentException If the function invocation is illegal.
      */
-    void validate(double[] p, double[] x, double[] y) throws IllegalArgumentException;
+    void validate(double[] p, double[] x, double[] y);
 
 }

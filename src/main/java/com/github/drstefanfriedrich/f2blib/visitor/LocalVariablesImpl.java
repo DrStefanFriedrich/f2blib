@@ -36,9 +36,9 @@ import java.util.Set;
  * <code>10: Markov shift end</code><p>
  * <code>11: IntVar</code><p>
  * <code>12: summation for the IntVar</code><p>
- * <code>14: multiplication for the IntVar</code>
- * <code>16: ...</code>
- * <code>...: AuxVar's</code><p>
+ * <code>14: multiplication for the IntVar</code><p>
+ * <code>16: ...</code><p>
+ * <code>...: AuxVar's</code>
  */
 public class LocalVariablesImpl implements LocalVariables {
 

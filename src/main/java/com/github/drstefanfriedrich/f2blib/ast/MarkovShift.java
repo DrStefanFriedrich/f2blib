@@ -20,13 +20,13 @@ import java.util.Objects;
 
 /**
  * Replace some variables by the outcome of the last computation. Consider a
- * function <code>f: IR^n -&gt; IR^m, n>m</code> and an <code>offset>=0</code>.
- * After <code>f(x)</code> has been calculated, the Markov Shift skips the first
- * <code>offset</code> variables in <code>x \in IR^n</code> and shifts the
- * remaining <code>n-offset</code> variables to the right by <code>m</code>
- * positions. Thus, <code>(x_(n-m+1), ..., x_n)</code> will be discarded and
- * <code>(x_(offset+1), ..., x_(offset+m))</code> will be filled with the just
- * calculated <code>f(x)</code>.
+ * function <code>f: IR^n -&gt; IR^m, n&gt;m</code> and an <code>offset&gt;=0
+ * </code>. After <code>f(x)</code> has been calculated, the Markov Shift skips
+ * the first <code>offset</code> variables in <code>x \in IR^n</code> and
+ * shifts the remaining <code>n-offset</code> variables to the right by <code>
+ * m</code> positions. Thus, <code>(x_(n-m+1), ..., x_n)</code> will be
+ * discarded and <code>(x_(offset+1), ..., x_(offset+m))</code> will be filled
+ * with the just calculated <code>f(x)</code>.
  */
 public final class MarkovShift implements Serializable, ASTElement {
 

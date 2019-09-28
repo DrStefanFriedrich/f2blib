@@ -77,3 +77,8 @@ performance_test lifeinsurance BytecodeLifeInsuranceVariantsTest
 #
 performance_test lifeinsurance EvalLifeInsuranceVariantsTest
 
+#
+# JavaLifeInsuranceVariantsTest.performance
+#
+performance_test lifeinsurance JavaLifeInsuranceVariantsTest
+

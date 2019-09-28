@@ -726,6 +726,11 @@ used.
 
 Same as Test Case 5, but this time using the EvalVisitor.
 
+**Test Case 7: JavaLifeInsuranceVariantsTest**
+
+Same as Test Case 5, but this time using a plain Java implementation of the life
+insurance formula.
+
 The result was as follows:
 
 | Test Case                           | Duration (secs) | Standard Deviation |
@@ -736,6 +741,7 @@ The result was as follows:
 | EvalPerformanceTest                 | 32.948          | 1.904              |
 | BytecodeLifeInsuranceVariantsTest   | 0.3727          | 0.01523            |
 | EvalLifeInsuranceVariantsTest       | 58.300          | 2.682              |
+| JavaLifeInsuranceVariantsTest       | 0.3637          | 0.03246            |
 
 
 ## References
